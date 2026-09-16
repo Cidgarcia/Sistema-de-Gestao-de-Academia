@@ -1,0 +1,22 @@
+# ── Maven build output ────────────────────────────────────────
+target/
+bin/
+
+# ── Banco de dados local (não deve ir pro repositório) ───────
+*.sqlite
+*.db
+
+# ── Arquivos de IDE ──────────────────────────────────────────
+.idea/
+*.iml
+.vscode/
+*.classpath
+*.project
+.settings/
+
+# ── Sistema operacional ──────────────────────────────────────
+.DS_Store
+Thumbs.db
+
+# ── Logs ────────────────────────────────────────────────────
+*.log

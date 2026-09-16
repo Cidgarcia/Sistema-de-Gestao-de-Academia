@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<!--
+    login.fxml — Tela de Autenticação
+    Padrão visual: AtlantaFX PrimerDark
+    Controller: com.academia.controller.LoginController
+-->
+<StackPane xmlns="http://javafx.com/javafx/17"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.academia.controller.LoginController"
+           style="-fx-background-color: #0d1117;">
+
+    <!-- Cartão centralizado de login -->
+    <VBox alignment="CENTER" spacing="20" maxWidth="380" maxHeight="480"
+          style="-fx-background-color: #161b22; -fx-background-radius: 12;
+                 -fx-padding: 40; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 20, 0, 0, 8);">
+
+        <!-- Ícone / Título -->
+        <Label text="🏋 Academia" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+        <Label text="Sistema de Gestão" style="-fx-font-size: 14px; -fx-text-fill: #8b949e;"/>
+
+        <Separator/>
+
+        <!-- Campo: Login -->
+        <VBox spacing="6">
+            <Label text="Login" style="-fx-text-fill: #c9d1d9;"/>
+            <TextField fx:id="campLogin" promptText="Digite seu login"
+                       style="-fx-pref-width: 300px;"/>
+        </VBox>
+
+        <!-- Campo: Senha -->
+        <VBox spacing="6">
+            <Label text="Senha" style="-fx-text-fill: #c9d1d9;"/>
+            <PasswordField fx:id="campSenha" promptText="Digite sua senha"
+                           style="-fx-pref-width: 300px;"/>
+        </VBox>
+
+        <!-- Campo: Perfil -->
+        <VBox spacing="6">
+            <Label text="Perfil de Acesso" style="-fx-text-fill: #c9d1d9;"/>
+            <ComboBox fx:id="comboPerfil" style="-fx-pref-width: 300px;"/>
+        </VBox>
+
+        <!-- Mensagem de erro (oculta por padrão) -->
+        <Label fx:id="labelErro" text="" visible="false"
+               style="-fx-text-fill: #f85149; -fx-font-size: 12px;"/>
+
+        <Separator/>
+
+        <!-- Botão de login -->
+        <Button fx:id="btnEntrar" text="Entrar" onAction="#onEntrarClicado"
+                style="-fx-pref-width: 300px; -fx-font-size: 14px;"
+                styleClass="accent"/>
+
+        <!-- Credenciais padrão (apenas para desenvolvimento) -->
+        <Label text="Padrão: admin / admin123 / FUNCIONARIO"
+               style="-fx-text-fill: #484f58; -fx-font-size: 11px;"/>
+    </VBox>
+</StackPane>
+

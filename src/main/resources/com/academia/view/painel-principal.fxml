@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    painel-principal.fxml — Tela Principal com abas de navegação
+    Controller: com.academia.controller.PainelPrincipalController
+    
+    Implementa o lado Observer do Padrão Observer:
+    recebe notificações do PagamentoController e atualiza labelTotalDia.
+-->
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.academia.controller.PainelPrincipalController">
+
+    <!-- ── Cabeçalho (topo) ──────────────────────────────────────── -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20"
+              style="-fx-background-color: #161b22; -fx-padding: 12 20 12 20;
+                     -fx-border-color: #30363d; -fx-border-width: 0 0 1 0;">
+
+            <!-- Nome do sistema -->
+            <Label text="🏋 Academia"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+
+            <!-- Espaço expansível -->
+            <Region HBox.hgrow="ALWAYS"/>
+
+            <!-- Indicador Observer: Total Recebido no Dia -->
+            <Label fx:id="labelTotalDia" text="Total Recebido Hoje: R$ 0,00"
+                   style="-fx-font-size: 14px; -fx-font-weight: bold;
+                          -fx-text-fill: #3fb950; -fx-background-color: #1a2c1a;
+                          -fx-background-radius: 6; -fx-padding: 6 12 6 12;"/>
+
+            <!-- Usuário logado -->
+            <Label fx:id="labelUsuario" text="Usuário: —"
+                   style="-fx-text-fill: #8b949e; -fx-font-size: 12px;"/>
+
+            <!-- Botão Sair -->
+            <Button text="Sair" onAction="#onSairClicado" styleClass="danger"/>
+        </HBox>
+    </top>
+
+    <!-- ── Conteúdo central: TabPane com abas dos Casos de Uso ───── -->
+    <center>
+        <TabPane fx:id="tabPanePrincipal" tabClosingPolicy="UNAVAILABLE">
+
+            <!-- UC 01: Cadastrar Aluno -->
+            <Tab fx:id="tabAlunos" text="👤 Alunos"/>
+
+            <!-- UC 02: Cadastrar Plano -->
+            <Tab fx:id="tabPlanos" text="📋 Planos"/>
+
+            <!-- UC 03: Realizar Matrícula -->
+            <Tab fx:id="tabMatriculas" text="📝 Matrículas"/>
+
+            <!-- UC 04: Controlar Pagamentos -->
+            <Tab fx:id="tabPagamentos" text="💳 Pagamentos"/>
+
+            <!-- UC 05: Avaliação Física (Restrita a Instrutores) -->
+            <Tab fx:id="tabAvaliacao" text="📊 Avaliação Física"/>
+
+        </TabPane>
+    </center>
+
+</BorderPane>
+

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    plano.fxml — UC 02: Cadastrar Plano
+    Controller: com.academia.controller.PlanoController
+-->
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.academia.controller.PlanoController"
+            style="-fx-padding: 16;">
+
+    <!-- ── Formulário (esquerda) ──────────────────────────────────── -->
+    <left>
+        <VBox spacing="12" style="-fx-padding: 0 20 0 0; -fx-pref-width: 320px;">
+
+            <Label text="Cadastro de Plano"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+            <Separator/>
+
+            <Label text="Nome do Plano *" style="-fx-text-fill: #c9d1d9;"/>
+            <TextField fx:id="campNome" promptText="Ex.: Mensal, Trimestral..."/>
+
+            <Label text="Descrição" style="-fx-text-fill: #c9d1d9;"/>
+            <TextArea fx:id="campDescricao" promptText="Detalhes do plano..."
+                      prefRowCount="3" wrapText="true"/>
+
+            <Label text="Valor (R$) *" style="-fx-text-fill: #c9d1d9;"/>
+            <TextField fx:id="campValor" promptText="Ex.: 99.90"/>
+
+            <Label text="Duração (dias) *" style="-fx-text-fill: #c9d1d9;"/>
+            <TextField fx:id="campDuracao" promptText="Ex.: 30, 90, 365"/>
+
+            <Separator/>
+
+            <HBox spacing="8">
+                <Button text="💾 Salvar"  onAction="#onSalvarClicado"  styleClass="accent" HBox.hgrow="ALWAYS"/>
+                <Button text="🗑 Excluir" onAction="#onExcluirClicado" styleClass="danger" HBox.hgrow="ALWAYS"/>
+                <Button text="➕ Novo"   onAction="#onNovoClicado"     HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <Label fx:id="labelStatus" text="" wrapText="true"
+                   style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+        </VBox>
+    </left>
+
+    <!-- ── Tabela (direita) ───────────────────────────────────────── -->
+    <center>
+        <TableView fx:id="tabelaPlanos" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId"       text="ID"        prefWidth="50"/>
+                <TableColumn fx:id="colNome"     text="Nome"      prefWidth="160"/>
+                <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="220"/>
+                <TableColumn fx:id="colValor"    text="Valor"     prefWidth="100"/>
+                <TableColumn fx:id="colDuracao"  text="Dias"      prefWidth="80"/>
+            </columns>
+            <placeholder><Label text="Nenhum plano cadastrado."/></placeholder>
+        </TableView>
+    </center>
+
+</BorderPane>
+

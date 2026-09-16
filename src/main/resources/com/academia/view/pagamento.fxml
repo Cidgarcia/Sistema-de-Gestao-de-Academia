@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    pagamento.fxml — UC 04: Controlar Pagamentos
+    Controller: com.academia.controller.PagamentoController
+    
+    PagamentoController implementa Subject (Padrão Observer):
+    notifica PainelPrincipalController ao registrar pagamentos.
+    
+    Usa TabPane interno para separar "Registrar Pagamento" de "Atrasados".
+-->
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.academia.controller.PagamentoController"
+      spacing="0" style="-fx-padding: 16;">
+
+    <Label text="Controlar Pagamentos"
+           style="-fx-font-size: 16px; -fx-font-weight: bold;
+                  -fx-text-fill: #58a6ff; -fx-padding: 0 0 12 0;"/>
+
+    <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
+
+        <!-- ── Aba: Registrar Pagamento ──────────────────────────── -->
+        <Tab text="💳 Registrar Pagamento">
+            <BorderPane style="-fx-padding: 16;">
+
+                <!-- Formulário -->
+                <left>
+                    <VBox spacing="12" style="-fx-padding: 0 20 0 0; -fx-pref-width: 340px;">
+
+                        <Label text="Matrícula *" style="-fx-text-fill: #c9d1d9;"/>
+                        <ComboBox fx:id="comboMatricula" style="-fx-pref-width: 300px;"/>
+
+                        <Label text="Valor Pago (R$) *" style="-fx-text-fill: #c9d1d9;"/>
+                        <TextField fx:id="campValor" promptText="Ex.: 99.90"/>
+
+                        <Label text="Forma de Pagamento *" style="-fx-text-fill: #c9d1d9;"/>
+                        <ComboBox fx:id="comboFormaPagamento" style="-fx-pref-width: 300px;"/>
+
+                        <Label text="Data do Pagamento" style="-fx-text-fill: #c9d1d9;"/>
+                        <DatePicker fx:id="campDataPagamento" style="-fx-pref-width: 300px;"/>
+
+                        <Label text="Observações" style="-fx-text-fill: #c9d1d9;"/>
+                        <TextArea fx:id="campObservacoes" promptText="Observações..."
+                                  prefRowCount="3" wrapText="true"/>
+
+                        <Separator/>
+
+                        <HBox spacing="8">
+                            <Button text="✔ Registrar Pagamento" onAction="#onRegistrarPagamentoClicado"
+                                    styleClass="accent" HBox.hgrow="ALWAYS"/>
+                            <Button text="🔄 Atualizar" onAction="#onAtualizarClicado"
+                                    HBox.hgrow="ALWAYS"/>
+                        </HBox>
+
+                        <Label fx:id="labelStatus" text="" wrapText="true"
+                               style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+                    </VBox>
+                </left>
+
+                <!-- Tabela de pagamentos -->
+                <center>
+                    <TableView fx:id="tabelaPagamentos" VBox.vgrow="ALWAYS">
+                        <columns>
+                            <TableColumn fx:id="colId"    text="ID"     prefWidth="50"/>
+                            <TableColumn fx:id="colAluno" text="Aluno"  prefWidth="180"/>
+                            <TableColumn fx:id="colValor" text="Valor"  prefWidth="100"/>
+                            <TableColumn fx:id="colData"  text="Data"   prefWidth="100"/>
+                            <TableColumn fx:id="colForma" text="Forma"  prefWidth="100"/>
+                            <TableColumn fx:id="colObs"   text="Obs."   prefWidth="160"/>
+                        </columns>
+                        <placeholder><Label text="Nenhum pagamento registrado."/></placeholder>
+                    </TableView>
+                </center>
+            </BorderPane>
+        </Tab>
+
+        <!-- ── Aba: Mensalidades Atrasadas ───────────────────────── -->
+        <Tab text="⚠ Mensalidades Atrasadas">
+            <VBox spacing="10" style="-fx-padding: 16;">
+
+                <Label text="Alunos com matrículas vencidas (sem renovação)"
+                       style="-fx-text-fill: #f85149; -fx-font-size: 13px;"/>
+
+                <TableView fx:id="tabelaAtrasados" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colAlunoAt" text="Aluno"  prefWidth="300"/>
+                        <TableColumn fx:id="colObsAt"   text="Status" prefWidth="200"/>
+                    </columns>
+                    <placeholder><Label text="🎉 Nenhum aluno em atraso!"/></placeholder>
+                </TableView>
+            </VBox>
+        </Tab>
+
+    </TabPane>
+</VBox>
+

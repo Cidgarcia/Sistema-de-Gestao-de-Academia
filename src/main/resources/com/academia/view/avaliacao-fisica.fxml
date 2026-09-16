@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    avaliacao-fisica.fxml — UC 05: Registrar Avaliação Física
+    Controller: com.academia.controller.AvaliacaoFisicaController
+    
+    Acesso restrito a Instrutores. O controller valida o perfil em tempo de execução.
+-->
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.academia.controller.AvaliacaoFisicaController"
+            style="-fx-padding: 16;">
+
+    <!-- ── Formulário (esquerda) ──────────────────────────────────── -->
+    <left>
+        <VBox spacing="12" style="-fx-padding: 0 20 0 0; -fx-pref-width: 340px;">
+
+            <Label text="Avaliação Física"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+
+            <!-- Badge de acesso restrito -->
+            <Label text="🔒 Restrito a Instrutores"
+                   style="-fx-background-color: #3d1f00; -fx-background-radius: 4;
+                          -fx-padding: 4 8; -fx-text-fill: #e3b341; -fx-font-size: 11px;"/>
+
+            <Separator/>
+
+            <Label text="Aluno *" style="-fx-text-fill: #c9d1d9;"/>
+            <ComboBox fx:id="comboAluno" style="-fx-pref-width: 300px;"/>
+
+            <Label text="Data da Avaliação" style="-fx-text-fill: #c9d1d9;"/>
+            <DatePicker fx:id="campData" style="-fx-pref-width: 300px;"/>
+
+            <!-- Medidas em grade 2x2 -->
+            <GridPane hgap="10" vgap="8">
+                <Label text="Peso (kg)"        GridPane.columnIndex="0" GridPane.rowIndex="0"
+                       style="-fx-text-fill: #c9d1d9;"/>
+                <TextField fx:id="campPeso"    GridPane.columnIndex="1" GridPane.rowIndex="0"
+                           promptText="Ex.: 75.5" prefWidth="130"/>
+
+                <Label text="Altura (cm)"      GridPane.columnIndex="0" GridPane.rowIndex="1"
+                       style="-fx-text-fill: #c9d1d9;"/>
+                <TextField fx:id="campAltura"  GridPane.columnIndex="1" GridPane.rowIndex="1"
+                           promptText="Ex.: 175" prefWidth="130"/>
+
+                <Label text="Gordura (%)"      GridPane.columnIndex="0" GridPane.rowIndex="2"
+                       style="-fx-text-fill: #c9d1d9;"/>
+                <TextField fx:id="campGordura" GridPane.columnIndex="1" GridPane.rowIndex="2"
+                           promptText="Ex.: 18.5" prefWidth="130"/>
+
+                <Label text="Massa Muscular"   GridPane.columnIndex="0" GridPane.rowIndex="3"
+                       style="-fx-text-fill: #c9d1d9;"/>
+                <TextField fx:id="campMassa"   GridPane.columnIndex="1" GridPane.rowIndex="3"
+                           promptText="Ex.: 35.2" prefWidth="130"/>
+            </GridPane>
+
+            <!-- IMC calculado em tempo real -->
+            <Label fx:id="labelImc" text="IMC calculado: —"
+                   style="-fx-text-fill: #58a6ff; -fx-font-size: 13px;
+                          -fx-font-weight: bold; -fx-background-color: #0d2137;
+                          -fx-background-radius: 4; -fx-padding: 6 10;"/>
+
+            <Label text="Observações" style="-fx-text-fill: #c9d1d9;"/>
+            <TextArea fx:id="campObservacoes" promptText="Progresso, metas, recomendações..."
+                      prefRowCount="3" wrapText="true"/>
+
+            <Separator/>
+
+            <HBox spacing="8">
+                <Button text="💾 Salvar Avaliação" onAction="#onSalvarClicado"
+                        styleClass="accent" HBox.hgrow="ALWAYS"/>
+                <Button text="🗑 Limpar"            onAction="#onLimparClicado"
+                        HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <Label fx:id="labelStatus" text="" wrapText="true"
+                   style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+        </VBox>
+    </left>
+
+    <!-- ── Tabela (direita) ───────────────────────────────────────── -->
+    <center>
+        <VBox spacing="8">
+            <Label text="Histórico de Avaliações"
+                   style="-fx-text-fill: #8b949e; -fx-font-size: 12px;"/>
+
+            <TableView fx:id="tabelaAvaliacoes" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colAluno"     text="Aluno"      prefWidth="160"/>
+                    <TableColumn fx:id="colData"      text="Data"       prefWidth="100"/>
+                    <TableColumn fx:id="colPeso"      text="Peso"       prefWidth="80"/>
+                    <TableColumn fx:id="colAltura"    text="Altura"     prefWidth="80"/>
+                    <TableColumn fx:id="colImc"       text="IMC"        prefWidth="80"/>
+                    <TableColumn fx:id="colGordura"   text="Gordura"    prefWidth="80"/>
+                    <TableColumn fx:id="colInstrutor" text="Instrutor"  prefWidth="140"/>
+                </columns>
+                <placeholder><Label text="Nenhuma avaliação registrada."/></placeholder>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>
+

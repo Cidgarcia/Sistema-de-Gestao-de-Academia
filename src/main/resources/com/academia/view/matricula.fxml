@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    matricula.fxml — UC 03: Realizar Matrícula
+    Controller: com.academia.controller.MatriculaController
+-->
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.academia.controller.MatriculaController"
+            style="-fx-padding: 16;">
+
+    <!-- ── Formulário (esquerda) ──────────────────────────────────── -->
+    <left>
+        <VBox spacing="12" style="-fx-padding: 0 20 0 0; -fx-pref-width: 340px;">
+
+            <Label text="Realizar Matrícula"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+            <Separator/>
+
+            <Label text="Aluno *" style="-fx-text-fill: #c9d1d9;"/>
+            <ComboBox fx:id="comboAluno" style="-fx-pref-width: 300px;"/>
+
+            <Label text="Plano *" style="-fx-text-fill: #c9d1d9;"/>
+            <ComboBox fx:id="comboPlano" style="-fx-pref-width: 300px;"/>
+
+            <Label text="Data de Início *" style="-fx-text-fill: #c9d1d9;"/>
+            <DatePicker fx:id="campDataInicio" style="-fx-pref-width: 300px;"/>
+
+            <!-- Exibe a data de término calculada automaticamente -->
+            <Label fx:id="labelDataFim" text="Data de Término: —"
+                   style="-fx-text-fill: #e3b341; -fx-font-size: 13px;
+                          -fx-font-weight: bold; -fx-background-color: #2d2500;
+                          -fx-background-radius: 4; -fx-padding: 8;"/>
+
+            <Separator/>
+
+            <HBox spacing="8">
+                <Button text="✔ Matricular"           onAction="#onMatricularClicado"       styleClass="accent" HBox.hgrow="ALWAYS"/>
+                <Button text="✗ Cancelar Matrícula"   onAction="#onCancelarMatriculaClicado" styleClass="danger" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <Label fx:id="labelStatus" text="" wrapText="true"
+                   style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+        </VBox>
+    </left>
+
+    <!-- ── Tabela (direita) ───────────────────────────────────────── -->
+    <center>
+        <TableView fx:id="tabelaMatriculas" VBox.vgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="colId"       text="ID"          prefWidth="50"/>
+                <TableColumn fx:id="colAluno"    text="Aluno"       prefWidth="180"/>
+                <TableColumn fx:id="colPlano"    text="Plano"       prefWidth="150"/>
+                <TableColumn fx:id="colInicio"   text="Início"      prefWidth="100"/>
+                <TableColumn fx:id="colFim"      text="Término"     prefWidth="100"/>
+                <TableColumn fx:id="colAtiva"    text="Status"      prefWidth="90"/>
+            </columns>
+            <placeholder><Label text="Nenhuma matrícula encontrada."/></placeholder>
+        </TableView>
+    </center>
+
+</BorderPane>
+

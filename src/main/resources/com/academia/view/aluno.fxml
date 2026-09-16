@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    aluno.fxml — UC 01: Cadastrar Aluno
+    Controller: com.academia.controller.AlunoController
+-->
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.academia.controller.AlunoController"
+            style="-fx-padding: 16;">
+
+    <!-- ── Formulário (esquerda) ──────────────────────────────────── -->
+    <left>
+        <VBox spacing="12" style="-fx-padding: 0 20 0 0; -fx-pref-width: 340px;">
+
+            <Label text="Cadastro de Aluno"
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+            <Separator/>
+
+            <Label text="Nome *" style="-fx-text-fill: #c9d1d9;"/>
+            <TextField fx:id="campNome" promptText="Nome completo"/>
+
+            <Label text="CPF" style="-fx-text-fill: #c9d1d9;"/>
+            <TextField fx:id="campCpf" promptText="000.000.000-00"/>
+
+            <Label text="E-mail" style="-fx-text-fill: #c9d1d9;"/>
+            <TextField fx:id="campEmail" promptText="email@exemplo.com"/>
+
+            <Label text="Telefone" style="-fx-text-fill: #c9d1d9;"/>
+            <TextField fx:id="campTelefone" promptText="(00) 00000-0000"/>
+
+            <Label text="Data de Nascimento" style="-fx-text-fill: #c9d1d9;"/>
+            <DatePicker fx:id="campDataNascimento" style="-fx-pref-width: 300px;"/>
+
+            <Label text="Observações" style="-fx-text-fill: #c9d1d9;"/>
+            <TextArea fx:id="campObservacoes" promptText="Observações gerais..."
+                      prefRowCount="3" wrapText="true"/>
+
+            <Separator/>
+
+            <!-- Botões de ação -->
+            <HBox spacing="8">
+                <Button text="💾 Salvar"   onAction="#onSalvarClicado"  styleClass="accent"   HBox.hgrow="ALWAYS"/>
+                <Button text="🗑 Excluir"  onAction="#onExcluirClicado" styleClass="danger"   HBox.hgrow="ALWAYS"/>
+                <Button text="➕ Novo"    onAction="#onNovoClicado"     HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <!-- Mensagem de status -->
+            <Label fx:id="labelStatus" text="" wrapText="true"
+                   style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+        </VBox>
+    </left>
+
+    <!-- ── Tabela (direita) ───────────────────────────────────────── -->
+    <center>
+        <VBox spacing="10">
+            <!-- Barra de pesquisa -->
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Label text="Pesquisar:" style="-fx-text-fill: #c9d1d9;"/>
+                <TextField fx:id="campPesquisa" promptText="Nome do aluno..."
+                           HBox.hgrow="ALWAYS"/>
+                <Button text="🔍 Buscar" onAction="#onPesquisarClicado"/>
+            </HBox>
+
+            <TableView fx:id="tabelaAlunos" VBox.vgrow="ALWAYS">
+                <columns>
+                    <TableColumn fx:id="colId"       text="ID"         prefWidth="50"/>
+                    <TableColumn fx:id="colNome"     text="Nome"       prefWidth="180"/>
+                    <TableColumn fx:id="colCpf"      text="CPF"        prefWidth="120"/>
+                    <TableColumn fx:id="colEmail"    text="E-mail"     prefWidth="180"/>
+                    <TableColumn fx:id="colTelefone" text="Telefone"   prefWidth="120"/>
+                    <TableColumn fx:id="colDataNasc" text="Nascimento" prefWidth="100"/>
+                </columns>
+                <placeholder><Label text="Nenhum aluno cadastrado."/></placeholder>
+            </TableView>
+        </VBox>
+    </center>
+
+</BorderPane>
+
