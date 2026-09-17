@@ -27,25 +27,56 @@ public class LoginController {
 
     @FXML private TextField     campLogin;
     @FXML private PasswordField campSenha;
-    @FXML private ComboBox<String> comboPerfil;
+    @FXML private ToggleButton  btnFuncionario;
+    @FXML private ToggleButton  btnInstrutor;
     @FXML private Label         labelErro;
     @FXML private Button        btnEntrar;
+
+    /** Estilos dos botões de perfil */
+    private static final String ESTILO_SELECIONADO   =
+            "-fx-pref-width: 145px; -fx-pref-height: 36px; -fx-font-size: 13px; -fx-font-weight: bold;" +
+            "-fx-background-radius: 8; -fx-background-color: #58a6ff; -fx-text-fill: #0d1117; -fx-cursor: hand;";
+    private static final String ESTILO_NAO_SELECIONADO =
+            "-fx-pref-width: 145px; -fx-pref-height: 36px; -fx-font-size: 13px; -fx-font-weight: bold;" +
+            "-fx-background-radius: 8; -fx-background-color: #21262d; -fx-text-fill: #8b949e; -fx-cursor: hand;";
 
     /** DAO responsável por autenticar o usuário. */
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     /**
      * Inicializa o controller após o FXML ter sido carregado.
-     * Popula o ComboBox com os perfis disponíveis.
+     * Pré-seleciona o perfil FUNCIONARIO e configura os botões de perfil.
      */
     @FXML
     public void initialize() {
-        comboPerfil.getItems().addAll("FUNCIONARIO", "INSTRUTOR");
-        comboPerfil.getSelectionModel().selectFirst();
+        // Pré-seleciona FUNCIONARIO
+        aplicarDestaque(btnFuncionario, btnInstrutor);
         labelErro.setVisible(false);
 
         // Permite submeter o formulário pressionando Enter no campo de senha
         campSenha.setOnAction(this::onEntrarClicado);
+    }
+
+    /**
+     * Alterna o destaque visual entre os botões de perfil.
+     *
+     * @param event Evento de clique em um dos botões de perfil.
+     */
+    @FXML
+    private void onPerfilSelecionado(ActionEvent event) {
+        if (event.getSource() == btnFuncionario) {
+            aplicarDestaque(btnFuncionario, btnInstrutor);
+        } else {
+            aplicarDestaque(btnInstrutor, btnFuncionario);
+        }
+    }
+
+    /** Aplica estilo de selecionado ao {@code ativo} e de inativo ao {@code outro}. */
+    private void aplicarDestaque(ToggleButton ativo, ToggleButton outro) {
+        ativo.setStyle(ESTILO_SELECIONADO);
+        ativo.setSelected(true);
+        outro.setStyle(ESTILO_NAO_SELECIONADO);
+        outro.setSelected(false);
     }
 
     /**
@@ -61,7 +92,7 @@ public class LoginController {
         // Validação básica dos campos
         String login  = campLogin.getText().trim();
         String senha  = campSenha.getText();
-        String perfil = comboPerfil.getValue();
+        String perfil = btnFuncionario.isSelected() ? "FUNCIONARIO" : "INSTRUTOR";
 
         if (login.isEmpty() || senha.isEmpty()) {
             exibirErro("Preencha login e senha.");
