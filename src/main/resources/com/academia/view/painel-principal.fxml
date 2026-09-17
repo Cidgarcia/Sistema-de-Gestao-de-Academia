@@ -61,6 +61,9 @@
             <!-- UC 05: Avaliação Física (Restrita a Instrutores) -->
             <Tab fx:id="tabAvaliacao" text="📊 Avaliação Física"/>
 
+            <!-- UC 06: Montagem de Treinos -->
+            <Tab fx:id="tabTreinos" text="🏋 Treinos"/>
+
         </TabPane>
     </center>
 

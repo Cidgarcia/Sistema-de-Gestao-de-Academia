@@ -109,3 +109,31 @@ CREATE TABLE IF NOT EXISTS AvaliacoesFisicas (
     observacoes     TEXT
 );
 
+-- -------------------------------------------------------------
+--  Tabela: FichasTreino
+--  Representa as abas/divisões de treino de um aluno (ex: "Treino A").
+-- -------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS FichasTreino (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    aluno_id        INTEGER NOT NULL REFERENCES Alunos(id) ON DELETE CASCADE,
+    nome_divisao    TEXT    NOT NULL,
+    data_atualizacao TEXT   NOT NULL DEFAULT (datetime('now', 'localtime'))
+);
+
+-- -------------------------------------------------------------
+--  Tabela: ExerciciosTreino
+--  Representa os exercícios de uma determinada ficha/divisão.
+-- -------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS ExerciciosTreino (
+    id              INTEGER PRIMARY KEY AUTOINCREMENT,
+    ficha_id        INTEGER NOT NULL REFERENCES FichasTreino(id) ON DELETE CASCADE,
+    ordem           INTEGER NOT NULL,
+    grupo_muscular  TEXT    NOT NULL,
+    nome            TEXT    NOT NULL,
+    series          INTEGER NOT NULL,
+    repeticoes      TEXT    NOT NULL,
+    carga           TEXT,
+    descanso        INTEGER,
+    observacoes     TEXT
+);
+
