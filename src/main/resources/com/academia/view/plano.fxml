@@ -7,58 +7,156 @@
     plano.fxml — UC 02: Cadastrar Plano
     Controller: com.academia.controller.PlanoController
 -->
-<BorderPane xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.academia.controller.PlanoController"
-            style="-fx-padding: 16;">
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.academia.controller.PlanoController"
+      spacing="0"
+      style="-fx-background-color: #0d1117;">
 
-    <!-- ── Formulário (esquerda) ──────────────────────────────────── -->
-    <left>
-        <VBox spacing="12" style="-fx-padding: 0 20 0 0; -fx-pref-width: 320px;">
+    <!-- ── Cabeçalho ─────────────────────────────────────────────────── -->
+    <VBox style="-fx-padding: 20 20 14 20; -fx-background-color: #0d1117;"
+          VBox.vgrow="NEVER">
+        <Label text="Gerenciar Planos"
+               style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+        <Label text="Cadastre, edite e exclua os planos disponíveis na academia."
+               style="-fx-font-size: 12px; -fx-text-fill: #8b949e; -fx-padding: 2 0 0 0;"/>
+    </VBox>
 
-            <Label text="Cadastro de Plano"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
-            <Separator/>
+    <Separator style="-fx-background-color: #21262d;"/>
 
-            <Label text="Nome do Plano *" style="-fx-text-fill: #c9d1d9;"/>
-            <TextField fx:id="campNome" promptText="Ex.: Mensal, Trimestral..."/>
+    <!-- ── Conteúdo principal ────────────────────────────────────────── -->
+    <BorderPane VBox.vgrow="ALWAYS" style="-fx-padding: 16; -fx-background-color: #0d1117;">
 
-            <Label text="Descrição" style="-fx-text-fill: #c9d1d9;"/>
-            <TextArea fx:id="campDescricao" promptText="Detalhes do plano..."
-                      prefRowCount="3" wrapText="true"/>
+        <!-- ── Formulário (esquerda) — card escuro ────────────────────── -->
+        <left>
+            <VBox spacing="0"
+                  style="-fx-padding: 0 16 0 0; -fx-pref-width: 300px;">
 
-            <Label text="Valor (R$) *" style="-fx-text-fill: #c9d1d9;"/>
-            <TextField fx:id="campValor" promptText="Ex.: 99.90"/>
+                <!-- Card do formulário -->
+                <VBox spacing="11"
+                      style="-fx-background-color: #161b22;
+                             -fx-border-color: #30363d;
+                             -fx-border-width: 1.5;
+                             -fx-border-radius: 12;
+                             -fx-background-radius: 12;
+                             -fx-padding: 18;">
 
-            <Label text="Duração (dias) *" style="-fx-text-fill: #c9d1d9;"/>
-            <TextField fx:id="campDuracao" promptText="Ex.: 30, 90, 365"/>
+                    <!-- Título do card -->
+                    <HBox alignment="CENTER_LEFT" spacing="8">
+                        <Label text="✦"
+                               style="-fx-text-fill: #58a6ff; -fx-font-size: 14;"/>
+                        <Label fx:id="labelTituloForm" text="Novo Plano"
+                               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e6edf3;"/>
+                    </HBox>
 
-            <Separator/>
+                    <Separator style="-fx-background-color: #21262d;"/>
 
-            <HBox spacing="8">
-                <Button text="💾 Salvar"  onAction="#onSalvarClicado"  styleClass="accent" HBox.hgrow="ALWAYS"/>
-                <Button text="🗑 Excluir" onAction="#onExcluirClicado" styleClass="danger" HBox.hgrow="ALWAYS"/>
-                <Button text="➕ Novo"   onAction="#onNovoClicado"     HBox.hgrow="ALWAYS"/>
-            </HBox>
+                    <!-- Nome -->
+                    <VBox spacing="4">
+                        <Label text="Nome do Plano *"
+                               style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                        <TextField fx:id="campNome" promptText="Ex.: Mensal, Trimestral..."
+                                   style="-fx-background-color: #0d1117;
+                                          -fx-border-color: #30363d;
+                                          -fx-border-radius: 6; -fx-background-radius: 6;
+                                          -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                          -fx-padding: 8 10 8 10;"/>
+                    </VBox>
 
-            <Label fx:id="labelStatus" text="" wrapText="true"
-                   style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
-        </VBox>
-    </left>
+                    <!-- Descrição -->
+                    <VBox spacing="4">
+                        <Label text="Descrição (features separadas por |)"
+                               style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                        <TextArea fx:id="campDescricao"
+                                  promptText="Ex.: Musculação Livre|Aeróbico"
+                                  prefRowCount="2" wrapText="true"
+                                  style="-fx-background-color: #0d1117;
+                                         -fx-border-color: #30363d;
+                                         -fx-border-radius: 6; -fx-background-radius: 6;
+                                         -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                         -fx-padding: 8 10 8 10;"/>
+                    </VBox>
 
-    <!-- ── Tabela (direita) ───────────────────────────────────────── -->
-    <center>
-        <TableView fx:id="tabelaPlanos" VBox.vgrow="ALWAYS">
-            <columns>
-                <TableColumn fx:id="colId"       text="ID"        prefWidth="50"/>
-                <TableColumn fx:id="colNome"     text="Nome"      prefWidth="160"/>
-                <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="220"/>
-                <TableColumn fx:id="colValor"    text="Valor"     prefWidth="100"/>
-                <TableColumn fx:id="colDuracao"  text="Dias"      prefWidth="80"/>
-            </columns>
-            <placeholder><Label text="Nenhum plano cadastrado."/></placeholder>
-        </TableView>
-    </center>
+                    <!-- Valor e Duração lado a lado -->
+                    <HBox spacing="10">
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Valor Total (R$) *"
+                                   style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                            <TextField fx:id="campValor" promptText="Ex.: 120.00"
+                                       style="-fx-background-color: #0d1117;
+                                              -fx-border-color: #30363d;
+                                              -fx-border-radius: 6; -fx-background-radius: 6;
+                                              -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                              -fx-padding: 8 10 8 10;"/>
+                        </VBox>
+                        <VBox spacing="4" HBox.hgrow="ALWAYS">
+                            <Label text="Duração (dias) *"
+                                   style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                            <TextField fx:id="campDuracao" promptText="30, 90, 365"
+                                       style="-fx-background-color: #0d1117;
+                                              -fx-border-color: #30363d;
+                                              -fx-border-radius: 6; -fx-background-radius: 6;
+                                              -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                              -fx-padding: 8 10 8 10;"/>
+                        </VBox>
+                    </HBox>
 
-</BorderPane>
+                    <Separator style="-fx-background-color: #21262d;"/>
 
+                    <!-- Botões de ação -->
+                    <HBox spacing="8">
+                        <Button text="💾 Salvar"  onAction="#onSalvarClicado"
+                                HBox.hgrow="ALWAYS"
+                                style="-fx-background-color: #1f6feb;
+                                       -fx-text-fill: white; -fx-font-weight: bold;
+                                       -fx-border-radius: 6; -fx-background-radius: 6;
+                                       -fx-padding: 8 0 8 0; -fx-cursor: hand;
+                                       -fx-pref-width: 9999;"/>
+                        <Button text="🗑 Excluir" onAction="#onExcluirClicado"
+                                HBox.hgrow="ALWAYS"
+                                style="-fx-background-color: #da3633;
+                                       -fx-text-fill: white; -fx-font-weight: bold;
+                                       -fx-border-radius: 6; -fx-background-radius: 6;
+                                       -fx-padding: 8 0 8 0; -fx-cursor: hand;
+                                       -fx-pref-width: 9999;"/>
+                        <Button text="+ Novo"    onAction="#onNovoClicado"
+                                HBox.hgrow="ALWAYS"
+                                style="-fx-background-color: transparent;
+                                       -fx-border-color: #30363d; -fx-text-fill: #c9d1d9;
+                                       -fx-border-radius: 6; -fx-background-radius: 6;
+                                       -fx-padding: 8 0 8 0; -fx-cursor: hand;
+                                       -fx-pref-width: 9999;"/>
+                    </HBox>
+
+                    <Label fx:id="labelStatus" text="" wrapText="true"
+                           style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+                </VBox>
+            </VBox>
+        </left>
+
+        <!-- ── Tabela (centro) ────────────────────────────────────────── -->
+        <center>
+            <VBox spacing="10">
+                <!-- Mini-cabeçalho da tabela -->
+                <HBox alignment="CENTER_LEFT" spacing="6"
+                      style="-fx-padding: 0 0 4 0;">
+                    <Label text="Planos Cadastrados"
+                           style="-fx-text-fill: #58a6ff; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                </HBox>
+
+                <TableView fx:id="tabelaPlanos" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="colId"        text="ID"        prefWidth="50"/>
+                        <TableColumn fx:id="colNome"      text="Nome"      prefWidth="130"/>
+                        <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="230"/>
+                        <TableColumn fx:id="colValor"     text="Valor"     prefWidth="100"/>
+                        <TableColumn fx:id="colDuracao"   text="Dias"      prefWidth="70"/>
+                    </columns>
+                    <placeholder><Label text="Nenhum plano cadastrado."/></placeholder>
+                </TableView>
+            </VBox>
+        </center>
+
+    </BorderPane>
+
+</VBox>

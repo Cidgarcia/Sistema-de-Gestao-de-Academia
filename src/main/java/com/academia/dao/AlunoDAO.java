@@ -151,6 +151,89 @@ public class AlunoDAO {
         return alunos;
     }
 
+    /**
+     * Busca aluno pelo seu ID.
+     *
+     * @param id ID do aluno.
+     * @return Objeto Aluno correspondente ou null se não encontrado.
+     */
+    public Aluno buscarPorId(int id) {
+        String sql = "SELECT * FROM Alunos WHERE id = ?";
+        try (Connection conn = ConexaoSQLite.getConexao();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapearResultSet(rs);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("[ERRO] AlunoDAO.buscarPorId: " + e.getMessage());
+        }
+        return null;
+    }
+
+    /**
+     * Retorna a lista unificada de Aluno + Matrícula via LEFT JOIN.
+     * Traz todos os alunos, e se tiverem matrícula, as informações vêm junto.
+     * Caso o aluno tenha mais de uma, pode retornar várias linhas.
+     * 
+     * @param filtroNome Parte do nome do aluno (opcional).
+     * @return Lista de {@link com.academia.model.AlunoMatriculaDTO}.
+     */
+    public List<com.academia.model.AlunoMatriculaDTO> listarAlunosComMatriculas(String filtroNome) {
+        StringBuilder sql = new StringBuilder("""
+                SELECT a.id as aluno_id, a.nome as aluno_nome, a.cpf, a.email, a.telefone, a.data_nascimento,
+                       m.id as matricula_id, p.nome as plano_nome, m.data_inicio, m.data_fim, m.ativa
+                FROM Alunos a
+                LEFT JOIN Matriculas m ON a.id = m.aluno_id
+                LEFT JOIN Planos p ON m.plano_id = p.id
+                """);
+
+        if (filtroNome != null && !filtroNome.trim().isEmpty()) {
+            sql.append(" WHERE a.nome LIKE ?");
+        }
+        sql.append(" ORDER BY a.nome, m.data_inicio DESC");
+
+        List<com.academia.model.AlunoMatriculaDTO> lista = new ArrayList<>();
+
+        try (Connection conn = ConexaoSQLite.getConexao();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            if (filtroNome != null && !filtroNome.trim().isEmpty()) {
+                ps.setString(1, "%" + filtroNome + "%");
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    com.academia.model.AlunoMatriculaDTO dto = new com.academia.model.AlunoMatriculaDTO();
+                    
+                    dto.setAlunoId(rs.getInt("aluno_id"));
+                    dto.setNome(rs.getString("aluno_nome"));
+                    dto.setCpf(rs.getString("cpf"));
+                    dto.setEmail(rs.getString("email"));
+                    dto.setTelefone(rs.getString("telefone"));
+                    dto.setDataNascimento(rs.getString("data_nascimento"));
+                    
+                    int matId = rs.getInt("matricula_id");
+                    if (!rs.wasNull()) {
+                        dto.setMatriculaId(matId);
+                        dto.setNomePlano(rs.getString("plano_nome"));
+                        dto.setDataInicio(rs.getString("data_inicio"));
+                        dto.setDataFim(rs.getString("data_fim"));
+                        dto.setAtiva(rs.getInt("ativa") == 1);
+                    }
+                    
+                    lista.add(dto);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("[ERRO] AlunoDAO.listarAlunosComMatriculas: " + e.getMessage());
+        }
+        return lista;
+    }
+
     /** Mapeia uma linha do ResultSet para um objeto {@link Aluno}. */
     private Aluno mapearResultSet(ResultSet rs) throws SQLException {
         return new Aluno(

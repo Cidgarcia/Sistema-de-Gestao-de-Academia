@@ -50,10 +50,10 @@ public class PainelPrincipalController implements Observer {
     private final PagamentoDAO pagamentoDAO = new PagamentoDAO();
 
     // ── Referências aos controllers filhos (para chamar refresh) ──────────
-    private AlunoController            alunoCtrl;
-    private MatriculaController        matriculaCtrl;
-    private PagamentoController        pagamentoCtrl;
-    private AvaliacaoFisicaController  avaliacaoCtrl;
+    private AlunoController                alunoCtrl;
+    private MatriculaController            matriculaCtrl;
+    private PagamentoController            pagamentoCtrl;
+    private AvaliacaoFisicaController      avaliacaoCtrl;
 
     /**
      * Inicializa o painel com o usuário autenticado.
@@ -71,12 +71,12 @@ public class PainelPrincipalController implements Observer {
         }
 
         // Carrega cada aba com seu respectivo FXML e guarda a referência do controller
-        alunoCtrl     = carregarAba(tabAlunos,     "/com/academia/view/aluno.fxml",          AlunoController.class);
-        /* PlanoController não precisa de refresh — planos raramente mudam durante a sessão */
-                        carregarAba(tabPlanos,     "/com/academia/view/plano.fxml",          null);
-        matriculaCtrl = carregarAba(tabMatriculas, "/com/academia/view/matricula.fxml",      MatriculaController.class);
-        pagamentoCtrl = carregarAba(tabPagamentos, "/com/academia/view/pagamento.fxml",      PagamentoController.class);
-        avaliacaoCtrl = carregarAba(tabAvaliacao,  "/com/academia/view/avaliacao-fisica.fxml", AvaliacaoFisicaController.class);
+        alunoCtrl              = carregarAba(tabAlunos,              "/com/academia/view/aluno.fxml",                AlunoController.class);
+        /* PlanoController não precisa de refresh */
+                                 carregarAba(tabPlanos,              "/com/academia/view/plano.fxml",                null);
+        matriculaCtrl          = carregarAba(tabMatriculas,          "/com/academia/view/matricula.fxml",            MatriculaController.class);
+        pagamentoCtrl          = carregarAba(tabPagamentos,          "/com/academia/view/pagamento.fxml",            PagamentoController.class);
+        avaliacaoCtrl          = carregarAba(tabAvaliacao,           "/com/academia/view/avaliacao-fisica.fxml",     AvaliacaoFisicaController.class);
 
         // Conecta o PainelPrincipal como Observer do PagamentoController (Subject)
         if (pagamentoCtrl != null) {
@@ -96,7 +96,6 @@ public class PainelPrincipalController implements Observer {
                     } else if (tabSelecionada == tabPagamentos && pagamentoCtrl != null) {
                         pagamentoCtrl.refresh();
                     } else if (tabSelecionada == tabAvaliacao && avaliacaoCtrl != null) {
-                        // Recarrega lista de alunos na avaliação física também
                         avaliacaoCtrl.refresh();
                     }
                 }
