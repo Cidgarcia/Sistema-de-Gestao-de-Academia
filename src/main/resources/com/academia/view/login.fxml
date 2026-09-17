@@ -42,7 +42,24 @@
         <!-- Campo: Perfil -->
         <VBox spacing="6">
             <Label text="Perfil de Acesso" style="-fx-text-fill: #c9d1d9;"/>
-            <ComboBox fx:id="comboPerfil" style="-fx-pref-width: 300px;"/>
+            <HBox spacing="10">
+                <ToggleButton fx:id="btnFuncionario" text="FUNCIONARIO"
+                              onAction="#onPerfilSelecionado"
+                              style="-fx-pref-width: 145px; -fx-pref-height: 36px;
+                                     -fx-font-size: 13px; -fx-font-weight: bold;
+                                     -fx-background-radius: 8;
+                                     -fx-background-color: #21262d;
+                                     -fx-text-fill: #8b949e;
+                                     -fx-cursor: hand;"/>
+                <ToggleButton fx:id="btnInstrutor" text="INSTRUTOR"
+                              onAction="#onPerfilSelecionado"
+                              style="-fx-pref-width: 145px; -fx-pref-height: 36px;
+                                     -fx-font-size: 13px; -fx-font-weight: bold;
+                                     -fx-background-radius: 8;
+                                     -fx-background-color: #21262d;
+                                     -fx-text-fill: #8b949e;
+                                     -fx-cursor: hand;"/>
+            </HBox>
         </VBox>
 
         <!-- Mensagem de erro (oculta por padrão) -->
