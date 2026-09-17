@@ -15,8 +15,12 @@ module com.academia {
     // ── SQLite JDBC ───────────────────────────────────────────
     requires org.xerial.sqlitejdbc;
 
+    // OpenPDF
+    requires com.github.librepdf.openpdf;
+
     // ── Java standard library ─────────────────────────────────
     requires java.sql;
+    requires java.desktop;
 
     // ── Abre os pacotes para reflexão do JavaFX/FXML ─────────
     opens com.academia             to javafx.fxml;
