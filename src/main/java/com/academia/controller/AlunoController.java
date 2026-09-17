@@ -74,6 +74,7 @@ public class AlunoController {
     public void initialize() {
         configurarColunas();
         carregarAlunos();
+        aplicarMascaras();
 
         // Ao clicar numa linha da tabela, preenche o formulário para edição
         tabelaAlunos.getSelectionModel().selectedItemProperty().addListener(
@@ -360,6 +361,105 @@ public class AlunoController {
     /** Exibe uma mensagem de status abaixo do formulário. */
     private void exibirStatus(String msg) {
         labelStatus.setText(msg);
+    }
+
+    /** Configura as máscaras para os campos de CPF, Telefone e Data de Nascimento */
+    private void aplicarMascaras() {
+        configurarMascara(campCpf, "###.###.###-##");
+        configurarMascara(campDataNascimento.getEditor(), "##/##/####");
+        configurarMascaraTelefone(campTelefone);
+    }
+
+    private void configurarMascara(TextField textField, String mascara) {
+        textField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) return;
+
+            if (oldValue != null && oldValue.length() > newValue.length()) {
+                String apenasNumerosOld = oldValue.replaceAll("[^\\d]", "");
+                String apenasNumerosNew = newValue.replaceAll("[^\\d]", "");
+                if (apenasNumerosOld.equals(apenasNumerosNew) && !apenasNumerosNew.isEmpty()) {
+                    apenasNumerosNew = apenasNumerosNew.substring(0, apenasNumerosNew.length() - 1);
+                    newValue = apenasNumerosNew;
+                }
+            }
+
+            String apenasNumeros = newValue.replaceAll("[^\\d]", "");
+            int maxNumeros = mascara.replaceAll("[^#]", "").length();
+            if (apenasNumeros.length() > maxNumeros) {
+                textField.setText(oldValue);
+                return;
+            }
+
+            StringBuilder formatado = new StringBuilder();
+            int i = 0;
+            for (char m : mascara.toCharArray()) {
+                if (m == '#') {
+                    if (i < apenasNumeros.length()) {
+                        formatado.append(apenasNumeros.charAt(i));
+                        i++;
+                    } else {
+                        break;
+                    }
+                } else {
+                    if (i < apenasNumeros.length()) {
+                        formatado.append(m);
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            String finalString = formatado.toString();
+            if (!newValue.equals(finalString)) {
+                textField.setText(finalString);
+            }
+        });
+    }
+
+    private void configurarMascaraTelefone(TextField textField) {
+        textField.textProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue == null || newValue.isEmpty()) return;
+
+            if (oldValue != null && oldValue.length() > newValue.length()) {
+                String apenasNumerosOld = oldValue.replaceAll("[^\\d]", "");
+                String apenasNumerosNew = newValue.replaceAll("[^\\d]", "");
+                if (apenasNumerosOld.equals(apenasNumerosNew) && !apenasNumerosNew.isEmpty()) {
+                    apenasNumerosNew = apenasNumerosNew.substring(0, apenasNumerosNew.length() - 1);
+                    newValue = apenasNumerosNew;
+                }
+            }
+
+            String apenasNumeros = newValue.replaceAll("[^\\d]", "");
+            if (apenasNumeros.length() > 11) {
+                textField.setText(oldValue);
+                return;
+            }
+
+            String mascara = apenasNumeros.length() <= 10 ? "(##) ####-####" : "(##) # ####-####";
+            StringBuilder formatado = new StringBuilder();
+            int i = 0;
+            for (char m : mascara.toCharArray()) {
+                if (m == '#') {
+                    if (i < apenasNumeros.length()) {
+                        formatado.append(apenasNumeros.charAt(i));
+                        i++;
+                    } else {
+                        break;
+                    }
+                } else {
+                    if (i < apenasNumeros.length()) {
+                        formatado.append(m);
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            String finalString = formatado.toString();
+            if (!newValue.equals(finalString)) {
+                textField.setText(finalString);
+            }
+        });
     }
 }
 
