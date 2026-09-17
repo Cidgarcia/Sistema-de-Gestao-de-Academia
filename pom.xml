@@ -59,6 +59,13 @@
             <artifactId>sqlite-jdbc</artifactId>
             <version>${sqlite.jdbc.version}</version>
         </dependency>
+
+        <!-- OpenPDF (Geração de PDFs) -->
+        <dependency>
+            <groupId>com.github.librepdf</groupId>
+            <artifactId>openpdf</artifactId>
+            <version>1.3.36</version>
+        </dependency>
     </dependencies>
 
     <build>

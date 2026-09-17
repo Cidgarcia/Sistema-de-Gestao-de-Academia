@@ -363,6 +363,58 @@ public class TreinoController {
         }
     }
 
+    @FXML
+    private void onExportarClicado() {
+        Aluno alunoSelecionado = comboAluno.getSelectionModel().getSelectedItem();
+        if (alunoSelecionado == null) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Selecione um aluno primeiro!");
+            alert.showAndWait();
+            return;
+        }
+
+        List<TreinoDivisao> divisoesParaExportar = new ArrayList<>();
+        for (Tab tab : tabPaneTreinos.getTabs()) {
+            if (tab != tabNovoGrupo && tab.getUserData() instanceof TreinoDivisao) {
+                TreinoDivisao div = (TreinoDivisao) tab.getUserData();
+                if (tab.getContent() instanceof TableView) {
+                    @SuppressWarnings("unchecked")
+                    TableView<Exercicio> tabela = (TableView<Exercicio>) tab.getContent();
+                    // Atualiza a lista com o que está na tela antes de exportar
+                    div.getExercicios().setAll(tabela.getItems());
+                }
+                divisoesParaExportar.add(div);
+            }
+        }
+
+        if (divisoesParaExportar.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING, "Não há treinos para exportar.");
+            alert.showAndWait();
+            return;
+        }
+
+        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+        fileChooser.setTitle("Salvar Ficha de Treino em PDF");
+        fileChooser.setInitialFileName("Treino_" + alunoSelecionado.getNome().replace(" ", "_") + ".pdf");
+        fileChooser.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("Arquivos PDF", "*.pdf"));
+        
+        // Pega a janela atual a partir do botão
+        java.io.File file = fileChooser.showSaveDialog(btnExportar.getScene().getWindow());
+
+        if (file != null) {
+            try {
+                com.academia.util.PdfGenerator.gerarFichaTreino(alunoSelecionado, divisoesParaExportar, file);
+                Alert alert = new Alert(Alert.AlertType.INFORMATION, "PDF gerado com sucesso em:\n" + file.getAbsolutePath());
+                alert.setTitle("Exportação Concluída");
+                alert.setHeaderText("Sucesso");
+                alert.showAndWait();
+            } catch (Exception e) {
+                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Erro ao gerar PDF: " + e.getMessage());
+                alert.showAndWait();
+            }
+        }
+    }
+
     private void atualizarTotais() {
         int totalEx = 0;
         int totalSeries = 0;

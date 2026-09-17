@@ -67,9 +67,15 @@ public class PainelPrincipalController implements Observer {
         this.usuarioLogado = usuario;
         labelUsuario.setText("Usuário: " + usuario.getNome() + " | " + usuario.getPerfil());
 
-        // Restringe a aba de Avaliação Física apenas a Instrutores
-        if (!usuario.isInstrutor()) {
+        if (usuario.isInstrutor()) {
+            // Instrutor acessa apenas Alunos, Avaliação Física e Treinos
+            tabPlanos.setDisable(true);
+            tabMatriculas.setDisable(true);
+            tabPagamentos.setDisable(true);
+        } else {
+            // Funcionário não acessa Avaliação Física nem Treinos
             tabAvaliacao.setDisable(true);
+            tabTreinos.setDisable(true);
         }
 
         // Carrega cada aba com seu respectivo FXML e guarda a referência do controller
