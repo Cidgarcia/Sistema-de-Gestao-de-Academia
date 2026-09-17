@@ -57,6 +57,15 @@ CREATE TABLE IF NOT EXISTS Planos (
     duracao_dias INTEGER NOT NULL       -- ex.: 30, 90, 180, 365
 );
 
+-- Planos padrão da academia — cada INSERT separado para evitar
+-- quebra do parser que divide por ponto-e-vírgula
+INSERT OR IGNORE INTO Planos (id, nome, descricao, valor, duracao_dias)
+VALUES (2, 'Básico', 'Musculação Livre|Aeróbico', 120.00, 30);
+INSERT OR IGNORE INTO Planos (id, nome, descricao, valor, duracao_dias)
+VALUES (3, 'Trimestral', 'Musculação Livre|Aeróbico|1 Aula Coletiva/sem', 315.00, 90);
+INSERT OR IGNORE INTO Planos (id, nome, descricao, valor, duracao_dias)
+VALUES (4, 'Premium', 'Acesso Total 24/7|Aulas Coletivas Livres|Avaliação Física Inclusa', 1068.00, 365);
+
 -- -------------------------------------------------------------
 --  Tabela: Matriculas
 --  Vincula um aluno a um plano, com datas de início e fim.

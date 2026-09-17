@@ -22,6 +22,7 @@ public class PlanoController {
     @FXML private TextArea   campDescricao;
     @FXML private TextField  campValor;
     @FXML private TextField  campDuracao;
+    @FXML private Label      labelTituloForm;
 
     // ── Tabela de listagem ────────────────────────────────────────────────
 
@@ -161,6 +162,7 @@ public class PlanoController {
         campDescricao.setText(plano.getDescricao());
         campValor.setText(String.format("%.2f", plano.getValor()));
         campDuracao.setText(String.valueOf(plano.getDuracaoDias()));
+        if (labelTituloForm != null) labelTituloForm.setText("Editando Plano");
     }
 
     private void limparFormulario() {
@@ -170,6 +172,7 @@ public class PlanoController {
         campValor.clear();
         campDuracao.clear();
         labelStatus.setText("");
+        if (labelTituloForm != null) labelTituloForm.setText("Novo Plano");
     }
 
     private void exibirStatus(String msg) { labelStatus.setText(msg); }
