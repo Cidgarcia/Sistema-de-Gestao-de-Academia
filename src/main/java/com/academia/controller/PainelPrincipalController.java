@@ -42,6 +42,7 @@ public class PainelPrincipalController implements Observer {
     @FXML private Tab tabMatriculas;
     @FXML private Tab tabPagamentos;
     @FXML private Tab tabAvaliacao;
+    @FXML private Tab tabTreinos;
 
     /** Usuário autenticado, recebido via {@link #inicializar(Usuario)}. */
     private Usuario usuarioLogado;
@@ -54,6 +55,7 @@ public class PainelPrincipalController implements Observer {
     private MatriculaController            matriculaCtrl;
     private PagamentoController            pagamentoCtrl;
     private AvaliacaoFisicaController      avaliacaoCtrl;
+    private TreinoController               treinoCtrl;
 
     /**
      * Inicializa o painel com o usuário autenticado.
@@ -77,6 +79,7 @@ public class PainelPrincipalController implements Observer {
         matriculaCtrl          = carregarAba(tabMatriculas,          "/com/academia/view/matricula.fxml",            MatriculaController.class);
         pagamentoCtrl          = carregarAba(tabPagamentos,          "/com/academia/view/pagamento.fxml",            PagamentoController.class);
         avaliacaoCtrl          = carregarAba(tabAvaliacao,           "/com/academia/view/avaliacao-fisica.fxml",     AvaliacaoFisicaController.class);
+        treinoCtrl             = carregarAba(tabTreinos,             "/com/academia/view/treino.fxml",               TreinoController.class);
 
         // Conecta o PainelPrincipal como Observer do PagamentoController (Subject)
         if (pagamentoCtrl != null) {
@@ -86,6 +89,11 @@ public class PainelPrincipalController implements Observer {
         // Repassa o usuário logado ao AvaliacaoFisicaController
         if (avaliacaoCtrl != null) {
             avaliacaoCtrl.setUsuarioLogado(usuario);
+        }
+        
+        // Repassa o usuário logado ao TreinoController
+        if (treinoCtrl != null) {
+            treinoCtrl.setUsuarioLogado(usuario);
         }
 
         // ── Listener de troca de aba: recarrega dados ao selecionar ──────
@@ -97,6 +105,8 @@ public class PainelPrincipalController implements Observer {
                         pagamentoCtrl.refresh();
                     } else if (tabSelecionada == tabAvaliacao && avaliacaoCtrl != null) {
                         avaliacaoCtrl.refresh();
+                    } else if (tabSelecionada == tabTreinos && treinoCtrl != null) {
+                        treinoCtrl.refresh();
                     }
                 }
         );

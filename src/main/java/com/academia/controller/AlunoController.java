@@ -17,45 +17,71 @@ import java.util.stream.Collectors;
 /**
  * Controller: Cadastro de Alunos — UC 01.
  *
- * <p>Permite cadastrar, editar e listar alunos da academia.
- * Agora também lista e permite cancelar as matrículas diretamente.</p>
+ * <p>
+ * Permite cadastrar, editar e listar alunos da academia.
+ * Agora também lista e permite cancelar as matrículas diretamente.
+ * </p>
  */
 public class AlunoController {
 
     // ── Campos do formulário ──────────────────────────────────────────────
 
-    @FXML private TextField      campNome;
-    @FXML private TextField      campCpf;
-    @FXML private TextField      campEmail;
-    @FXML private TextField      campTelefone;
-    @FXML private DatePicker     campDataNascimento;
-    @FXML private TextArea       campObservacoes;
+    @FXML
+    private TextField campNome;
+    @FXML
+    private TextField campCpf;
+    @FXML
+    private TextField campEmail;
+    @FXML
+    private TextField campTelefone;
+    @FXML
+    private DatePicker campDataNascimento;
+    @FXML
+    private TextArea campObservacoes;
 
     // ── Controles da listagem ─────────────────────────────────────────────
 
-    @FXML private TextField campPesquisa;
-    @FXML private Label     labelStatus;
-    @FXML private Button    btnTodos;
-    @FXML private Button    btnAtivos;
-    @FXML private Button    btnCancelados;
-    @FXML private Label     labelContador;
+    @FXML
+    private TextField campPesquisa;
+    @FXML
+    private Label labelStatus;
+    @FXML
+    private Button btnTodos;
+    @FXML
+    private Button btnAtivos;
+    @FXML
+    private Button btnCancelados;
+    @FXML
+    private Label labelContador;
 
     // ── Tabela de listagem ────────────────────────────────────────────────
 
-    @FXML private TableView<AlunoMatriculaDTO>        tabelaAlunos;
-    @FXML private TableColumn<AlunoMatriculaDTO, Integer> colId;
-    @FXML private TableColumn<AlunoMatriculaDTO, String>  colNome;
-    @FXML private TableColumn<AlunoMatriculaDTO, String>  colCpf;
-    @FXML private TableColumn<AlunoMatriculaDTO, String>  colEmail;
-    @FXML private TableColumn<AlunoMatriculaDTO, String>  colTelefone;
-    @FXML private TableColumn<AlunoMatriculaDTO, String>  colDataNasc;
-    
+    @FXML
+    private TableView<AlunoMatriculaDTO> tabelaAlunos;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, Integer> colId;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, String> colNome;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, String> colCpf;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, String> colEmail;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, String> colTelefone;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, String> colDataNasc;
+
     // Novas colunas da matrícula
-    @FXML private TableColumn<AlunoMatriculaDTO, Integer> colMatriculaId;
-    @FXML private TableColumn<AlunoMatriculaDTO, String>  colPlano;
-    @FXML private TableColumn<AlunoMatriculaDTO, String>  colInicio;
-    @FXML private TableColumn<AlunoMatriculaDTO, String>  colFim;
-    @FXML private TableColumn<AlunoMatriculaDTO, String>  colStatus;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, Integer> colMatriculaId;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, String> colPlano;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, String> colInicio;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, String> colFim;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, String> colStatus;
 
     /** DAOs para operações no banco. */
     private final AlunoDAO alunoDAO = new AlunoDAO();
@@ -63,7 +89,7 @@ public class AlunoController {
 
     /** ID do aluno selecionado para edição (0 = nenhum). */
     private int idEmEdicao = 0;
-    
+
     private String filtroAtual = "TODOS";
     private List<AlunoMatriculaDTO> listaCompleta = null;
 
@@ -79,10 +105,10 @@ public class AlunoController {
         // Ao clicar numa linha da tabela, preenche o formulário para edição
         tabelaAlunos.getSelectionModel().selectedItemProperty().addListener(
                 (obs, anterior, selecionado) -> {
-                    if (selecionado != null) preencherFormulario(selecionado);
-                }
-        );
-        
+                    if (selecionado != null)
+                        preencherFormulario(selecionado);
+                });
+
         // Listener para barra de pesquisa em tempo real
         campPesquisa.textProperty().addListener((obs, oldV, newV) -> aplicarFiltrosEBusca());
     }
@@ -95,13 +121,13 @@ public class AlunoController {
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
         colDataNasc.setCellValueFactory(new PropertyValueFactory<>("dataNascimento"));
-        
+
         colMatriculaId.setCellValueFactory(new PropertyValueFactory<>("matriculaId"));
         colPlano.setCellValueFactory(new PropertyValueFactory<>("nomePlano"));
         colInicio.setCellValueFactory(new PropertyValueFactory<>("dataInicio"));
         colFim.setCellValueFactory(new PropertyValueFactory<>("dataFim"));
         colStatus.setCellValueFactory(new PropertyValueFactory<>("situacao"));
-        
+
         // Customização de célula para exibir Status Colorido
         colStatus.setCellFactory(column -> new TableCell<>() {
             @Override
@@ -130,14 +156,14 @@ public class AlunoController {
         aplicarFiltrosEBusca();
     }
 
-
     /**
      * Ação do botão "Salvar".
      * Realiza inserção ou atualização dependendo de {@link #idEmEdicao}.
      */
     @FXML
     private void onSalvarClicado() {
-        if (!validarCampos()) return;
+        if (!validarCampos())
+            return;
 
         Aluno aluno = montarObjetoAluno();
 
@@ -239,19 +265,22 @@ public class AlunoController {
 
     // ── Lógica de Filtros e Busca ─────────────────────────────────────────
 
-    @FXML private void onFiltroTodos() {
+    @FXML
+    private void onFiltroTodos() {
         filtroAtual = "TODOS";
         atualizarEstilosBotoesFiltro(btnTodos);
         aplicarFiltrosEBusca();
     }
 
-    @FXML private void onFiltroAtivos() {
+    @FXML
+    private void onFiltroAtivos() {
         filtroAtual = "ATIVOS";
         atualizarEstilosBotoesFiltro(btnAtivos);
         aplicarFiltrosEBusca();
     }
 
-    @FXML private void onFiltroCancelados() {
+    @FXML
+    private void onFiltroCancelados() {
         filtroAtual = "CANCELADOS";
         atualizarEstilosBotoesFiltro(btnCancelados);
         aplicarFiltrosEBusca();
@@ -277,7 +306,8 @@ public class AlunoController {
     }
 
     private void aplicarFiltrosEBusca() {
-        if (listaCompleta == null) return;
+        if (listaCompleta == null)
+            return;
 
         String termo = campPesquisa.getText().toLowerCase().trim();
 
@@ -288,7 +318,7 @@ public class AlunoController {
                         case "CANCELADOS" -> "CANCELADO".equals(a.getSituacao());
                         default -> true;
                     };
-                    boolean nomeOk = termo.isEmpty() || a.getNome().toLowerCase().contains(termo) 
+                    boolean nomeOk = termo.isEmpty() || a.getNome().toLowerCase().contains(termo)
                             || (a.getNomePlano() != null && a.getNomePlano().toLowerCase().contains(termo));
                     return statusOk && nomeOk;
                 })
@@ -319,8 +349,7 @@ public class AlunoController {
         aluno.setDataNascimento(
                 campDataNascimento.getValue() != null
                         ? campDataNascimento.getValue().toString()
-                        : null
-        );
+                        : null);
         aluno.setObservacoes(campObservacoes.getText().trim());
         return aluno;
     }
@@ -336,7 +365,7 @@ public class AlunoController {
         if (aluno.getDataNascimento() != null && !aluno.getDataNascimento().isEmpty()) {
             campDataNascimento.setValue(java.time.LocalDate.parse(aluno.getDataNascimento()));
         }
-        
+
         // Pega as observações completas do banco pois o DTO não carrega
         Aluno aDb = alunoDAO.buscarPorId(aluno.getAlunoId());
         if (aDb != null) {
@@ -346,7 +375,9 @@ public class AlunoController {
         }
     }
 
-    /** Limpa todos os campos do formulário e redefine o modo para "novo cadastro". */
+    /**
+     * Limpa todos os campos do formulário e redefine o modo para "novo cadastro".
+     */
     private void limparFormulario() {
         idEmEdicao = 0;
         campNome.clear();
@@ -363,7 +394,9 @@ public class AlunoController {
         labelStatus.setText(msg);
     }
 
-    /** Configura as máscaras para os campos de CPF, Telefone e Data de Nascimento */
+    /**
+     * Configura as máscaras para os campos de CPF, Telefone e Data de Nascimento
+     */
     private void aplicarMascaras() {
         configurarMascara(campCpf, "###.###.###-##");
         configurarMascara(campDataNascimento.getEditor(), "##/##/####");
@@ -372,7 +405,8 @@ public class AlunoController {
 
     private void configurarMascara(TextField textField, String mascara) {
         textField.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue == null || newValue.isEmpty()) return;
+            if (newValue == null || newValue.isEmpty())
+                return;
 
             if (oldValue != null && oldValue.length() > newValue.length()) {
                 String apenasNumerosOld = oldValue.replaceAll("[^\\d]", "");
@@ -418,7 +452,8 @@ public class AlunoController {
 
     private void configurarMascaraTelefone(TextField textField) {
         textField.textProperty().addListener((obs, oldValue, newValue) -> {
-            if (newValue == null || newValue.isEmpty()) return;
+            if (newValue == null || newValue.isEmpty())
+                return;
 
             if (oldValue != null && oldValue.length() > newValue.length()) {
                 String apenasNumerosOld = oldValue.replaceAll("[^\\d]", "");
@@ -462,4 +497,3 @@ public class AlunoController {
         });
     }
 }
-

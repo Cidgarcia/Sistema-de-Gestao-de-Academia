@@ -14,10 +14,14 @@ import java.util.Objects;
 /**
  * Classe principal da aplicação JavaFX.
  *
- * <p>Inicializa o tema AtlantaFX (PrimerDark), carrega a tela de login
- * e gerencia o ciclo de vida da aplicação.</p>
+ * <p>
+ * Inicializa o tema AtlantaFX (PrimerDark), carrega a tela de login
+ * e gerencia o ciclo de vida da aplicação.
+ * </p>
  *
- * <p>Para executar: {@code mvn javafx:run}</p>
+ * <p>
+ * Para executar: {@code mvn javafx:run}
+ * </p>
  */
 public class App extends Application {
 
@@ -25,7 +29,7 @@ public class App extends Application {
     private static final double LARGURA = 1100;
 
     /** Altura padrão da janela principal. */
-    private static final double ALTURA  = 700;
+    private static final double ALTURA = 700;
 
     /**
      * Ponto de entrada JavaFX — chamado após {@link #main(String[])}.
@@ -41,9 +45,7 @@ public class App extends Application {
         Parent raiz = FXMLLoader.load(
                 Objects.requireNonNull(
                         App.class.getResource("/com/academia/view/login.fxml"),
-                        "login.fxml não encontrado nos resources!"
-                )
-        );
+                        "login.fxml não encontrado nos resources!"));
 
         // ── 3. Configura e exibe a janela ───────────────────────────────────
         Scene cena = new Scene(raiz, LARGURA, ALTURA);
@@ -73,4 +75,3 @@ public class App extends Application {
         launch(args);
     }
 }
-

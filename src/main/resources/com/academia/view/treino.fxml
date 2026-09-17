@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import java.lang.String?>
+
+<!--
+    treino.fxml — Tela de Montagem de Treinos
+    Controller: com.academia.controller.TreinoController
+-->
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.academia.controller.TreinoController"
+      spacing="15" style="-fx-padding: 20;">
+
+    <!-- Cabeçalho -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <VBox spacing="5">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="ALUNO:" style="-fx-font-size: 12px; -fx-text-fill: #3fb950; -fx-font-weight: bold;"/>
+                <ComboBox fx:id="comboAluno" prefWidth="300" promptText="Selecione um aluno..." />
+            </HBox>
+            <Label text="Montagem de Treinos" styleClass="title-1"/>
+        </VBox>
+        
+        <Region HBox.hgrow="ALWAYS" />
+        
+        <Button fx:id="btnDuplicar" text="Duplicar" styleClass="button-outlined" />
+        <Button fx:id="btnExportar" text="Exportar PDF" styleClass="button-outlined" />
+        <Button fx:id="btnSalvar" text="Salvar Ficha" styleClass="success" onAction="#onSalvarClicado" />
+    </HBox>
+
+    <!-- Centro: TabPane para as divisões -->
+    <TabPane fx:id="tabPaneTreinos" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS" styleClass="classic">
+        <!-- Abas geradas dinamicamente pelo Controller -->
+    </TabPane>
+
+    <!-- Botão inferior largo -->
+    <Button fx:id="btnAdicionarExercicio" text="+ Adicionar Exercício" maxWidth="Infinity"
+            style="-fx-background-color: transparent; -fx-border-color: #30363d; -fx-border-radius: 4; -fx-border-style: dashed;"
+            onAction="#onAdicionarExercicioClicado"/>
+
+    <!-- Rodapé -->
+    <HBox alignment="CENTER_LEFT" spacing="20">
+        <Label fx:id="labelTotalExercicios" text="Total de Exercícios: 0" styleClass="text-muted"/>
+        <Label fx:id="labelTotalSeries" text="Total de Séries: 0" styleClass="text-muted"/>
+        <Region HBox.hgrow="ALWAYS" />
+        <Label fx:id="labelDataEdicao" text="Última edição: --" styleClass="text-muted"/>
+    </HBox>
+
+</VBox>
