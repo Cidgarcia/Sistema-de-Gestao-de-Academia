@@ -137,3 +137,13 @@ CREATE TABLE IF NOT EXISTS ExerciciosTreino (
     observacoes     TEXT
 );
 
+-- -------------------------------------------------------------
+--  Tabela: Frequencias
+--  Registra os acessos/entradas dos alunos na academia.
+-- -------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS Frequencias (
+    id                INTEGER PRIMARY KEY AUTOINCREMENT,
+    aluno_id          INTEGER NOT NULL REFERENCES Alunos(id) ON DELETE CASCADE,
+    data_hora_entrada TEXT    NOT NULL DEFAULT (datetime('now', 'localtime'))
+);
+
