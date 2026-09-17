@@ -38,6 +38,7 @@ public class PainelPrincipalController implements Observer {
 
     // Abas do TabPane
     @FXML private Tab tabAlunos;
+    @FXML private Tab tabFrequencia;
     @FXML private Tab tabPlanos;
     @FXML private Tab tabMatriculas;
     @FXML private Tab tabPagamentos;
@@ -52,6 +53,7 @@ public class PainelPrincipalController implements Observer {
 
     // ── Referências aos controllers filhos (para chamar refresh) ──────────
     private AlunoController                alunoCtrl;
+    private FrequenciaController           frequenciaCtrl;
     private MatriculaController            matriculaCtrl;
     private PagamentoController            pagamentoCtrl;
     private AvaliacaoFisicaController      avaliacaoCtrl;
@@ -80,6 +82,7 @@ public class PainelPrincipalController implements Observer {
 
         // Carrega cada aba com seu respectivo FXML e guarda a referência do controller
         alunoCtrl              = carregarAba(tabAlunos,              "/com/academia/view/aluno.fxml",                AlunoController.class);
+        frequenciaCtrl         = carregarAba(tabFrequencia,          "/com/academia/view/frequencia.fxml",           FrequenciaController.class);
         /* PlanoController não precisa de refresh */
                                  carregarAba(tabPlanos,              "/com/academia/view/plano.fxml",                null);
         matriculaCtrl          = carregarAba(tabMatriculas,          "/com/academia/view/matricula.fxml",            MatriculaController.class);
@@ -105,7 +108,9 @@ public class PainelPrincipalController implements Observer {
         // ── Listener de troca de aba: recarrega dados ao selecionar ──────
         tabPanePrincipal.getSelectionModel().selectedItemProperty().addListener(
                 (obs, tabAnterior, tabSelecionada) -> {
-                    if (tabSelecionada == tabMatriculas && matriculaCtrl != null) {
+                    if (tabSelecionada == tabFrequencia && frequenciaCtrl != null) {
+                        frequenciaCtrl.refresh();
+                    } else if (tabSelecionada == tabMatriculas && matriculaCtrl != null) {
                         matriculaCtrl.refresh();
                     } else if (tabSelecionada == tabPagamentos && pagamentoCtrl != null) {
                         pagamentoCtrl.refresh();

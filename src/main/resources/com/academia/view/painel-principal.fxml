@@ -49,6 +49,9 @@
             <!-- UC 01: Cadastrar Aluno -->
             <Tab fx:id="tabAlunos" text="👤 Alunos"/>
 
+            <!-- UC 07: Registro de Frequência (Recepção) -->
+            <Tab fx:id="tabFrequencia" text="⏰ Recepção"/>
+
             <!-- UC 02: Cadastrar Plano -->
             <Tab fx:id="tabPlanos" text="📋 Planos"/>
 

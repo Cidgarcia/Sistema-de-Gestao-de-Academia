@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.academia.controller.FrequenciaController"
+      spacing="20" style="-fx-background-color: #0d1117; -fx-padding: 30;">
+
+    <HBox spacing="20" VBox.vgrow="ALWAYS">
+        <!-- PAINEL ESQUERDO: Controle de Acesso -->
+        <VBox alignment="CENTER" spacing="20" style="-fx-background-color: #161b22; -fx-background-radius: 10; -fx-padding: 40;" HBox.hgrow="ALWAYS">
+            <Label text="📇" style="-fx-font-size: 64px; -fx-text-fill: #58a6ff;" />
+            <Label text="Controle de Acesso" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: white;" />
+            <Label text="Aproxime a carteirinha do leitor ou digite manualmente a matrícula ou CPF." 
+                   wrapText="true" textAlignment="CENTER" style="-fx-text-fill: #8b949e; -fx-font-size: 14px; -fx-padding: 0 20 0 20;" />
+            
+            <TextField fx:id="txtBusca" promptText="Digite Matrícula / CPF e pressione Enter"
+                       onAction="#onBuscaRealizada"
+                       style="-fx-background-color: transparent; -fx-border-color: #3fb950; -fx-border-radius: 6; 
+                              -fx-border-width: 2; -fx-text-fill: #3fb950; -fx-font-size: 18px; -fx-padding: 15; 
+                              -fx-alignment: center;" />
+                              
+            <Label fx:id="lblAguardando" text="((•)) Aguardando leitura..." style="-fx-text-fill: #3fb950; -fx-font-size: 12px;" />
+        </VBox>
+
+        <!-- PAINEL DIREITO: Status do Acesso -->
+        <VBox fx:id="vboxStatus" alignment="CENTER" spacing="15" 
+              style="-fx-background-color: #161b22; -fx-background-radius: 10; -fx-padding: 40;" HBox.hgrow="ALWAYS">
+            
+            <!-- Avatar/Ícone do Aluno -->
+            <Label fx:id="lblAvatar" text="👤" style="-fx-font-size: 80px; -fx-text-fill: #8b949e; 
+                                                     -fx-background-color: #21262d; -fx-background-radius: 100; 
+                                                     -fx-padding: 20; -fx-min-width: 140; -fx-min-height: 140; 
+                                                     -fx-alignment: center;" />
+                                                     
+            <Label fx:id="lblStatusAcesso" text="Aguardando..." 
+                   style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #8b949e;" />
+                   
+            <Label fx:id="lblNomeAluno" text="-" 
+                   style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;" />
+                   
+            <HBox alignment="CENTER" spacing="15">
+                <Label fx:id="lblMatriculaCpf" text="ID/CPF: -" 
+                       style="-fx-background-color: #21262d; -fx-text-fill: #c9d1d9; -fx-padding: 5 10 5 10; -fx-background-radius: 5;" />
+                <Label fx:id="lblDetalhePlano" text="Plano: -" 
+                       style="-fx-background-color: #21262d; -fx-text-fill: #c9d1d9; -fx-padding: 5 10 5 10; -fx-background-radius: 5;" />
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <!-- PAINEL INFERIOR: Histórico Recente -->
+    <VBox spacing="10" style="-fx-background-color: #161b22; -fx-background-radius: 10; -fx-padding: 20;" VBox.vgrow="ALWAYS">
+        <HBox alignment="CENTER_LEFT">
+            <Label text="🕒 Histórico Recente" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #c9d1d9;" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label text="Últimos 10 acessos" style="-fx-background-color: #21262d; -fx-text-fill: #8b949e; -fx-padding: 4 8 4 8; -fx-background-radius: 5;" />
+        </HBox>
+        
+        <TableView fx:id="tabelaHistorico" VBox.vgrow="ALWAYS" style="-fx-base: #161b22; -fx-control-inner-background: #0d1117; -fx-table-cell-border-color: transparent;">
+            <!-- A Tabela terá colunas configuradas via Controller para melhor customização das tags verdes/vermelhas -->
+        </TableView>
+    </VBox>
+
+</VBox>
