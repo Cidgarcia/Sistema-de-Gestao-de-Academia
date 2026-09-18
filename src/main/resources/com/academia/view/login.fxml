@@ -69,7 +69,7 @@
         <Separator/>
 
         <!-- Botão de login -->
-        <Button fx:id="btnEntrar" text="Entrar" onAction="#onEntrarClicado"
+        <Button fx:id="btnEntrar" text="Entrar" onAction="#onEntrarClicado" defaultButton="true"
                 style="-fx-pref-width: 300px; -fx-font-size: 14px;"
                 styleClass="accent"/>
 
@@ -78,4 +78,3 @@
                style="-fx-text-fill: #484f58; -fx-font-size: 11px;"/>
     </VBox>
 </StackPane>
-

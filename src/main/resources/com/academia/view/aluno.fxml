@@ -14,7 +14,10 @@
 
     <!-- ── Formulário (esquerda) ──────────────────────────────────── -->
     <left>
-        <VBox spacing="12" style="-fx-padding: 0 20 0 0; -fx-pref-width: 340px;">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" focusTraversable="false"
+                    prefWidth="360" style="-fx-background-color: transparent; -fx-background: transparent;">
+          <content>
+            <VBox spacing="12" style="-fx-padding: 0 16 0 0;">
 
             <Label text="Cadastro de Aluno"
                    style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
@@ -36,7 +39,7 @@
             <TextField fx:id="campTelefone" promptText="(00) 00000-0000"/>
 
             <Label text="Data de Nascimento" style="-fx-text-fill: #c9d1d9;"/>
-            <DatePicker fx:id="campDataNascimento" style="-fx-pref-width: 300px;"/>
+            <DatePicker fx:id="campDataNascimento" maxWidth="Infinity"/>
 
             <Label text="Observações" style="-fx-text-fill: #c9d1d9;"/>
             <TextArea fx:id="campObservacoes" promptText="Observações gerais..."
@@ -46,15 +49,20 @@
 
             <!-- Botões de ação -->
             <HBox spacing="8">
-                <Button text="💾 Salvar"   onAction="#onSalvarClicado"  styleClass="accent"   HBox.hgrow="ALWAYS"/>
-                <Button text="🗑 Excluir"  onAction="#onExcluirClicado" styleClass="danger"   HBox.hgrow="ALWAYS"/>
-                <Button text="➕ Novo"    onAction="#onNovoClicado"     HBox.hgrow="ALWAYS"/>
+                <Button text="💾 Salvar" onAction="#onSalvarClicado" styleClass="accent"
+                        maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                <Button text="🗑 Excluir" onAction="#onExcluirClicado" styleClass="danger"
+                        maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                <Button text="➕ Novo" onAction="#onNovoClicado"
+                        maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
             </HBox>
 
             <!-- Mensagem de status -->
             <Label fx:id="labelStatus" text="" wrapText="true"
                    style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
-        </VBox>
+            </VBox>
+          </content>
+        </ScrollPane>
     </left>
 
     <!-- ── Tabela (direita) ───────────────────────────────────────── -->
@@ -79,8 +87,9 @@
                 </HBox>
 
                 <!-- Filtros de status -->
-                <HBox spacing="8" style="-fx-padding: 10 0 0 0;" alignment="CENTER_LEFT">
-                    <Button fx:id="btnTodos"         text="● Todos"       onAction="#onFiltroTodos"
+                <VBox spacing="8" style="-fx-padding: 10 0 0 0;">
+                  <HBox spacing="8" alignment="CENTER_LEFT">
+                    <Button fx:id="btnTodos" text="● Todos" onAction="#onFiltroTodos"
                             style="-fx-background-color: #238636; -fx-text-fill: white;
                                    -fx-border-radius: 20; -fx-background-radius: 20;
                                    -fx-padding: 4 16 4 16; -fx-cursor: hand; -fx-font-size: 12;"/>
@@ -96,18 +105,17 @@
                                    -fx-cursor: hand; -fx-font-size: 12;"/>
 
                     <Region HBox.hgrow="ALWAYS"/>
-
-                    <!-- Botão cancelar matrícula -->
-                    <Button text="✗ Cancelar Matrícula" onAction="#onCancelarMatriculaClicado"
-                            style="-fx-background-color: transparent;
-                                   -fx-border-color: #da3633; -fx-border-radius: 6;
-                                   -fx-background-radius: 6; -fx-text-fill: #f85149;
-                                   -fx-padding: 7 14 7 14; -fx-cursor: hand;"/>
-                                   
-                    <!-- Contador de registros -->
                     <Label fx:id="labelContador" text="0 registros"
                            style="-fx-text-fill: #8b949e; -fx-font-size: 12; -fx-padding: 0 0 0 10;"/>
-                </HBox>
+                  </HBox>
+                  <HBox alignment="CENTER_RIGHT">
+                      <Button text="✗ Cancelar Matrícula" onAction="#onCancelarMatriculaClicado"
+                              style="-fx-background-color: transparent;
+                                     -fx-border-color: #da3633; -fx-border-radius: 6;
+                                     -fx-background-radius: 6; -fx-text-fill: #f85149;
+                                     -fx-padding: 7 14 7 14; -fx-cursor: hand;"/>
+                  </HBox>
+                </VBox>
             </VBox>
 
             <Separator style="-fx-background-color: #21262d;"/>
@@ -138,4 +146,3 @@
     </center>
 
 </BorderPane>
-
