@@ -4,6 +4,7 @@ import com.academia.dao.AlunoDAO;
 import com.academia.dao.MatriculaDAO;
 import com.academia.model.Aluno;
 import com.academia.model.AlunoMatriculaDTO;
+import com.academia.validation.AlunoValidator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -175,6 +176,11 @@ public class AlunoController {
 
         Aluno aluno = montarObjetoAluno();
 
+        if (alunoDAO.cpfJaCadastrado(aluno.getCpf(), idEmEdicao)) {
+            exibirStatus("⚠ Já existe um aluno cadastrado com este CPF.");
+            return;
+        }
+
         if (idEmEdicao == 0) {
             // ── Novo cadastro ────────────────────────────────────────────
             if (alunoDAO.inserir(aluno)) {
@@ -333,13 +339,13 @@ public class AlunoController {
 
     // ── Métodos auxiliares ────────────────────────────────────────────────
 
-    /** Valida os campos obrigatórios do formulário. */
+    /** Valida os dados do formulário. */
     private boolean validarCampos() {
-        if (campNome.getText().trim().isEmpty()) {
-            exibirStatus("⚠ O campo 'Nome' é obrigatório.");
-            return false;
-        }
-        return true;
+        String erro = AlunoValidator.validar(
+                campNome.getText(), campCpf.getText(), campEmail.getText(), campTelefone.getText());
+        if (erro == null) return true;
+        exibirStatus("⚠ " + erro);
+        return false;
     }
 
     /** Constrói um objeto {@link Aluno} a partir dos campos do formulário. */

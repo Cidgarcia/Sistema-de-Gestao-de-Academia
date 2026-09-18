@@ -14,6 +14,22 @@ import java.util.List;
  */
 public class AlunoDAO {
 
+    /** Verifica se o CPF pertence a outro aluno. */
+    public boolean cpfJaCadastrado(String cpf, int idIgnorado) {
+        String sql = "SELECT 1 FROM Alunos WHERE cpf = ? AND id <> ? LIMIT 1";
+        try (Connection conn = ConexaoSQLite.getConexao();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, cpf);
+            ps.setInt(2, idIgnorado);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("[ERRO] AlunoDAO.cpfJaCadastrado: " + e.getMessage());
+            return false;
+        }
+    }
+
     /**
      * Insere um novo aluno no banco de dados.
      *
