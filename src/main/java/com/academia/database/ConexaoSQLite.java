@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 public class ConexaoSQLite {
 
     /** Caminho do arquivo do banco de dados (criado na pasta do usuário). */
-    private static final String URL = "jdbc:sqlite:" +
-            System.getProperty("user.home") + "/academia_db.sqlite";
+    private static final String URL = "jdbc:sqlite:" + System.getProperty(
+            "academia.db.path", System.getProperty("user.home") + "/academia_db.sqlite");
 
     /** Instância única (Singleton) da conexão. */
     private static Connection instancia = null;
@@ -111,4 +111,3 @@ public class ConexaoSQLite {
         }
     }
 }
-
