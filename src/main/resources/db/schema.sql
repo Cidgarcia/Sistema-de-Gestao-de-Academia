@@ -90,8 +90,23 @@ CREATE TABLE IF NOT EXISTS Pagamentos (
     matricula_id  INTEGER NOT NULL REFERENCES Matriculas(id) ON DELETE CASCADE,
     valor_pago    REAL    NOT NULL,
     data_pagamento TEXT   NOT NULL DEFAULT (date('now')),
+    tipo_pagamento TEXT   NOT NULL DEFAULT 'OUTRO', -- 'MENSALIDADE' ou 'OUTRO'
     forma_pagamento TEXT  NOT NULL,    -- 'DINHEIRO', 'CARTAO', 'PIX'
     observacoes   TEXT
+);
+
+-- Obrigações financeiras geradas para cada mensalidade da matrícula
+CREATE TABLE IF NOT EXISTS PendenciasFinanceiras (
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    matricula_id     INTEGER NOT NULL REFERENCES Matriculas(id) ON DELETE CASCADE,
+    tipo             TEXT    NOT NULL DEFAULT 'MENSALIDADE',
+    descricao        TEXT    NOT NULL,
+    valor            REAL    NOT NULL CHECK (valor > 0),
+    data_vencimento  TEXT    NOT NULL,
+    situacao         TEXT    NOT NULL DEFAULT 'PENDENTE'
+                              CHECK (situacao IN ('PENDENTE', 'PAGA', 'VENCIDA')),
+    pagamento_id     INTEGER UNIQUE REFERENCES Pagamentos(id),
+    UNIQUE (matricula_id, tipo, data_vencimento)
 );
 
 -- -------------------------------------------------------------

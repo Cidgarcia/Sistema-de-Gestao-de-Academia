@@ -37,6 +37,9 @@
                         <Label text="Valor Pago (R$) *" style="-fx-text-fill: #c9d1d9;"/>
                         <TextField fx:id="campValor" promptText="Ex.: 99.90"/>
 
+                        <Label text="Tipo de Pagamento *" style="-fx-text-fill: #c9d1d9;"/>
+                        <ComboBox fx:id="comboTipoPagamento" style="-fx-pref-width: 300px;"/>
+
                         <Label text="Forma de Pagamento *" style="-fx-text-fill: #c9d1d9;"/>
                         <ComboBox fx:id="comboFormaPagamento" style="-fx-pref-width: 300px;"/>
 
@@ -69,6 +72,7 @@
                             <TableColumn fx:id="colAluno" text="Aluno"  prefWidth="180"/>
                             <TableColumn fx:id="colValor" text="Valor"  prefWidth="100"/>
                             <TableColumn fx:id="colData"  text="Data"   prefWidth="100"/>
+                            <TableColumn fx:id="colTipo"  text="Tipo"   prefWidth="110"/>
                             <TableColumn fx:id="colForma" text="Forma"  prefWidth="100"/>
                             <TableColumn fx:id="colObs"   text="Obs."   prefWidth="160"/>
                         </columns>
@@ -79,22 +83,24 @@
         </Tab>
 
         <!-- ── Aba: Mensalidades Atrasadas ───────────────────────── -->
-        <Tab text="⚠ Mensalidades Atrasadas">
+        <Tab text="⚠ Pendências Financeiras">
             <VBox spacing="10" style="-fx-padding: 16;">
 
-                <Label text="Alunos com matrículas vencidas (sem renovação)"
+                <Label text="Selecione uma pendência para registrar o pagamento"
                        style="-fx-text-fill: #f85149; -fx-font-size: 13px;"/>
 
                 <TableView fx:id="tabelaAtrasados" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colAlunoAt" text="Aluno"  prefWidth="300"/>
-                        <TableColumn fx:id="colObsAt"   text="Status" prefWidth="200"/>
+                        <TableColumn fx:id="colAlunoAt" text="Aluno" prefWidth="220"/>
+                        <TableColumn fx:id="colTipoAt" text="Mensalidade" prefWidth="240"/>
+                        <TableColumn fx:id="colValorAt" text="Valor" prefWidth="100"/>
+                        <TableColumn fx:id="colVencimentoAt" text="Vencimento" prefWidth="110"/>
+                        <TableColumn fx:id="colSituacaoAt" text="Situação" prefWidth="110"/>
                     </columns>
-                    <placeholder><Label text="🎉 Nenhum aluno em atraso!"/></placeholder>
+                    <placeholder><Label text="🎉 Nenhuma pendência encontrada!"/></placeholder>
                 </TableView>
             </VBox>
         </Tab>
 
     </TabPane>
 </VBox>
-

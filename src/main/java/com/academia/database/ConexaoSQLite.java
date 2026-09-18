@@ -72,6 +72,20 @@ public class ConexaoSQLite {
                     WHERE condicoes_utilizacao IS NULL OR trim(condicoes_utilizacao) = ''
                     """);
         }
+
+        boolean possuiTipoPagamento = false;
+        try (Statement stmt = conexao.createStatement();
+             var rs = stmt.executeQuery("PRAGMA table_info(Pagamentos)")) {
+            while (rs.next()) {
+                if ("tipo_pagamento".equals(rs.getString("name"))) possuiTipoPagamento = true;
+            }
+        }
+        if (!possuiTipoPagamento) {
+            try (Statement stmt = conexao.createStatement()) {
+                stmt.execute("ALTER TABLE Pagamentos ADD COLUMN tipo_pagamento TEXT NOT NULL DEFAULT 'OUTRO'");
+                stmt.executeUpdate("UPDATE Pagamentos SET tipo_pagamento = 'LEGADO'");
+            }
+        }
     }
 
     /**
