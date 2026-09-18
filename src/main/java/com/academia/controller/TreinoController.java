@@ -6,6 +6,7 @@ import com.academia.model.Aluno;
 import com.academia.model.Exercicio;
 import com.academia.model.TreinoDivisao;
 import com.academia.model.Usuario;
+import com.academia.validation.TreinoValidator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ListChangeListener;
@@ -29,6 +30,8 @@ public class TreinoController {
     private ComboBox<Aluno> comboAluno;
     @FXML
     private Button btnDuplicar;
+    @FXML
+    private Button btnDescartar;
     @FXML
     private Button btnExportar;
     @FXML
@@ -78,9 +81,11 @@ public class TreinoController {
     }
 
     private void aplicarPermissoes() {
-        boolean isInstrutor = usuarioLogado != null && usuarioLogado.isInstrutor();
+        boolean isInstrutor = TreinoValidator.podeEditar(usuarioLogado);
         btnSalvar.setDisable(!isInstrutor);
         btnAdicionarExercicio.setDisable(!isInstrutor);
+        btnDuplicar.setDisable(!isInstrutor);
+        btnDescartar.setDisable(!isInstrutor);
 
         // Se não for instrutor, não permite adicionar ou fechar abas
         if (!isInstrutor) {
@@ -190,6 +195,12 @@ public class TreinoController {
         divisao.getExercicios().addListener((ListChangeListener<Exercicio>) c -> atualizarTotais());
 
         // Se a aba for fechada, atualiza totais
+        aba.setOnCloseRequest(e -> {
+            Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
+                    "Excluir a divisão '" + aba.getText() + "' e seus exercícios?", ButtonType.YES, ButtonType.NO);
+            confirmacao.setHeaderText("Confirmar exclusão da divisão");
+            if (confirmacao.showAndWait().orElse(ButtonType.NO) != ButtonType.YES) e.consume();
+        });
         aba.setOnClosed(e -> atualizarTotais());
     }
 
@@ -290,14 +301,19 @@ public class TreinoController {
                 btnExcluir.setStyle("-fx-text-fill: -color-danger-emphasis; -fx-background-color: transparent;");
                 btnExcluir.setOnAction(event -> {
                     Exercicio ex = getTableView().getItems().get(getIndex());
-                    getTableView().getItems().remove(ex);
+                    Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
+                            "Excluir o exercício '" + ex.getNome() + "'?", ButtonType.YES, ButtonType.NO);
+                    confirmacao.setHeaderText("Confirmar exclusão do exercício");
+                    if (confirmacao.showAndWait().orElse(ButtonType.NO) == ButtonType.YES) {
+                        getTableView().getItems().remove(ex);
+                    }
                 });
             }
 
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || (!usuarioLogado.isInstrutor())) {
+                if (empty || !TreinoValidator.podeEditar(usuarioLogado)) {
                     setGraphic(null);
                 } else {
                     HBox box = new HBox(btnExcluir);
@@ -325,6 +341,33 @@ public class TreinoController {
     }
 
     @FXML
+    private void onDuplicarClicado() {
+        Tab abaAtual = tabPaneTreinos.getSelectionModel().getSelectedItem();
+        if (abaAtual == null || abaAtual == tabNovoGrupo || !(abaAtual.getContent() instanceof TableView<?> tabela)) {
+            new Alert(Alert.AlertType.WARNING, "Selecione uma divisão para duplicar.").showAndWait();
+            return;
+        }
+
+        TreinoDivisao copia = new TreinoDivisao(abaAtual.getText() + " (Cópia)");
+        for (Object item : tabela.getItems()) copia.getExercicios().add(copiarExercicio((Exercicio) item));
+        adicionarAbaDivisao(copia);
+        atualizarTotais();
+    }
+
+    @FXML
+    private void onDescartarClicado() {
+        Aluno aluno = comboAluno.getSelectionModel().getSelectedItem();
+        if (aluno == null) {
+            new Alert(Alert.AlertType.WARNING, "Selecione um aluno primeiro!").showAndWait();
+            return;
+        }
+        Alert confirmacao = new Alert(Alert.AlertType.CONFIRMATION,
+                "Descartar todas as alterações não salvas?", ButtonType.YES, ButtonType.NO);
+        confirmacao.setHeaderText("Descartar alterações");
+        if (confirmacao.showAndWait().orElse(ButtonType.NO) == ButtonType.YES) carregarTreinoAluno(aluno);
+    }
+
+    @FXML
     private void onSalvarClicado() {
         Aluno alunoSelecionado = comboAluno.getSelectionModel().getSelectedItem();
         if (alunoSelecionado == null) {
@@ -348,6 +391,12 @@ public class TreinoController {
                 }
                 divisoesParaSalvar.add(div);
             }
+        }
+
+        String erro = TreinoValidator.validar(divisoesParaSalvar);
+        if (erro != null) {
+            new Alert(Alert.AlertType.WARNING, erro).showAndWait();
+            return;
         }
 
         boolean sucesso = treinoDAO.salvarTreinos(alunoSelecionado.getId(), divisoesParaSalvar);
@@ -428,6 +477,18 @@ public class TreinoController {
         }
         labelTotalExercicios.setText("Total de Exercícios: " + totalEx);
         labelTotalSeries.setText("Total de Séries: " + totalSeries);
+    }
+
+    private Exercicio copiarExercicio(Exercicio original) {
+        Exercicio copia = new Exercicio(original.getOrdem());
+        copia.setGrupoMuscular(original.getGrupoMuscular());
+        copia.setNome(original.getNome());
+        copia.setSeries(original.getSeries());
+        copia.setRepeticoes(original.getRepeticoes());
+        copia.setCarga(original.getCarga());
+        copia.setDescanso(original.getDescanso());
+        copia.setObservacoes(original.getObservacoes());
+        return copia;
     }
 
     private <T> javafx.util.Callback<TableColumn<Exercicio, T>, TableCell<Exercicio, T>> celulaEditavel(

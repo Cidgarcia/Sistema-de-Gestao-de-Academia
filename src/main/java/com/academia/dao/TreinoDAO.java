@@ -95,10 +95,9 @@ public class TreinoDAO {
                         int fichaId = rs.getInt(1);
 
                         // 3. Insere os exercícios dessa divisão
-                        int ordem = 1;
                         for (Exercicio ex : div.getExercicios()) {
                             stmtEx.setInt(1, fichaId);
-                            stmtEx.setInt(2, ordem++);
+                            stmtEx.setInt(2, ex.getOrdem());
                             stmtEx.setString(3, ex.getGrupoMuscular() != null ? ex.getGrupoMuscular() : "");
                             stmtEx.setString(4, ex.getNome() != null ? ex.getNome() : "");
                             stmtEx.setInt(5, ex.getSeries());
