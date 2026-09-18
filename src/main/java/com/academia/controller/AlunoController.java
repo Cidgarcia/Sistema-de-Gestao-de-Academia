@@ -165,6 +165,11 @@ public class AlunoController {
         aplicarFiltrosEBusca();
     }
 
+    /** Recarrega os alunos e suas matrículas ao retornar para a aba. */
+    public void refresh() {
+        carregarAlunos();
+    }
+
     /**
      * Ação do botão "Salvar".
      * Realiza inserção ou atualização dependendo de {@link #idEmEdicao}.

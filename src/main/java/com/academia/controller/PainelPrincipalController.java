@@ -108,7 +108,9 @@ public class PainelPrincipalController implements Observer {
         // ── Listener de troca de aba: recarrega dados ao selecionar ──────
         tabPanePrincipal.getSelectionModel().selectedItemProperty().addListener(
                 (obs, tabAnterior, tabSelecionada) -> {
-                    if (tabSelecionada == tabFrequencia && frequenciaCtrl != null) {
+                    if (tabSelecionada == tabAlunos && alunoCtrl != null) {
+                        alunoCtrl.refresh();
+                    } else if (tabSelecionada == tabFrequencia && frequenciaCtrl != null) {
                         frequenciaCtrl.refresh();
                     } else if (tabSelecionada == tabMatriculas && matriculaCtrl != null) {
                         matriculaCtrl.refresh();
