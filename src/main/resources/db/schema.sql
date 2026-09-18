@@ -54,6 +54,7 @@ CREATE TABLE IF NOT EXISTS Planos (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     nome        TEXT    NOT NULL,
     descricao   TEXT,
+    condicoes_utilizacao TEXT,
     valor       REAL    NOT NULL,
     duracao_dias INTEGER NOT NULL       -- ex.: 30, 90, 180, 365
 );
@@ -147,4 +148,3 @@ CREATE TABLE IF NOT EXISTS Frequencias (
     aluno_id          INTEGER NOT NULL REFERENCES Alunos(id) ON DELETE CASCADE,
     data_hora_entrada TEXT    NOT NULL DEFAULT (datetime('now', 'localtime'))
 );
-

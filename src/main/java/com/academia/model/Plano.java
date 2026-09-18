@@ -11,15 +11,18 @@ public class Plano {
     private int    id;
     private String nome;
     private String descricao;
+    private String condicoesUtilizacao;
     private double valor;
     private int    duracaoDias;  // ex.: 30, 90, 180, 365
 
     public Plano() {}
 
-    public Plano(int id, String nome, String descricao, double valor, int duracaoDias) {
+    public Plano(int id, String nome, String descricao, String condicoesUtilizacao,
+                 double valor, int duracaoDias) {
         this.id          = id;
         this.nome        = nome;
         this.descricao   = descricao;
+        this.condicoesUtilizacao = condicoesUtilizacao;
         this.valor       = valor;
         this.duracaoDias = duracaoDias;
     }
@@ -35,6 +38,9 @@ public class Plano {
     public String getDescricao()                { return descricao; }
     public void setDescricao(String descricao)  { this.descricao = descricao; }
 
+    public String getCondicoesUtilizacao() { return condicoesUtilizacao; }
+    public void setCondicoesUtilizacao(String condicoesUtilizacao) { this.condicoesUtilizacao = condicoesUtilizacao; }
+
     public double getValor()                    { return valor; }
     public void setValor(double valor)          { this.valor = valor; }
 
@@ -47,4 +53,3 @@ public class Plano {
                " (" + duracaoDias + " dias)";
     }
 }
-
