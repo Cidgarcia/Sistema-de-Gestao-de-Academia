@@ -16,7 +16,10 @@
 
     <!-- ── Formulário (esquerda) ──────────────────────────────────── -->
     <left>
-        <VBox spacing="12" style="-fx-padding: 0 20 0 0; -fx-pref-width: 340px;">
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" focusTraversable="false"
+                    prefWidth="360" style="-fx-background-color: transparent; -fx-background: transparent;">
+          <content>
+            <VBox spacing="12" style="-fx-padding: 0 16 0 0;">
 
             <Label text="Avaliação Física"
                    style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
@@ -29,10 +32,10 @@
             <Separator/>
 
             <Label text="Aluno *" style="-fx-text-fill: #c9d1d9;"/>
-            <ComboBox fx:id="comboAluno" style="-fx-pref-width: 300px;"/>
+            <ComboBox fx:id="comboAluno" maxWidth="Infinity"/>
 
             <Label text="Data da Avaliação" style="-fx-text-fill: #c9d1d9;"/>
-            <DatePicker fx:id="campData" style="-fx-pref-width: 300px;"/>
+            <DatePicker fx:id="campData" maxWidth="Infinity"/>
 
             <!-- Medidas em grade 2x2 -->
             <GridPane hgap="10" vgap="8">
@@ -71,14 +74,16 @@
 
             <HBox spacing="8">
                 <Button text="💾 Salvar Avaliação" onAction="#onSalvarClicado"
-                        styleClass="accent" HBox.hgrow="ALWAYS"/>
+                        styleClass="accent" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
                 <Button text="🗑 Limpar"            onAction="#onLimparClicado"
-                        HBox.hgrow="ALWAYS"/>
+                        maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
             </HBox>
 
             <Label fx:id="labelStatus" text="" wrapText="true"
                    style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
-        </VBox>
+            </VBox>
+          </content>
+        </ScrollPane>
     </left>
 
     <!-- ── Tabela (direita) ───────────────────────────────────────── -->
@@ -103,4 +108,3 @@
     </center>
 
 </BorderPane>
-

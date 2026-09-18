@@ -29,22 +29,25 @@
 
                 <!-- Formulário -->
                 <left>
-                    <VBox spacing="12" style="-fx-padding: 0 20 0 0; -fx-pref-width: 340px;">
+                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" focusTraversable="false"
+                                prefWidth="360" style="-fx-background-color: transparent; -fx-background: transparent;">
+                      <content>
+                        <VBox spacing="12" style="-fx-padding: 0 16 0 0;">
 
                         <Label text="Matrícula *" style="-fx-text-fill: #c9d1d9;"/>
-                        <ComboBox fx:id="comboMatricula" style="-fx-pref-width: 300px;"/>
+                        <ComboBox fx:id="comboMatricula" maxWidth="Infinity"/>
 
                         <Label text="Valor Pago (R$) *" style="-fx-text-fill: #c9d1d9;"/>
                         <TextField fx:id="campValor" promptText="Ex.: 99.90"/>
 
                         <Label text="Tipo de Pagamento *" style="-fx-text-fill: #c9d1d9;"/>
-                        <ComboBox fx:id="comboTipoPagamento" style="-fx-pref-width: 300px;"/>
+                        <ComboBox fx:id="comboTipoPagamento" maxWidth="Infinity"/>
 
                         <Label text="Forma de Pagamento *" style="-fx-text-fill: #c9d1d9;"/>
-                        <ComboBox fx:id="comboFormaPagamento" style="-fx-pref-width: 300px;"/>
+                        <ComboBox fx:id="comboFormaPagamento" maxWidth="Infinity"/>
 
                         <Label text="Data do Pagamento" style="-fx-text-fill: #c9d1d9;"/>
-                        <DatePicker fx:id="campDataPagamento" style="-fx-pref-width: 300px;"/>
+                        <DatePicker fx:id="campDataPagamento" maxWidth="Infinity"/>
 
                         <Label text="Observações" style="-fx-text-fill: #c9d1d9;"/>
                         <TextArea fx:id="campObservacoes" promptText="Observações..."
@@ -54,14 +57,16 @@
 
                         <HBox spacing="8">
                             <Button text="✔ Registrar Pagamento" onAction="#onRegistrarPagamentoClicado"
-                                    styleClass="accent" HBox.hgrow="ALWAYS"/>
+                                    styleClass="accent" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
                             <Button text="🔄 Atualizar" onAction="#onAtualizarClicado"
-                                    HBox.hgrow="ALWAYS"/>
+                                    maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
                         </HBox>
 
                         <Label fx:id="labelStatus" text="" wrapText="true"
                                style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
-                    </VBox>
+                        </VBox>
+                      </content>
+                    </ScrollPane>
                 </left>
 
                 <!-- Tabela de pagamentos -->

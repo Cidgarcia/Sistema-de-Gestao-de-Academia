@@ -13,7 +13,8 @@
       spacing="15" style="-fx-padding: 20;">
 
     <!-- Cabeçalho -->
-    <HBox alignment="CENTER_LEFT" spacing="20">
+    <VBox spacing="10">
+      <HBox alignment="CENTER_LEFT" spacing="20">
         <VBox spacing="5">
             <HBox alignment="CENTER_LEFT" spacing="10">
                 <Label text="ALUNO:" style="-fx-font-size: 12px; -fx-text-fill: #3fb950; -fx-font-weight: bold;"/>
@@ -22,14 +23,15 @@
             <Label text="Montagem de Treinos" styleClass="title-1"/>
         </VBox>
         
-        <Region HBox.hgrow="ALWAYS" />
-        
-        <Button fx:id="btnDuplicar" text="Duplicar" styleClass="button-outlined" onAction="#onDuplicarClicado" />
-        <Button fx:id="btnDescartar" text="Descartar alterações" styleClass="button-outlined"
-                onAction="#onDescartarClicado" />
-        <Button fx:id="btnExportar" text="Exportar PDF" styleClass="button-outlined" onAction="#onExportarClicado" />
-        <Button fx:id="btnSalvar" text="Salvar Ficha" styleClass="success" onAction="#onSalvarClicado" />
-    </HBox>
+      </HBox>
+      <FlowPane hgap="10" vgap="8" alignment="CENTER_RIGHT">
+          <Button fx:id="btnDuplicar" text="Duplicar" styleClass="button-outlined" onAction="#onDuplicarClicado" />
+          <Button fx:id="btnDescartar" text="Descartar alterações" styleClass="button-outlined"
+                  onAction="#onDescartarClicado" />
+          <Button fx:id="btnExportar" text="Exportar PDF" styleClass="button-outlined" onAction="#onExportarClicado" />
+          <Button fx:id="btnSalvar" text="Salvar Ficha" styleClass="success" onAction="#onSalvarClicado" />
+      </FlowPane>
+    </VBox>
 
     <!-- Centro: TabPane para as divisões -->
     <TabPane fx:id="tabPaneTreinos" tabClosingPolicy="ALL_TABS" VBox.vgrow="ALWAYS" styleClass="classic">

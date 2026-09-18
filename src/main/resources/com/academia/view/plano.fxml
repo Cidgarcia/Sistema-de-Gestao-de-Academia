@@ -29,8 +29,11 @@
 
         <!-- ── Formulário (esquerda) — card escuro ────────────────────── -->
         <left>
-            <VBox spacing="0"
-                  style="-fx-padding: 0 16 0 0; -fx-pref-width: 300px;">
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED"
+                        focusTraversable="false" prefWidth="320"
+                        style="-fx-background-color: transparent; -fx-background: transparent;">
+              <content>
+                <VBox spacing="0" style="-fx-padding: 0 12 0 0;">
 
                 <!-- Card do formulário -->
                 <VBox spacing="11"
@@ -117,41 +120,47 @@
                     <Separator style="-fx-background-color: #21262d;"/>
 
                     <!-- Botões de ação -->
-                    <HBox spacing="8">
+                    <GridPane hgap="8" vgap="8">
+                        <columnConstraints>
+                            <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                            <ColumnConstraints percentWidth="50" hgrow="ALWAYS"/>
+                        </columnConstraints>
                         <Button text="💾 Salvar"  onAction="#onSalvarClicado"
-                                HBox.hgrow="ALWAYS"
+                                maxWidth="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="0"
                                 style="-fx-background-color: #1f6feb;
                                        -fx-text-fill: white; -fx-font-weight: bold;
                                        -fx-border-radius: 6; -fx-background-radius: 6;
                                        -fx-padding: 8 0 8 0; -fx-cursor: hand;
                                        -fx-pref-width: 9999;"/>
                         <Button text="🗑 Excluir" onAction="#onExcluirClicado"
-                                HBox.hgrow="ALWAYS"
+                                maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="0"
                                 style="-fx-background-color: #da3633;
                                        -fx-text-fill: white; -fx-font-weight: bold;
                                        -fx-border-radius: 6; -fx-background-radius: 6;
                                        -fx-padding: 8 0 8 0; -fx-cursor: hand;
                                        -fx-pref-width: 9999;"/>
                         <Button text="+ Novo"    onAction="#onNovoClicado"
-                                HBox.hgrow="ALWAYS"
+                                maxWidth="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="1"
                                 style="-fx-background-color: transparent;
                                        -fx-border-color: #30363d; -fx-text-fill: #c9d1d9;
                                        -fx-border-radius: 6; -fx-background-radius: 6;
                                        -fx-padding: 8 0 8 0; -fx-cursor: hand;
                                        -fx-pref-width: 9999;"/>
                         <Button text="Cancelar" onAction="#onCancelarClicado"
-                                HBox.hgrow="ALWAYS"
+                                maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1"
                                 style="-fx-background-color: transparent;
                                        -fx-border-color: #30363d; -fx-text-fill: #c9d1d9;
                                        -fx-border-radius: 6; -fx-background-radius: 6;
                                        -fx-padding: 8 0 8 0; -fx-cursor: hand;
                                        -fx-pref-width: 9999;"/>
-                    </HBox>
+                    </GridPane>
 
                     <Label fx:id="labelStatus" text="" wrapText="true"
                            style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
                 </VBox>
-            </VBox>
+                </VBox>
+              </content>
+            </ScrollPane>
         </left>
 
         <!-- ── Tabela (centro) ────────────────────────────────────────── -->

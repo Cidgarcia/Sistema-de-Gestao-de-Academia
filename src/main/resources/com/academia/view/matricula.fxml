@@ -1,86 +1,74 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<!--
-    matricula.fxml — UC 03: Realizar Matrícula
-    Controller: com.academia.controller.MatriculaController
-    (Tabela de matrículas movida para alunos-matriculados.fxml)
--->
-<VBox xmlns="http://javafx.com/javafx/17"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.academia.controller.MatriculaController"
-      spacing="0"
-      style="-fx-background-color: #0d1117;">
+<!-- UC 03: Realizar Matrícula -->
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.academia.controller.MatriculaController"
+            style="-fx-padding: 16; -fx-background-color: #0d1117;">
 
-    <!-- ── Seção de Cards ─────────────────────────────────────────────── -->
-    <VBox style="-fx-padding: 10 16 8 16; -fx-background-color: #0d1117;"
-          VBox.vgrow="NEVER">
+    <left>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" focusTraversable="false"
+                    prefWidth="360" style="-fx-background-color: transparent; -fx-background: transparent;">
+            <content>
+                <VBox spacing="12" style="-fx-padding: 0 16 0 0;">
+                    <Label text="Realizar Matrícula"
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+                    <Label text="Selecione o aluno, o plano e a data inicial."
+                           wrapText="true" style="-fx-font-size: 11px; -fx-text-fill: #8b949e;"/>
+                    <Separator/>
 
-        <Label text="Planos Ativos"
-               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: white;"/>
-        <Label text="Selecione um plano base ou crie uma matrícula personalizada."
-               style="-fx-font-size: 11px; -fx-text-fill: #8b949e; -fx-padding: 2 0 8 0;"/>
+                    <Label text="Aluno *" style="-fx-text-fill: #c9d1d9;"/>
+                    <ComboBox fx:id="comboAluno" maxWidth="Infinity" promptText="Selecione um aluno..."/>
 
-        <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="NEVER"
-                    fitToHeight="true" prefHeight="220"
-                    style="-fx-background: transparent; -fx-background-color: transparent;
-                           -fx-border-color: transparent;">
-            <HBox fx:id="painelCards" spacing="12" alignment="CENTER_LEFT"
-                  style="-fx-padding: 4 4 8 4;"/>
+                    <Label text="Data de Início *" style="-fx-text-fill: #c9d1d9;"/>
+                    <DatePicker fx:id="campDataInicio" maxWidth="Infinity"/>
+
+                    <Label text="Plano selecionado" style="-fx-text-fill: #c9d1d9;"/>
+                    <Label fx:id="labelPlanoSelecionado" text="Nenhum plano selecionado"
+                           maxWidth="Infinity" wrapText="true"
+                           style="-fx-text-fill: #8b949e; -fx-font-size: 12px;
+                                  -fx-padding: 8 12 8 12; -fx-background-color: #161b22;
+                                  -fx-background-radius: 6;"/>
+
+                    <Label text="Data de Término" style="-fx-text-fill: #c9d1d9;"/>
+                    <Label fx:id="labelDataFim" text="Data de Término: —"
+                           maxWidth="Infinity" wrapText="true"
+                           style="-fx-text-fill: #e3b341; -fx-font-size: 13px; -fx-font-weight: bold;
+                                  -fx-background-color: #2d2500; -fx-background-radius: 6;
+                                  -fx-padding: 8 12 8 12;"/>
+
+                    <Separator/>
+
+                    <Button text="✔ Matricular" onAction="#onMatricularClicado"
+                            styleClass="accent" maxWidth="Infinity" prefHeight="36"/>
+                    <Button text="✗ Cancelar Matrícula" onAction="#onCancelarMatriculaClicado"
+                            styleClass="danger" maxWidth="Infinity" prefHeight="36"/>
+
+                    <Label fx:id="labelStatus" text="" wrapText="true"
+                           style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+                </VBox>
+            </content>
         </ScrollPane>
-    </VBox>
+    </left>
 
-    <Separator style="-fx-background-color: #21262d;"/>
+    <center>
+        <VBox spacing="8">
+            <Label text="Planos Ativos"
+                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Label text="Selecione um plano para preencher a matrícula."
+                   style="-fx-font-size: 12px; -fx-text-fill: #8b949e;"/>
+            <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED" focusTraversable="false"
+                        fitToHeight="false" fitToWidth="false" VBox.vgrow="ALWAYS"
+                        style="-fx-background-color: transparent; -fx-background: transparent;
+                               -fx-border-color: transparent;">
+                <content>
+                    <HBox fx:id="painelCards" spacing="12" alignment="TOP_LEFT"
+                          style="-fx-padding: 4 4 12 4;"/>
+                </content>
+            </ScrollPane>
+        </VBox>
+    </center>
 
-    <!-- ── Formulário centralizado (sem tabela) ──────────────────────── -->
-    <VBox VBox.vgrow="ALWAYS" alignment="TOP_LEFT"
-          style="-fx-padding: 20 24 20 24; -fx-background-color: #0d1117;">
-
-        <Label text="Realizar Matrícula"
-               style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;
-                      -fx-padding: 0 0 8 0;"/>
-        <Separator style="-fx-padding: 0 0 10 0;"/>
-
-        <!-- Grid 2 colunas: campos do formulário -->
-        <HBox spacing="20" style="-fx-padding: 12 0 0 0;">
-
-            <!-- Coluna 1: Aluno + Data -->
-            <VBox spacing="8" HBox.hgrow="NEVER" style="-fx-pref-width: 290;">
-                <Label text="Aluno *" style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                <ComboBox fx:id="comboAluno" style="-fx-pref-width: 280px;"/>
-
-                <Label text="Data de Início *" style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                <DatePicker fx:id="campDataInicio" style="-fx-pref-width: 280px;"/>
-            </VBox>
-
-            <!-- Coluna 2: Feedback + Data fim -->
-            <VBox spacing="8" HBox.hgrow="ALWAYS">
-                <Label text="Plano selecionado" style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                <Label fx:id="labelPlanoSelecionado" text="Nenhum plano selecionado"
-                       style="-fx-text-fill: #8b949e; -fx-font-size: 12px;
-                              -fx-padding: 6 12 6 12; -fx-background-color: #161b22;
-                              -fx-background-radius: 6; -fx-pref-width: 280;"/>
-
-                <Label text="Data de Término" style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
-                <Label fx:id="labelDataFim" text="—"
-                       style="-fx-text-fill: #e3b341; -fx-font-size: 13px; -fx-font-weight: bold;
-                              -fx-background-color: #2d2500; -fx-background-radius: 6;
-                              -fx-padding: 6 12 6 12; -fx-pref-width: 280;"/>
-            </VBox>
-        </HBox>
-
-        <!-- Botões -->
-        <HBox spacing="12" style="-fx-padding: 20 0 0 0;">
-            <Button text="✔ Matricular"  onAction="#onMatricularClicado"       styleClass="accent"
-                    style="-fx-pref-width: 160; -fx-pref-height: 36;"/>
-            <Button text="✗ Cancelar Matrícula" onAction="#onCancelarMatriculaClicado" styleClass="danger"
-                    style="-fx-pref-width: 200; -fx-pref-height: 36;"/>
-        </HBox>
-
-        <Label fx:id="labelStatus" text="" wrapText="true"
-               style="-fx-text-fill: #3fb950; -fx-font-size: 12px; -fx-padding: 8 0 0 0;"/>
-    </VBox>
-
-</VBox>
+</BorderPane>
