@@ -23,9 +23,6 @@ import java.util.stream.Collectors;
 public class ConexaoSQLite {
 
     /** Caminho do arquivo do banco de dados (criado na pasta do usuário). */
-    private static final String URL = "jdbc:sqlite:" + System.getProperty(
-            "academia.db.path", System.getProperty("user.home") + "/academia_db.sqlite");
-
     /** Instância única (Singleton) da conexão. */
     private static Connection instancia = null;
 
@@ -42,7 +39,9 @@ public class ConexaoSQLite {
     public static Connection getConexao() {
         try {
             if (instancia == null || instancia.isClosed()) {
-                instancia = DriverManager.getConnection(URL);
+                String caminho = System.getProperty(
+                        "academia.db.path", System.getProperty("user.home") + "/academia_db.sqlite");
+                instancia = DriverManager.getConnection("jdbc:sqlite:" + caminho);
                 // Habilita suporte a chaves estrangeiras no SQLite
                 instancia.createStatement().execute("PRAGMA foreign_keys = ON;");
                 // Executa o script DDL para criar as tabelas, se ainda não existirem

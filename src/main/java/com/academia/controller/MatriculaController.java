@@ -6,6 +6,7 @@ import com.academia.dao.PlanoDAO;
 import com.academia.model.Aluno;
 import com.academia.model.Matricula;
 import com.academia.model.Plano;
+import com.academia.validation.MatriculaValidator;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -330,6 +331,17 @@ public class MatriculaController {
         }
 
         LocalDate dataFim = dataInicio.plusDays(planoSelecionado.getDuracaoDias());
+
+        String erroData = MatriculaValidator.validarDatas(dataInicio, dataFim);
+        if (erroData != null) {
+            exibirStatus("⚠ " + erroData);
+            return;
+        }
+
+        if (matriculaDAO.existeAtiva(aluno.getId(), planoSelecionado.getId())) {
+            exibirStatus("⚠ Este aluno já possui matrícula ativa neste plano.");
+            return;
+        }
 
         Matricula matricula = new Matricula();
         matricula.setAlunoId(aluno.getId());

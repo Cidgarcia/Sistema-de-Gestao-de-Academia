@@ -23,7 +23,11 @@ public class MatriculaDAO {
     public boolean inserir(Matricula matricula) {
         String sql = """
                 INSERT INTO Matriculas (aluno_id, plano_id, data_inicio, data_fim, ativa)
-                VALUES (?, ?, ?, ?, 1)
+                SELECT ?, ?, ?, ?, 1
+                WHERE NOT EXISTS (
+                    SELECT 1 FROM Matriculas
+                    WHERE aluno_id = ? AND plano_id = ? AND ativa = 1
+                )
                 """;
 
         try (Connection conn = ConexaoSQLite.getConexao();
@@ -33,6 +37,8 @@ public class MatriculaDAO {
             ps.setInt(2, matricula.getPlanoId());
             ps.setString(3, matricula.getDataInicio());
             ps.setString(4, matricula.getDataFim());
+            ps.setInt(5, matricula.getAlunoId());
+            ps.setInt(6, matricula.getPlanoId());
 
             int linhasAfetadas = ps.executeUpdate();
             if (linhasAfetadas > 0) {
@@ -45,6 +51,22 @@ public class MatriculaDAO {
             System.err.println("[ERRO] MatriculaDAO.inserir: " + e.getMessage());
         }
         return false;
+    }
+
+    /** Verifica se o aluno já possui matrícula ativa no plano. */
+    public boolean existeAtiva(int alunoId, int planoId) {
+        String sql = "SELECT 1 FROM Matriculas WHERE aluno_id = ? AND plano_id = ? AND ativa = 1 LIMIT 1";
+        try (Connection conn = ConexaoSQLite.getConexao();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, alunoId);
+            ps.setInt(2, planoId);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("[ERRO] MatriculaDAO.existeAtiva: " + e.getMessage());
+            return false;
+        }
     }
 
     /**
@@ -141,4 +163,3 @@ public class MatriculaDAO {
         return m;
     }
 }
-
