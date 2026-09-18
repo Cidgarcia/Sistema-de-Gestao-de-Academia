@@ -24,7 +24,9 @@
         
         <Region HBox.hgrow="ALWAYS" />
         
-        <Button fx:id="btnDuplicar" text="Duplicar" styleClass="button-outlined" />
+        <Button fx:id="btnDuplicar" text="Duplicar" styleClass="button-outlined" onAction="#onDuplicarClicado" />
+        <Button fx:id="btnDescartar" text="Descartar alterações" styleClass="button-outlined"
+                onAction="#onDescartarClicado" />
         <Button fx:id="btnExportar" text="Exportar PDF" styleClass="button-outlined" onAction="#onExportarClicado" />
         <Button fx:id="btnSalvar" text="Salvar Ficha" styleClass="success" onAction="#onSalvarClicado" />
     </HBox>
