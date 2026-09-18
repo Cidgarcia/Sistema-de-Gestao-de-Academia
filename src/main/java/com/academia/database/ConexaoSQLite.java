@@ -55,6 +55,19 @@ public class ConexaoSQLite {
     }
 
     private static void executarMigracoes(Connection conexao) throws SQLException {
+        boolean possuiEnderecoAluno = false;
+        try (Statement stmt = conexao.createStatement();
+             var rs = stmt.executeQuery("PRAGMA table_info(Alunos)")) {
+            while (rs.next()) {
+                if ("endereco".equals(rs.getString("name"))) possuiEnderecoAluno = true;
+            }
+        }
+        if (!possuiEnderecoAluno) {
+            try (Statement stmt = conexao.createStatement()) {
+                stmt.execute("ALTER TABLE Alunos ADD COLUMN endereco TEXT");
+            }
+        }
+
         boolean possuiCondicoes = false;
         try (Statement stmt = conexao.createStatement();
              var rs = stmt.executeQuery("PRAGMA table_info(Planos)")) {

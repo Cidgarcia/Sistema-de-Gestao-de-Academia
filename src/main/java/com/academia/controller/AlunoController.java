@@ -188,7 +188,7 @@ public class AlunoController {
                 limparFormulario();
                 carregarAlunos();
             } else {
-                exibirStatus("✗ Erro ao cadastrar aluno. Verifique o CPF.");
+                exibirStatus("✗ Não foi possível cadastrar o aluno. Consulte o erro no terminal.");
             }
         } else {
             // ── Atualização ──────────────────────────────────────────────
