@@ -63,6 +63,19 @@
                                           -fx-padding: 8 10 8 10;"/>
                     </VBox>
 
+                    <!-- Condições de utilização -->
+                    <VBox spacing="4">
+                        <Label text="Condições de utilização *"
+                               style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                        <TextArea fx:id="campCondicoes" promptText="Ex.: acesso de segunda a sábado, sem transferência"
+                                  prefRowCount="2" wrapText="true"
+                                  style="-fx-background-color: #0d1117;
+                                         -fx-border-color: #30363d;
+                                         -fx-border-radius: 6; -fx-background-radius: 6;
+                                         -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                         -fx-padding: 8 10 8 10;"/>
+                    </VBox>
+
                     <!-- Descrição -->
                     <VBox spacing="4">
                         <Label text="Descrição (features separadas por |)"
@@ -126,6 +139,13 @@
                                        -fx-border-radius: 6; -fx-background-radius: 6;
                                        -fx-padding: 8 0 8 0; -fx-cursor: hand;
                                        -fx-pref-width: 9999;"/>
+                        <Button text="Cancelar" onAction="#onCancelarClicado"
+                                HBox.hgrow="ALWAYS"
+                                style="-fx-background-color: transparent;
+                                       -fx-border-color: #30363d; -fx-text-fill: #c9d1d9;
+                                       -fx-border-radius: 6; -fx-background-radius: 6;
+                                       -fx-padding: 8 0 8 0; -fx-cursor: hand;
+                                       -fx-pref-width: 9999;"/>
                     </HBox>
 
                     <Label fx:id="labelStatus" text="" wrapText="true"
@@ -149,6 +169,7 @@
                         <TableColumn fx:id="colId"        text="ID"        prefWidth="50"/>
                         <TableColumn fx:id="colNome"      text="Nome"      prefWidth="130"/>
                         <TableColumn fx:id="colDescricao" text="Descrição" prefWidth="230"/>
+                        <TableColumn fx:id="colCondicoes" text="Condições" prefWidth="220"/>
                         <TableColumn fx:id="colValor"     text="Valor"     prefWidth="100"/>
                         <TableColumn fx:id="colDuracao"   text="Dias"      prefWidth="70"/>
                     </columns>

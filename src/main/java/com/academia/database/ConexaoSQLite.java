@@ -46,11 +46,32 @@ public class ConexaoSQLite {
                 instancia.createStatement().execute("PRAGMA foreign_keys = ON;");
                 // Executa o script DDL para criar as tabelas, se ainda não existirem
                 executarSchema(instancia);
+                executarMigracoes(instancia);
             }
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao conectar ao banco de dados SQLite: " + e.getMessage(), e);
         }
         return instancia;
+    }
+
+    private static void executarMigracoes(Connection conexao) throws SQLException {
+        boolean possuiCondicoes = false;
+        try (Statement stmt = conexao.createStatement();
+             var rs = stmt.executeQuery("PRAGMA table_info(Planos)")) {
+            while (rs.next()) {
+                if ("condicoes_utilizacao".equals(rs.getString("name"))) possuiCondicoes = true;
+            }
+        }
+        try (Statement stmt = conexao.createStatement()) {
+            if (!possuiCondicoes) {
+                stmt.execute("ALTER TABLE Planos ADD COLUMN condicoes_utilizacao TEXT");
+            }
+            stmt.executeUpdate("""
+                    UPDATE Planos
+                    SET condicoes_utilizacao = 'Plano pessoal e intransferível'
+                    WHERE condicoes_utilizacao IS NULL OR trim(condicoes_utilizacao) = ''
+                    """);
+        }
     }
 
     /**

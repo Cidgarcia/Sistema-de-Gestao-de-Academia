@@ -22,8 +22,8 @@ public class PlanoDAO {
      */
     public boolean inserir(Plano plano) {
         String sql = """
-                INSERT INTO Planos (nome, descricao, valor, duracao_dias)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO Planos (nome, descricao, condicoes_utilizacao, valor, duracao_dias)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
         try (Connection conn = ConexaoSQLite.getConexao();
@@ -31,8 +31,9 @@ public class PlanoDAO {
 
             ps.setString(1, plano.getNome());
             ps.setString(2, plano.getDescricao());
-            ps.setDouble(3, plano.getValor());
-            ps.setInt(4, plano.getDuracaoDias());
+            ps.setString(3, plano.getCondicoesUtilizacao());
+            ps.setDouble(4, plano.getValor());
+            ps.setInt(5, plano.getDuracaoDias());
 
             int linhasAfetadas = ps.executeUpdate();
             if (linhasAfetadas > 0) {
@@ -55,7 +56,7 @@ public class PlanoDAO {
      */
     public boolean atualizar(Plano plano) {
         String sql = """
-                UPDATE Planos SET nome = ?, descricao = ?, valor = ?, duracao_dias = ?
+                UPDATE Planos SET nome = ?, descricao = ?, condicoes_utilizacao = ?, valor = ?, duracao_dias = ?
                 WHERE id = ?
                 """;
 
@@ -64,9 +65,10 @@ public class PlanoDAO {
 
             ps.setString(1, plano.getNome());
             ps.setString(2, plano.getDescricao());
-            ps.setDouble(3, plano.getValor());
-            ps.setInt(4, plano.getDuracaoDias());
-            ps.setInt(5, plano.getId());
+            ps.setString(3, plano.getCondicoesUtilizacao());
+            ps.setDouble(4, plano.getValor());
+            ps.setInt(5, plano.getDuracaoDias());
+            ps.setInt(6, plano.getId());
 
             return ps.executeUpdate() > 0;
 
@@ -97,6 +99,21 @@ public class PlanoDAO {
         return false;
     }
 
+    /** Informa se o plano possui matrículas vinculadas. */
+    public boolean estaEmUso(int id) {
+        String sql = "SELECT 1 FROM Matriculas WHERE plano_id = ? LIMIT 1";
+        try (Connection conn = ConexaoSQLite.getConexao();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next();
+            }
+        } catch (SQLException e) {
+            System.err.println("[ERRO] PlanoDAO.estaEmUso: " + e.getMessage());
+            return true;
+        }
+    }
+
     /**
      * Lista todos os planos cadastrados.
      *
@@ -125,9 +142,9 @@ public class PlanoDAO {
                 rs.getInt("id"),
                 rs.getString("nome"),
                 rs.getString("descricao"),
+                rs.getString("condicoes_utilizacao"),
                 rs.getDouble("valor"),
                 rs.getInt("duracao_dias")
         );
     }
 }
-
