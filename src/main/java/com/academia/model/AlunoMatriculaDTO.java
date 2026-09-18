@@ -15,6 +15,7 @@ public class AlunoMatriculaDTO {
     private String cpf;
     private String email;
     private String telefone;
+    private String endereco;       // Adicionado: endereço do aluno
     private String dataNascimento;
 
     // Dados da Matrícula (podem ser nulos se o aluno não tiver matrícula)
@@ -43,6 +44,9 @@ public class AlunoMatriculaDTO {
 
     public String getTelefone() { return telefone; }
     public void setTelefone(String telefone) { this.telefone = telefone; }
+
+    public String getEndereco() { return endereco; }
+    public void setEndereco(String endereco) { this.endereco = endereco; }
 
     public String getDataNascimento() { return dataNascimento; }
     public void setDataNascimento(String dataNascimento) { this.dataNascimento = dataNascimento; }

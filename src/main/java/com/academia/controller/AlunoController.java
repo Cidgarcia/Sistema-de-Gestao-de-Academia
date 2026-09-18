@@ -35,6 +35,8 @@ public class AlunoController {
     @FXML
     private TextField campTelefone;
     @FXML
+    private TextField campEndereco; // Adicionado: campo de endereço
+    @FXML
     private DatePicker campDataNascimento;
     @FXML
     private TextArea campObservacoes;
@@ -68,6 +70,8 @@ public class AlunoController {
     private TableColumn<AlunoMatriculaDTO, String> colEmail;
     @FXML
     private TableColumn<AlunoMatriculaDTO, String> colTelefone;
+    @FXML
+    private TableColumn<AlunoMatriculaDTO, String> colEndereco; // Opcional na tabela
     @FXML
     private TableColumn<AlunoMatriculaDTO, String> colDataNasc;
 
@@ -120,6 +124,10 @@ public class AlunoController {
         colCpf.setCellValueFactory(new PropertyValueFactory<>("cpf"));
         colEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colTelefone.setCellValueFactory(new PropertyValueFactory<>("telefone"));
+        
+        // Se houver a coluna colEndereco no seu FXML, descomente a linha abaixo:
+        if (colEndereco != null) colEndereco.setCellValueFactory(new PropertyValueFactory<>("endereco"));
+        
         colDataNasc.setCellValueFactory(new PropertyValueFactory<>("dataNascimento"));
 
         colMatriculaId.setCellValueFactory(new PropertyValueFactory<>("matriculaId"));
@@ -193,10 +201,6 @@ public class AlunoController {
      * Ação do botão "Excluir".
      * Exclui o aluno selecionado após confirmação.
      */
-    /**
-     * Ação do botão "Excluir".
-     * Exclui o aluno selecionado após confirmação.
-     */
     @FXML
     private void onExcluirClicado() {
         AlunoMatriculaDTO selecionado = tabelaAlunos.getSelectionModel().getSelectedItem();
@@ -231,7 +235,6 @@ public class AlunoController {
         tabelaAlunos.getSelectionModel().clearSelection();
     }
 
-    /** Ação do botão "Pesquisar" — filtra alunos pelo nome. */
     /** Ação de cancelar a matrícula selecionada diretamente na tabela. */
     @FXML
     private void onCancelarMatriculaClicado() {
@@ -346,6 +349,7 @@ public class AlunoController {
         aluno.setCpf(campCpf.getText().trim());
         aluno.setEmail(campEmail.getText().trim());
         aluno.setTelefone(campTelefone.getText().trim());
+        aluno.setEndereco(campEndereco.getText().trim()); // Adicionado: preenche o endereço
         aluno.setDataNascimento(
                 campDataNascimento.getValue() != null
                         ? campDataNascimento.getValue().toString()
@@ -355,23 +359,25 @@ public class AlunoController {
     }
 
     /** Preenche o formulário com os dados do aluno selecionado. */
-    /** Preenche o formulário com os dados do aluno selecionado. */
     private void preencherFormulario(AlunoMatriculaDTO aluno) {
         idEmEdicao = aluno.getAlunoId();
         campNome.setText(aluno.getNome());
         campCpf.setText(aluno.getCpf());
         campEmail.setText(aluno.getEmail());
         campTelefone.setText(aluno.getTelefone());
+        
         if (aluno.getDataNascimento() != null && !aluno.getDataNascimento().isEmpty()) {
             campDataNascimento.setValue(java.time.LocalDate.parse(aluno.getDataNascimento()));
         }
 
-        // Pega as observações completas do banco pois o DTO não carrega
+        // Pega as informações completas do banco (incluindo observações e endereço caso o DTO não traga)
         Aluno aDb = alunoDAO.buscarPorId(aluno.getAlunoId());
         if (aDb != null) {
             campObservacoes.setText(aDb.getObservacoes());
+            campEndereco.setText(aDb.getEndereco() != null ? aDb.getEndereco() : "");
         } else {
             campObservacoes.setText("");
+            campEndereco.setText("");
         }
     }
 
@@ -384,6 +390,7 @@ public class AlunoController {
         campCpf.clear();
         campEmail.clear();
         campTelefone.clear();
+        campEndereco.clear(); // Adicionado: limpa o endereço
         campDataNascimento.setValue(null);
         campObservacoes.clear();
         labelStatus.setText("");

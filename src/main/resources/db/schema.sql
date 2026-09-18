@@ -35,14 +35,15 @@ VALUES ('Instrutor Padrão', 'instrutor',
 --  Dados cadastrais dos alunos da academia.
 -- -------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS Alunos (
-    id               INTEGER PRIMARY KEY AUTOINCREMENT,
-    nome             TEXT    NOT NULL,
-    cpf              TEXT    UNIQUE,
-    email            TEXT,
-    telefone         TEXT,
-    data_nascimento  TEXT,              -- formato ISO: YYYY-MM-DD
-    observacoes      TEXT,
-    data_cadastro    TEXT    NOT NULL DEFAULT (date('now'))
+    id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome               TEXT    NOT NULL,
+    cpf                TEXT    UNIQUE,
+    email              TEXT,
+    telefone           TEXT,
+    endereco           TEXT,               
+    data_nascimento    TEXT,               -- formato ISO: YYYY-MM-DD
+    observacoes        TEXT,
+    data_cadastro      TEXT    NOT NULL DEFAULT (date('now'))
 );
 
 -- -------------------------------------------------------------

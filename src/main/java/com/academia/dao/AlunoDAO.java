@@ -22,8 +22,8 @@ public class AlunoDAO {
      */
     public boolean inserir(Aluno aluno) {
         String sql = """
-                INSERT INTO Alunos (nome, cpf, email, telefone, data_nascimento, observacoes)
-                VALUES (?, ?, ?, ?, ?, ?)
+                INSERT INTO Alunos (nome, cpf, email, telefone, endereco, data_nascimento, observacoes)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
                 """;
 
         try (Connection conn = ConexaoSQLite.getConexao();
@@ -33,8 +33,9 @@ public class AlunoDAO {
             ps.setString(2, aluno.getCpf());
             ps.setString(3, aluno.getEmail());
             ps.setString(4, aluno.getTelefone());
-            ps.setString(5, aluno.getDataNascimento());
-            ps.setString(6, aluno.getObservacoes());
+            ps.setString(5, aluno.getEndereco());
+            ps.setString(6, aluno.getDataNascimento());
+            ps.setString(7, aluno.getObservacoes());
 
             int linhasAfetadas = ps.executeUpdate();
             if (linhasAfetadas > 0) {
@@ -60,7 +61,7 @@ public class AlunoDAO {
     public boolean atualizar(Aluno aluno) {
         String sql = """
                 UPDATE Alunos SET nome = ?, cpf = ?, email = ?, telefone = ?,
-                data_nascimento = ?, observacoes = ?
+                endereco = ?, data_nascimento = ?, observacoes = ?
                 WHERE id = ?
                 """;
 
@@ -71,9 +72,10 @@ public class AlunoDAO {
             ps.setString(2, aluno.getCpf());
             ps.setString(3, aluno.getEmail());
             ps.setString(4, aluno.getTelefone());
-            ps.setString(5, aluno.getDataNascimento());
-            ps.setString(6, aluno.getObservacoes());
-            ps.setInt(7, aluno.getId());
+            ps.setString(5, aluno.getEndereco());
+            ps.setString(6, aluno.getDataNascimento());
+            ps.setString(7, aluno.getObservacoes());
+            ps.setInt(8, aluno.getId());
 
             return ps.executeUpdate() > 0;
 
@@ -184,7 +186,7 @@ public class AlunoDAO {
      */
     public List<com.academia.model.AlunoMatriculaDTO> listarAlunosComMatriculas(String filtroNome) {
         StringBuilder sql = new StringBuilder("""
-                SELECT a.id as aluno_id, a.nome as aluno_nome, a.cpf, a.email, a.telefone, a.data_nascimento,
+                SELECT a.id as aluno_id, a.nome as aluno_nome, a.cpf, a.email, a.telefone, a.endereco, a.data_nascimento,
                        m.id as matricula_id, p.nome as plano_nome, m.data_inicio, m.data_fim, m.ativa
                 FROM Alunos a
                 LEFT JOIN Matriculas m ON a.id = m.aluno_id
@@ -214,6 +216,7 @@ public class AlunoDAO {
                     dto.setCpf(rs.getString("cpf"));
                     dto.setEmail(rs.getString("email"));
                     dto.setTelefone(rs.getString("telefone"));
+                    dto.setEndereco(rs.getString("endereco"));
                     dto.setDataNascimento(rs.getString("data_nascimento"));
                     
                     int matId = rs.getInt("matricula_id");
@@ -290,7 +293,7 @@ public class AlunoDAO {
         return null;
     }
 
-    /** Mapeia uma linha do ResultSet para um objeto {@link Aluno}. */
+   /** Mapeia uma linha do ResultSet para um objeto {@link Aluno}. */
     private Aluno mapearResultSet(ResultSet rs) throws SQLException {
         return new Aluno(
                 rs.getInt("id"),
@@ -298,10 +301,10 @@ public class AlunoDAO {
                 rs.getString("cpf"),
                 rs.getString("email"),
                 rs.getString("telefone"),
+                rs.getString("endereco"),
                 rs.getString("data_nascimento"),
                 rs.getString("observacoes"),
                 rs.getString("data_cadastro")
         );
     }
 }
-
