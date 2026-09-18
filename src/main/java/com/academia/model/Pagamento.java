@@ -12,6 +12,7 @@ public class Pagamento {
     private int    matriculaId;
     private double valorPago;
     private String dataPagamento;   // YYYY-MM-DD
+    private String tipo;            // "MENSALIDADE" ou "OUTRO"
     private String formaPagamento;  // "DINHEIRO", "CARTAO", "PIX"
     private String observacoes;
 
@@ -47,6 +48,9 @@ public class Pagamento {
     public String getFormaPagamento()                       { return formaPagamento; }
     public void setFormaPagamento(String formaPagamento)    { this.formaPagamento = formaPagamento; }
 
+    public String getTipo()                       { return tipo; }
+    public void setTipo(String tipo)               { this.tipo = tipo; }
+
     public String getObservacoes()                  { return observacoes; }
     public void setObservacoes(String observacoes)  { this.observacoes = observacoes; }
 
@@ -59,4 +63,3 @@ public class Pagamento {
                " (" + formaPagamento + ") em " + dataPagamento;
     }
 }
-

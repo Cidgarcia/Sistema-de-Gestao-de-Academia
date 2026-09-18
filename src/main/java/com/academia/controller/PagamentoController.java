@@ -4,8 +4,10 @@ import com.academia.dao.MatriculaDAO;
 import com.academia.dao.PagamentoDAO;
 import com.academia.model.Matricula;
 import com.academia.model.Pagamento;
+import com.academia.model.PendenciaFinanceira;
 import com.academia.observer.Observer;
 import com.academia.observer.Subject;
+import com.academia.validation.PagamentoValidator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -34,6 +36,7 @@ public class PagamentoController implements Subject {
 
     @FXML private ComboBox<Matricula>    comboMatricula;
     @FXML private TextField              campValor;
+    @FXML private ComboBox<String>       comboTipoPagamento;
     @FXML private ComboBox<String>       comboFormaPagamento;
     @FXML private DatePicker             campDataPagamento;
     @FXML private TextArea               campObservacoes;
@@ -45,19 +48,24 @@ public class PagamentoController implements Subject {
     @FXML private TableColumn<Pagamento, String>  colAluno;
     @FXML private TableColumn<Pagamento, Double>  colValor;
     @FXML private TableColumn<Pagamento, String>  colData;
+    @FXML private TableColumn<Pagamento, String>  colTipo;
     @FXML private TableColumn<Pagamento, String>  colForma;
     @FXML private TableColumn<Pagamento, String>  colObs;
 
     // ── Aba de atrasados ─────────────────────────────────────────────────
 
-    @FXML private TableView<Pagamento>         tabelaAtrasados;
-    @FXML private TableColumn<Pagamento, String>  colAlunoAt;
-    @FXML private TableColumn<Pagamento, String>  colObsAt;
+    @FXML private TableView<PendenciaFinanceira> tabelaAtrasados;
+    @FXML private TableColumn<PendenciaFinanceira, String> colAlunoAt;
+    @FXML private TableColumn<PendenciaFinanceira, String> colTipoAt;
+    @FXML private TableColumn<PendenciaFinanceira, Double> colValorAt;
+    @FXML private TableColumn<PendenciaFinanceira, String> colVencimentoAt;
+    @FXML private TableColumn<PendenciaFinanceira, String> colSituacaoAt;
 
     @FXML private Label labelStatus;
 
     private final PagamentoDAO  pagamentoDAO  = new PagamentoDAO();
     private final MatriculaDAO  matriculaDAO  = new MatriculaDAO();
+    private Integer pendenciaSelecionadaId;
 
     /**
      * Inicializa o controller: popula combos e tabelas.
@@ -76,6 +84,8 @@ public class PagamentoController implements Subject {
         // Formas de pagamento disponíveis
         comboFormaPagamento.getItems().addAll("DINHEIRO", "CARTAO", "PIX", "BOLETO");
         comboFormaPagamento.getSelectionModel().selectFirst();
+        comboTipoPagamento.getItems().addAll("MENSALIDADE", "OUTRO");
+        comboTipoPagamento.getSelectionModel().selectFirst();
 
         // Data de pagamento padrão: hoje
         campDataPagamento.setValue(LocalDate.now());
@@ -84,6 +94,13 @@ public class PagamentoController implements Subject {
         configurarColunasAtrasados();
         carregarPagamentos();
         carregarAtrasados();
+
+        comboMatricula.valueProperty().addListener((obs, anterior, atual) -> {
+            pendenciaSelecionadaId = null;
+            carregarPendencias(atual == null ? null : atual.getId());
+        });
+        tabelaAtrasados.getSelectionModel().selectedItemProperty().addListener(
+                (obs, anterior, pendencia) -> { if (pendencia != null) preencherComPendencia(pendencia); });
     }
 
     /**
@@ -131,7 +148,10 @@ public class PagamentoController implements Subject {
 
         Pagamento pagamento = montarObjetoPagamento();
 
-        if (pagamentoDAO.inserir(pagamento)) {
+        Integer pendenciaId = "MENSALIDADE".equals(pagamento.getTipo()) ? pendenciaSelecionadaId : null;
+        PagamentoDAO.ResultadoPagamento resultado = pagamentoDAO.registrarPagamento(pagamento, pendenciaId);
+
+        if (resultado == PagamentoDAO.ResultadoPagamento.SUCESSO) {
             exibirStatus("✔ Pagamento de R$ " +
                     String.format("%.2f", pagamento.getValorPago()) + " registrado!");
 
@@ -140,6 +160,11 @@ public class PagamentoController implements Subject {
 
             limparFormulario();
             carregarPagamentos();
+            carregarAtrasados();
+        } else if (resultado == PagamentoDAO.ResultadoPagamento.PENDENCIA_INEXISTENTE) {
+            exibirStatus("⚠ A pendência selecionada não existe para esta matrícula.");
+        } else if (resultado == PagamentoDAO.ResultadoPagamento.PENDENCIA_JA_PAGA) {
+            exibirStatus("⚠ Esta pendência já foi paga.");
         } else {
             exibirStatus("✗ Erro ao registrar pagamento.");
         }
@@ -179,9 +204,16 @@ public class PagamentoController implements Subject {
     }
 
     private void carregarAtrasados() {
-        tabelaAtrasados.setItems(
-                FXCollections.observableArrayList(pagamentoDAO.listarAtrasados())
-        );
+        Matricula matricula = comboMatricula.getValue();
+        carregarPendencias(matricula == null ? null : matricula.getId());
+    }
+
+    private void carregarPendencias(Integer matriculaId) {
+        List<PendenciaFinanceira> pendencias = pagamentoDAO.listarPendencias(matriculaId);
+        tabelaAtrasados.setItems(FXCollections.observableArrayList(pendencias));
+        if (matriculaId != null && pendencias.stream().noneMatch(p -> !"PAGA".equals(p.getSituacao()))) {
+            exibirStatus("ℹ Este aluno não possui pagamentos pendentes.");
+        }
     }
 
     private void configurarColunasPagamentos() {
@@ -189,6 +221,7 @@ public class PagamentoController implements Subject {
         colAluno.setCellValueFactory(new PropertyValueFactory<>("nomeAluno"));
         colValor.setCellValueFactory(new PropertyValueFactory<>("valorPago"));
         colData.setCellValueFactory(new PropertyValueFactory<>("dataPagamento"));
+        colTipo.setCellValueFactory(new PropertyValueFactory<>("tipo"));
         colForma.setCellValueFactory(new PropertyValueFactory<>("formaPagamento"));
         colObs.setCellValueFactory(new PropertyValueFactory<>("observacoes"));
 
@@ -204,7 +237,16 @@ public class PagamentoController implements Subject {
 
     private void configurarColunasAtrasados() {
         colAlunoAt.setCellValueFactory(new PropertyValueFactory<>("nomeAluno"));
-        colObsAt.setCellValueFactory(new PropertyValueFactory<>("observacoes"));
+        colTipoAt.setCellValueFactory(new PropertyValueFactory<>("descricao"));
+        colValorAt.setCellValueFactory(new PropertyValueFactory<>("valor"));
+        colVencimentoAt.setCellValueFactory(new PropertyValueFactory<>("dataVencimento"));
+        colSituacaoAt.setCellValueFactory(new PropertyValueFactory<>("situacao"));
+        colValorAt.setCellFactory(col -> new TableCell<>() {
+            @Override protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : String.format("R$ %.2f", item));
+            }
+        });
     }
 
     private boolean validarCampos() {
@@ -213,7 +255,13 @@ public class PagamentoController implements Subject {
             return false;
         }
         try {
-            Double.parseDouble(campValor.getText().replace(",", "."));
+            double valor = Double.parseDouble(campValor.getText().replace(",", "."));
+            String erro = PagamentoValidator.validar(valor, comboTipoPagamento.getValue(),
+                    pendenciaSelecionadaId);
+            if (erro != null) {
+                exibirStatus("⚠ " + erro);
+                return false;
+            }
         } catch (NumberFormatException e) {
             exibirStatus("⚠ Valor inválido.");
             return false;
@@ -230,6 +278,7 @@ public class PagamentoController implements Subject {
                         ? campDataPagamento.getValue().toString()
                         : LocalDate.now().toString()
         );
+        p.setTipo(comboTipoPagamento.getValue());
         p.setFormaPagamento(comboFormaPagamento.getValue());
         p.setObservacoes(campObservacoes.getText().trim());
         return p;
@@ -239,10 +288,22 @@ public class PagamentoController implements Subject {
         comboMatricula.setValue(null);
         campValor.clear();
         comboFormaPagamento.getSelectionModel().selectFirst();
+        comboTipoPagamento.getSelectionModel().selectFirst();
         campDataPagamento.setValue(LocalDate.now());
         campObservacoes.clear();
+        tabelaAtrasados.getSelectionModel().clearSelection();
+        pendenciaSelecionadaId = null;
+    }
+
+    private void preencherComPendencia(PendenciaFinanceira pendencia) {
+        comboMatricula.getItems().stream()
+                .filter(m -> m.getId() == pendencia.getMatriculaId())
+                .findFirst().ifPresent(comboMatricula::setValue);
+        pendenciaSelecionadaId = pendencia.getId();
+        comboTipoPagamento.setValue("MENSALIDADE");
+        campValor.setText(String.format("%.2f", pendencia.getValor()));
+        campObservacoes.setText(pendencia.getDescricao());
     }
 
     private void exibirStatus(String msg) { labelStatus.setText(msg); }
 }
-
