@@ -166,24 +166,27 @@ public class PagamentoDAO {
                 VALUES (?, 'MENSALIDADE', ?, ?, ?, 'PENDENTE')
                 """;
 
-        try (Connection conn = ConexaoSQLite.getConexao();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(sql);
-             PreparedStatement ps = conn.prepareStatement(inserir)) {
+        Connection conn = ConexaoSQLite.getConexao();
+        try {
+            conn.setAutoCommit(false);
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql);
+                 PreparedStatement ps = conn.prepareStatement(inserir)) {
 
-            while (rs.next()) {
-                int parcelas = Math.max(1, (int) Math.ceil(rs.getInt("duracao_dias") / 30.0));
-                double valorMensal = rs.getDouble("valor") / parcelas;
-                LocalDate inicio = LocalDate.parse(rs.getString("data_inicio"));
-                for (int i = 0; i < parcelas; i++) {
-                    ps.setInt(1, rs.getInt("id"));
-                    ps.setString(2, "Mensalidade " + (i + 1) + "/" + parcelas + " - " + rs.getString("nome"));
-                    ps.setDouble(3, valorMensal);
-                    ps.setString(4, inicio.plusMonths(i).toString());
-                    ps.addBatch();
+                while (rs.next()) {
+                    int parcelas = Math.max(1, (int) Math.ceil(rs.getInt("duracao_dias") / 30.0));
+                    double valorMensal = rs.getDouble("valor") / parcelas;
+                    LocalDate inicio = LocalDate.parse(rs.getString("data_inicio"));
+                    for (int i = 0; i < parcelas; i++) {
+                        ps.setInt(1, rs.getInt("id"));
+                        ps.setString(2, "Mensalidade " + (i + 1) + "/" + parcelas + " - " + rs.getString("nome"));
+                        ps.setDouble(3, valorMensal);
+                        ps.setString(4, inicio.plusMonths(i).toString());
+                        ps.addBatch();
+                    }
                 }
+                ps.executeBatch();
             }
-            ps.executeBatch();
             reconciliarPagamentosLegados(conn);
             try (Statement atualizar = conn.createStatement()) {
                 atualizar.executeUpdate("""
@@ -195,9 +198,12 @@ public class PagamentoDAO {
                         END
                         """);
             }
-
+            conn.commit();
         } catch (SQLException e) {
+            try { conn.rollback(); } catch (SQLException ignored) {}
             System.err.println("[ERRO] PagamentoDAO.sincronizarPendenciasMensais: " + e.getMessage());
+        } finally {
+            try { conn.setAutoCommit(true); } catch (SQLException ignored) {}
         }
     }
 
