@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     nome     TEXT    NOT NULL,
     login    TEXT    NOT NULL UNIQUE,
     senha    TEXT    NOT NULL,          -- senha armazenada com hash simples (SHA-256)
-    perfil   TEXT    NOT NULL           -- 'FUNCIONARIO' ou 'INSTRUTOR'
+    perfil   TEXT    NOT NULL CHECK (perfil IN ('FUNCIONARIO', 'INSTRUTOR'))
 );
 
 -- Usuário administrador padrão (senha: admin123)
@@ -55,8 +55,8 @@ CREATE TABLE IF NOT EXISTS Planos (
     nome        TEXT    NOT NULL,
     descricao   TEXT,
     condicoes_utilizacao TEXT,
-    valor       REAL    NOT NULL,
-    duracao_dias INTEGER NOT NULL       -- ex.: 30, 90, 180, 365
+    valor       REAL    NOT NULL CHECK (valor > 0),
+    duracao_dias INTEGER NOT NULL CHECK (duracao_dias > 0)
 );
 
 -- Planos padrão da academia — cada INSERT separado para evitar
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS Matriculas (
     plano_id      INTEGER NOT NULL REFERENCES Planos(id)  ON DELETE RESTRICT,
     data_inicio   TEXT    NOT NULL,    -- YYYY-MM-DD
     data_fim      TEXT    NOT NULL,    -- calculada: data_inicio + duracao_dias
-    ativa         INTEGER NOT NULL DEFAULT 1  -- 1 = ativa, 0 = cancelada
+    ativa         INTEGER NOT NULL DEFAULT 1 CHECK (ativa IN (0, 1))
 );
 
 -- -------------------------------------------------------------
@@ -88,10 +88,12 @@ CREATE TABLE IF NOT EXISTS Matriculas (
 CREATE TABLE IF NOT EXISTS Pagamentos (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,
     matricula_id  INTEGER NOT NULL REFERENCES Matriculas(id) ON DELETE CASCADE,
-    valor_pago    REAL    NOT NULL,
+    valor_pago    REAL    NOT NULL CHECK (valor_pago > 0),
     data_pagamento TEXT   NOT NULL DEFAULT (date('now')),
-    tipo_pagamento TEXT   NOT NULL DEFAULT 'OUTRO', -- 'MENSALIDADE' ou 'OUTRO'
-    forma_pagamento TEXT  NOT NULL,    -- 'DINHEIRO', 'CARTAO', 'PIX'
+    tipo_pagamento TEXT   NOT NULL DEFAULT 'OUTRO'
+                              CHECK (tipo_pagamento IN ('MENSALIDADE', 'OUTRO', 'LEGADO')),
+    forma_pagamento TEXT  NOT NULL
+                              CHECK (forma_pagamento IN ('DINHEIRO', 'CARTAO', 'PIX')),
     observacoes   TEXT
 );
 
@@ -118,11 +120,11 @@ CREATE TABLE IF NOT EXISTS AvaliacoesFisicas (
     aluno_id        INTEGER NOT NULL REFERENCES Alunos(id) ON DELETE CASCADE,
     instrutor_id    INTEGER NOT NULL REFERENCES Usuarios(id),
     data_avaliacao  TEXT    NOT NULL DEFAULT (date('now')),
-    peso_kg         REAL,
-    altura_cm       REAL,
-    imc             REAL,              -- calculado automaticamente pela aplicação
-    gordura_perc    REAL,
-    massa_muscular  REAL,
+    peso_kg         REAL CHECK (peso_kg IS NULL OR peso_kg > 0),
+    altura_cm       REAL CHECK (altura_cm IS NULL OR altura_cm > 0),
+    imc             REAL CHECK (imc IS NULL OR imc > 0),
+    gordura_perc    REAL CHECK (gordura_perc IS NULL OR gordura_perc >= 0),
+    massa_muscular  REAL CHECK (massa_muscular IS NULL OR massa_muscular >= 0),
     observacoes     TEXT
 );
 
@@ -144,13 +146,13 @@ CREATE TABLE IF NOT EXISTS FichasTreino (
 CREATE TABLE IF NOT EXISTS ExerciciosTreino (
     id              INTEGER PRIMARY KEY AUTOINCREMENT,
     ficha_id        INTEGER NOT NULL REFERENCES FichasTreino(id) ON DELETE CASCADE,
-    ordem           INTEGER NOT NULL,
+    ordem           INTEGER NOT NULL CHECK (ordem > 0),
     grupo_muscular  TEXT    NOT NULL,
     nome            TEXT    NOT NULL,
-    series          INTEGER NOT NULL,
+    series          INTEGER NOT NULL CHECK (series > 0),
     repeticoes      TEXT    NOT NULL,
     carga           TEXT,
-    descanso        INTEGER,
+    descanso        INTEGER CHECK (descanso IS NULL OR descanso >= 0),
     observacoes     TEXT
 );
 
@@ -163,3 +165,14 @@ CREATE TABLE IF NOT EXISTS Frequencias (
     aluno_id          INTEGER NOT NULL REFERENCES Alunos(id) ON DELETE CASCADE,
     data_hora_entrada TEXT    NOT NULL DEFAULT (datetime('now', 'localtime'))
 );
+
+-- Índices das consultas mais frequentes e garantia de matrícula ativa única
+CREATE INDEX IF NOT EXISTS idx_alunos_nome ON Alunos(nome);
+CREATE INDEX IF NOT EXISTS idx_matriculas_aluno ON Matriculas(aluno_id);
+CREATE INDEX IF NOT EXISTS idx_pagamentos_matricula_data ON Pagamentos(matricula_id, data_pagamento);
+CREATE INDEX IF NOT EXISTS idx_pendencias_matricula_situacao ON PendenciasFinanceiras(matricula_id, situacao);
+CREATE INDEX IF NOT EXISTS idx_avaliacoes_aluno_data ON AvaliacoesFisicas(aluno_id, data_avaliacao);
+CREATE INDEX IF NOT EXISTS idx_fichas_aluno ON FichasTreino(aluno_id);
+CREATE INDEX IF NOT EXISTS idx_frequencias_aluno_data ON Frequencias(aluno_id, data_hora_entrada);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_matricula_ativa_unica
+    ON Matriculas(aluno_id, plano_id) WHERE ativa = 1;

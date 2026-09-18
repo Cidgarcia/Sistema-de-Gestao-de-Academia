@@ -86,6 +86,76 @@ public class ConexaoSQLite {
                 stmt.executeUpdate("UPDATE Pagamentos SET tipo_pagamento = 'LEGADO'");
             }
         }
+
+        try (Statement stmt = conexao.createStatement()) {
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_alunos_nome ON Alunos(nome)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_matriculas_aluno ON Matriculas(aluno_id)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_pagamentos_matricula_data ON Pagamentos(matricula_id, data_pagamento)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_pendencias_matricula_situacao ON PendenciasFinanceiras(matricula_id, situacao)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_avaliacoes_aluno_data ON AvaliacoesFisicas(aluno_id, data_avaliacao)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_fichas_aluno ON FichasTreino(aluno_id)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_frequencias_aluno_data ON Frequencias(aluno_id, data_hora_entrada)");
+
+            // Triggers aplicam as novas regras também em bancos criados por versões anteriores.
+            stmt.execute("""
+                    CREATE TRIGGER IF NOT EXISTS validar_perfil_usuario_insert
+                    BEFORE INSERT ON Usuarios WHEN NEW.perfil NOT IN ('FUNCIONARIO', 'INSTRUTOR')
+                    BEGIN SELECT RAISE(ABORT, 'Perfil de usuário inválido'); END
+                    """);
+            stmt.execute("""
+                    CREATE TRIGGER IF NOT EXISTS validar_perfil_usuario_update
+                    BEFORE UPDATE OF perfil ON Usuarios WHEN NEW.perfil NOT IN ('FUNCIONARIO', 'INSTRUTOR')
+                    BEGIN SELECT RAISE(ABORT, 'Perfil de usuário inválido'); END
+                    """);
+            stmt.execute("""
+                    CREATE TRIGGER IF NOT EXISTS validar_plano_positivo_insert
+                    BEFORE INSERT ON Planos WHEN NEW.valor <= 0 OR NEW.duracao_dias <= 0
+                    BEGIN SELECT RAISE(ABORT, 'Valor e duração do plano devem ser positivos'); END
+                    """);
+            stmt.execute("""
+                    CREATE TRIGGER IF NOT EXISTS validar_plano_positivo_update
+                    BEFORE UPDATE OF valor, duracao_dias ON Planos WHEN NEW.valor <= 0 OR NEW.duracao_dias <= 0
+                    BEGIN SELECT RAISE(ABORT, 'Valor e duração do plano devem ser positivos'); END
+                    """);
+            stmt.execute("""
+                    CREATE TRIGGER IF NOT EXISTS validar_pagamento_positivo_insert
+                    BEFORE INSERT ON Pagamentos WHEN NEW.valor_pago <= 0
+                    BEGIN SELECT RAISE(ABORT, 'O valor do pagamento deve ser positivo'); END
+                    """);
+            stmt.execute("""
+                    CREATE TRIGGER IF NOT EXISTS validar_pagamento_positivo_update
+                    BEFORE UPDATE OF valor_pago ON Pagamentos WHEN NEW.valor_pago <= 0
+                    BEGIN SELECT RAISE(ABORT, 'O valor do pagamento deve ser positivo'); END
+                    """);
+            stmt.execute("""
+                    CREATE TRIGGER IF NOT EXISTS validar_exercicio_positivo_insert
+                    BEFORE INSERT ON ExerciciosTreino
+                    WHEN NEW.ordem <= 0 OR NEW.series <= 0 OR NEW.descanso < 0
+                    BEGIN SELECT RAISE(ABORT, 'Ordem e séries devem ser positivas'); END
+                    """);
+            stmt.execute("""
+                    CREATE TRIGGER IF NOT EXISTS validar_exercicio_positivo_update
+                    BEFORE UPDATE OF ordem, series, descanso ON ExerciciosTreino
+                    WHEN NEW.ordem <= 0 OR NEW.series <= 0 OR NEW.descanso < 0
+                    BEGIN SELECT RAISE(ABORT, 'Ordem e séries devem ser positivas'); END
+                    """);
+            stmt.execute("""
+                    CREATE TRIGGER IF NOT EXISTS impedir_matricula_ativa_duplicada_insert
+                    BEFORE INSERT ON Matriculas WHEN NEW.ativa = 1 AND EXISTS (
+                        SELECT 1 FROM Matriculas
+                        WHERE aluno_id = NEW.aluno_id AND plano_id = NEW.plano_id AND ativa = 1)
+                    BEGIN SELECT RAISE(ABORT, 'Matrícula ativa duplicada'); END
+                    """);
+            stmt.execute("""
+                    CREATE TRIGGER IF NOT EXISTS impedir_matricula_ativa_duplicada_update
+                    BEFORE UPDATE OF aluno_id, plano_id, ativa ON Matriculas
+                    WHEN NEW.ativa = 1 AND EXISTS (
+                        SELECT 1 FROM Matriculas
+                        WHERE aluno_id = NEW.aluno_id AND plano_id = NEW.plano_id
+                          AND ativa = 1 AND id <> OLD.id)
+                    BEGIN SELECT RAISE(ABORT, 'Matrícula ativa duplicada'); END
+                    """);
+        }
     }
 
     /**
