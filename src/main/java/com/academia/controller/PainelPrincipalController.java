@@ -71,6 +71,7 @@ public class PainelPrincipalController implements Observer {
 
         if (usuario.isInstrutor()) {
             // Instrutor acessa apenas Alunos, Avaliação Física e Treinos
+            tabFrequencia.setDisable(true);
             tabPlanos.setDisable(true);
             tabMatriculas.setDisable(true);
             tabPagamentos.setDisable(true);

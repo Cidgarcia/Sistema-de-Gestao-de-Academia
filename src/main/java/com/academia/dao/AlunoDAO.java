@@ -253,62 +253,6 @@ public class AlunoDAO {
         return lista;
     }
 
-    /**
-     * Busca o aluno pelo CPF ou ID e retorna seu status de acesso atual.
-     * Retorna um DTO com os dados do aluno e se ele está Liberado ou Bloqueado.
-     *
-     * @param termo CPF ou Matrícula (ID) digitado.
-     * @return DTO preenchido se encontrar, null caso contrário.
-     */
-    public com.academia.model.FrequenciaDTO buscarStatusAcesso(String termo) {
-        String sql = """
-                SELECT a.id, a.nome, a.cpf, p.nome AS plano_nome,
-                       (CASE WHEN m.id IS NOT NULL AND m.ativa = 1 AND m.data_fim >= date('now') THEN 1 ELSE 0 END) AS liberado
-                FROM Alunos a
-                LEFT JOIN Matriculas m ON a.id = m.aluno_id AND m.ativa = 1 AND m.data_fim >= date('now')
-                LEFT JOIN Planos p ON m.plano_id = p.id
-                WHERE a.cpf = ? OR a.id = ?
-                ORDER BY m.id DESC LIMIT 1
-                """;
-
-        try (Connection conn = ConexaoSQLite.getConexao();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setString(1, termo);
-            
-            // Tenta converter o termo para int (caso seja ID numérico)
-            int idBusca = -1;
-            try {
-                idBusca = Integer.parseInt(termo);
-            } catch (NumberFormatException e) {
-                // Ignore se não for número
-            }
-            ps.setInt(2, idBusca);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    String nome = rs.getString("nome");
-                    String cpf = rs.getString("cpf");
-                    String id = String.valueOf(rs.getInt("id"));
-                    
-                    String matriculaCpf = "CPF: " + (cpf != null && !cpf.isBlank() ? cpf : "N/A") + " | ID: #" + id;
-                    
-                    boolean liberado = rs.getInt("liberado") == 1;
-                    String status = liberado ? "Liberado" : "Bloqueado";
-                    
-                    String plano = rs.getString("plano_nome");
-                    String detalhe = liberado ? ("Plano " + (plano != null ? plano : "Ativo")) : "Mensalidade Atrasada / Vencida / Sem Plano";
-
-                    // O campo data_hora_entrada não se aplica aqui, será preenchido depois
-                    return new com.academia.model.FrequenciaDTO(null, nome, matriculaCpf, status, detalhe);
-                }
-            }
-        } catch (SQLException e) {
-            System.err.println("[ERRO] AlunoDAO.buscarStatusAcesso: " + e.getMessage());
-        }
-        return null;
-    }
-
    /** Mapeia uma linha do ResultSet para um objeto {@link Aluno}. */
     private Aluno mapearResultSet(ResultSet rs) throws SQLException {
         return new Aluno(

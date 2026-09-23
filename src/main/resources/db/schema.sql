@@ -163,6 +163,7 @@ CREATE TABLE IF NOT EXISTS ExerciciosTreino (
 CREATE TABLE IF NOT EXISTS Frequencias (
     id                INTEGER PRIMARY KEY AUTOINCREMENT,
     aluno_id          INTEGER NOT NULL REFERENCES Alunos(id) ON DELETE CASCADE,
+    matricula_id      INTEGER REFERENCES Matriculas(id) ON DELETE SET NULL,
     data_hora_entrada TEXT    NOT NULL DEFAULT (datetime('now', 'localtime'))
 );
 

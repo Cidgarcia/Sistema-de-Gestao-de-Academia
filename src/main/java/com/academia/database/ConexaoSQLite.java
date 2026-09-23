@@ -55,6 +55,19 @@ public class ConexaoSQLite {
     }
 
     private static void executarMigracoes(Connection conexao) throws SQLException {
+        boolean possuiMatriculaFrequencia = false;
+        try (Statement stmt = conexao.createStatement();
+             var rs = stmt.executeQuery("PRAGMA table_info(Frequencias)")) {
+            while (rs.next()) {
+                if ("matricula_id".equals(rs.getString("name"))) possuiMatriculaFrequencia = true;
+            }
+        }
+        if (!possuiMatriculaFrequencia) {
+            try (Statement stmt = conexao.createStatement()) {
+                stmt.execute("ALTER TABLE Frequencias ADD COLUMN matricula_id INTEGER REFERENCES Matriculas(id) ON DELETE SET NULL");
+            }
+        }
+
         boolean possuiEnderecoAluno = false;
         try (Statement stmt = conexao.createStatement();
              var rs = stmt.executeQuery("PRAGMA table_info(Alunos)")) {
