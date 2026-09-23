@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -49,7 +50,9 @@ public class App extends Application {
 
         // ── 3. Configura e exibe a janela ───────────────────────────────────
         Scene cena = new Scene(raiz, LARGURA, ALTURA);
-        stage.setTitle("Sistema de Gestão de Academia");
+        stage.setTitle("GymFlow");
+        stage.getIcons().add(new Image(Objects.requireNonNull(
+                App.class.getResourceAsStream("/com/academia/view/gymflow-icon.png"))));
         stage.setScene(cena);
         stage.setMinWidth(900);
         stage.setMinHeight(600);

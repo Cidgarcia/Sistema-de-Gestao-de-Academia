@@ -1,4 +1,4 @@
-# 🏋 Sistema de Gestão de Academia — Sprint 1
+# GymFlow — Sistema de Gestão de Academia
 
 > Aplicação desktop em **Java 17 + JavaFX + SQLite** com tema moderno AtlantaFX.  
 > Funciona 100% offline — sem internet, sem nuvem.

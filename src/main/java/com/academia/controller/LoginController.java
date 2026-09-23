@@ -123,7 +123,7 @@ public class LoginController {
 
             Stage stage = (Stage) btnEntrar.getScene().getWindow();
             stage.setScene(new Scene(raiz, 1100, 700));
-            stage.setTitle("Academia — Bem-vindo, " + usuario.getNome());
+            stage.setTitle("GymFlow — Bem-vindo, " + usuario.getNome());
 
         } catch (IOException e) {
             exibirErro("Erro ao carregar o painel principal: " + e.getMessage());
@@ -137,4 +137,3 @@ public class LoginController {
         labelErro.setVisible(true);
     }
 }
-

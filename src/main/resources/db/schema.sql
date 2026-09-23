@@ -1,5 +1,5 @@
 -- =============================================================
---  Script DDL — Sistema de Gestão de Academia
+--  Script DDL — GymFlow
 --  Sprint 1 | Criação das tabelas no SQLite
 -- =============================================================
 
