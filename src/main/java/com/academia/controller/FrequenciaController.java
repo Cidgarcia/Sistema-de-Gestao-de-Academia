@@ -1,6 +1,5 @@
 package com.academia.controller;
 
-import com.academia.dao.AlunoDAO;
 import com.academia.dao.FrequenciaDAO;
 import com.academia.model.FrequenciaDTO;
 import javafx.application.Platform;
@@ -13,6 +12,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class FrequenciaController {
@@ -26,9 +26,13 @@ public class FrequenciaController {
     @FXML private Label lblMatriculaCpf;
     @FXML private Label lblDetalhePlano;
     @FXML private TableView<FrequenciaDTO> tabelaHistorico;
+    @FXML private TextField txtFiltroAluno;
+    @FXML private DatePicker dataInicioFiltro;
+    @FXML private DatePicker dataFimFiltro;
+    @FXML private Label lblHistorico;
 
     private final FrequenciaDAO frequenciaDAO = new FrequenciaDAO();
-    private final AlunoDAO alunoDAO = new AlunoDAO();
+    private boolean historicoFiltrado;
 
     @FXML
     public void initialize() {
@@ -41,7 +45,8 @@ public class FrequenciaController {
 
     /** Chamado pelo main controller quando a aba é selecionada. */
     public void refresh() {
-        carregarHistorico();
+        if (historicoFiltrado) consultarHistorico();
+        else carregarHistorico();
         limparStatus();
         Platform.runLater(() -> txtBusca.requestFocus());
     }
@@ -73,6 +78,8 @@ public class FrequenciaController {
                     setAlignment(Pos.CENTER);
                     if ("Liberado".equalsIgnoreCase(item)) {
                         setStyle("-fx-background-color: #238636; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
+                    } else if ("Anterior".equalsIgnoreCase(item)) {
+                        setStyle("-fx-background-color: #6e7681; -fx-text-fill: white; -fx-background-radius: 5;");
                     } else {
                         setStyle("-fx-background-color: #da3633; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5;");
                     }
@@ -92,6 +99,30 @@ public class FrequenciaController {
         List<FrequenciaDTO> lista = frequenciaDAO.listarHistoricoRecente(10);
         ObservableList<FrequenciaDTO> dados = FXCollections.observableArrayList(lista);
         tabelaHistorico.setItems(dados);
+        lblHistorico.setText("Últimas 10 entradas");
+    }
+
+    @FXML
+    private void consultarHistorico() {
+        LocalDate inicio = dataInicioFiltro.getValue();
+        LocalDate fim = dataFimFiltro.getValue();
+        if (inicio != null && fim != null && inicio.isAfter(fim)) {
+            lblHistorico.setText("A data inicial deve ser anterior à final.");
+            return;
+        }
+        historicoFiltrado = true;
+        tabelaHistorico.setItems(FXCollections.observableArrayList(
+                frequenciaDAO.listarHistorico(txtFiltroAluno.getText(), inicio, fim, null)));
+        lblHistorico.setText("Histórico completo: " + tabelaHistorico.getItems().size() + " registro(s)");
+    }
+
+    @FXML
+    private void limparFiltro() {
+        txtFiltroAluno.clear();
+        dataInicioFiltro.setValue(null);
+        dataFimFiltro.setValue(null);
+        historicoFiltrado = false;
+        carregarHistorico();
     }
 
     @FXML
@@ -99,37 +130,18 @@ public class FrequenciaController {
         String termo = txtBusca.getText().trim();
         if (termo.isEmpty()) return;
 
-        FrequenciaDTO dto = alunoDAO.buscarStatusAcesso(termo);
+        FrequenciaDAO.ResultadoRegistro resultado = frequenciaDAO.registrarEntrada(termo);
+        if (resultado.status() == FrequenciaDAO.Status.NAO_ENCONTRADO || resultado.status() == FrequenciaDAO.Status.ERRO)
+            mostrarErro(resultado.detalhe());
+        else
+            mostrarResultado(new FrequenciaDTO(null, resultado.nome(), resultado.identificacao(),
+                    resultado.status() == FrequenciaDAO.Status.LIBERADO ? "Liberado" : "Bloqueado", resultado.detalhe()));
 
-        if (dto == null) {
-            mostrarErro("Cadastro não encontrado");
-        } else {
-            // Se encontrou o aluno (mesmo que bloqueado), registra a tentativa de entrada
-            // Para pegar o ID do Aluno, vou extrair do DTO ou adaptar (vou adaptar puxando o ID do termo/banco)
-            // Uma solução rápida é extrair o ID do formato "CPF: xxx | ID: #id"
-            int alunoId = extrairIdDoDto(dto.getMatriculaCpf());
-            if (alunoId > 0) {
-                frequenciaDAO.registrarEntrada(alunoId);
-            }
-            
-            mostrarResultado(dto);
-            carregarHistorico();
-        }
+        if (historicoFiltrado) consultarHistorico();
+        else carregarHistorico();
 
         txtBusca.clear();
         txtBusca.requestFocus();
-    }
-
-    private int extrairIdDoDto(String matriculaCpfStr) {
-        try {
-            String[] partes = matriculaCpfStr.split("#");
-            if (partes.length > 1) {
-                return Integer.parseInt(partes[1].trim());
-            }
-        } catch (Exception e) {
-            // Ignorar
-        }
-        return -1;
     }
 
     private void mostrarResultado(FrequenciaDTO dto) {
