@@ -37,6 +37,8 @@
             <Label fx:id="labelUsuario" text="Usuário: —"
                    style="-fx-text-fill: #8b949e; -fx-font-size: 12px;"/>
 
+            <Button text="Alterar senha" onAction="#onAlterarSenhaClicado"/>
+
             <!-- Botão Sair -->
             <Button text="Sair" onAction="#onSairClicado" styleClass="danger"/>
         </HBox>
@@ -71,4 +73,3 @@
     </center>
 
 </BorderPane>
-

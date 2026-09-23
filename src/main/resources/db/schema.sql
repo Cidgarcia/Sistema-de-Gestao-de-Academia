@@ -14,20 +14,20 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     id       INTEGER PRIMARY KEY AUTOINCREMENT,
     nome     TEXT    NOT NULL,
     login    TEXT    NOT NULL UNIQUE,
-    senha    TEXT    NOT NULL,          -- senha armazenada com hash simples (SHA-256)
+    senha    TEXT    NOT NULL,          -- PBKDF2 versionado (SHA-256 legado migra após login)
     perfil   TEXT    NOT NULL CHECK (perfil IN ('FUNCIONARIO', 'INSTRUTOR'))
 );
 
 -- Usuário administrador padrão (senha: admin123)
 INSERT OR IGNORE INTO Usuarios (nome, login, senha, perfil)
 VALUES ('Administrador', 'admin',
-        '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9',
+        'pbkdf2-sha256$600000$YVjaVN7bp4gLr/KXzbKmJg==$p4N8dZavB/tPCy25LmesMrjq0NE4ZRxfYSq8Z/Xq4Qg=',
         'FUNCIONARIO');
 
 -- Usuário instrutor padrão (senha: admin123)
 INSERT OR IGNORE INTO Usuarios (nome, login, senha, perfil)
 VALUES ('Instrutor Padrão', 'instrutor',
-        '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9',
+        'pbkdf2-sha256$600000$TB5ifntl1/OXhFldtIZclQ==$mtpjIMYsMjUGTigVhrJMVEEQviDDd93y0xyJ/0el/TE=',
         'INSTRUTOR');
 
 -- -------------------------------------------------------------

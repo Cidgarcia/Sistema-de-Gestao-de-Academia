@@ -90,6 +90,8 @@ Ao abrir o sistema, use as credenciais abaixo:
 
 > A aba **Avaliação Física** (UC 05) só aparece habilitada para o perfil **INSTRUTOR**.
 
+As contas iniciais são para demonstração. Em **Alterar senha**, cada usuário pode trocar a própria senha (mínimo de 8 caracteres). A troca é opcional: enquanto uma conta mantiver `admin123`, ela continuará usando uma senha pública e conhecida. Os hashes novos usam PBKDF2-HMAC-SHA256 com salt individual; contas antigas com SHA-256 são atualizadas automaticamente após o primeiro login correto.
+
 ---
 
 ## 🗄️ Banco de Dados
@@ -122,15 +124,9 @@ Ao abrir o sistema, use as credenciais abaixo:
 
 **Causas possíveis:**
 1. **Perfil errado:** Certifique-se de selecionar `FUNCIONARIO`, não `INSTRUTOR`
-2. **Banco antigo corrompido:** O arquivo `academia_db.sqlite` pode estar desatualizado
+2. **Senha alterada:** depois da troca, a senha inicial deixa de funcionar.
 
-**Solução (banco corrompido):**
-```powershell
-# No PowerShell, apague o banco para ele ser recriado do zero:
-Remove-Item "$env:USERPROFILE\academia_db.sqlite" -Force
-# Em seguida, rode o projeto novamente
-mvn javafx:run
-```
+Se o problema persistir, confira o perfil e a senha com o responsável pelo banco. Não apague o arquivo `academia_db.sqlite`: ele contém os dados cadastrados.
 
 ---
 

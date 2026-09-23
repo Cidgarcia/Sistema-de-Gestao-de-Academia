@@ -11,7 +11,7 @@ public class Usuario {
     private int id;
     private String nome;
     private String login;
-    private String senha;   // armazenada como hash SHA-256
+    private String senha;   // hash de senha (PBKDF2 ou SHA-256 legado)
     private String perfil;  // "FUNCIONARIO" ou "INSTRUTOR"
 
     public Usuario() {}
@@ -51,4 +51,3 @@ public class Usuario {
         return nome + " (" + perfil + ")";
     }
 }
-

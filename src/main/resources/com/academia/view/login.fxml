@@ -73,8 +73,5 @@
                 style="-fx-pref-width: 300px; -fx-font-size: 14px;"
                 styleClass="accent"/>
 
-        <!-- Credenciais padrão (apenas para desenvolvimento) -->
-        <Label text="Padrão: admin / admin123 / FUNCIONARIO"
-               style="-fx-text-fill: #484f58; -fx-font-size: 11px;"/>
     </VBox>
 </StackPane>
