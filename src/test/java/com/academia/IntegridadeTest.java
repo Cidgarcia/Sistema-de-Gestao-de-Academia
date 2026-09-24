@@ -62,13 +62,26 @@ class IntegridadeTest {
     void falhaAoSalvarTreinoRestauraDadosAnteriores() throws SQLException {
         Aluno aluno = criarAluno("Rollback", "111.444.777-35");
         TreinoDAO dao = new TreinoDAO();
-        assertTrue(dao.salvarTreinos(aluno.getId(), List.of(divisao("Treino original", 3))));
+        int instrutorId = idUsuario("instrutor");
+        assertTrue(dao.salvarTreinos(aluno.getId(), List.of(divisao("Treino original", 3)), instrutorId));
 
-        assertFalse(dao.salvarTreinos(aluno.getId(), List.of(divisao("Treino inválido", 0))));
+        assertFalse(dao.salvarTreinos(aluno.getId(), List.of(divisao("Treino inválido", 0)), instrutorId));
         List<TreinoDivisao> persistidas = dao.listarDivisoesPorAluno(aluno.getId());
         assertEquals(1, persistidas.size());
         assertEquals("Treino original", persistidas.get(0).getNomeDivisao());
         assertEquals(3, persistidas.get(0).getExercicios().get(0).getSeries());
+    }
+
+    @Test
+    void funcionarioNaoPodeGravarTreino() throws SQLException {
+        Aluno aluno = criarAluno("Permissão", "390.533.447-05");
+        TreinoDAO dao = new TreinoDAO();
+        int instrutorId = idUsuario("instrutor");
+        assertTrue(dao.salvarTreinos(aluno.getId(), List.of(divisao("Treino original", 3)), instrutorId));
+
+        assertFalse(dao.salvarTreinos(aluno.getId(), List.of(divisao("Treino indevido", 4)), idUsuario("admin")));
+        assertFalse(dao.salvarTreinos(aluno.getId(), List.of(divisao("Treino sem usuário", 4)), -1));
+        assertEquals("Treino original", dao.listarDivisoesPorAluno(aluno.getId()).get(0).getNomeDivisao());
     }
 
     @Test
@@ -114,6 +127,16 @@ class IntegridadeTest {
     private static int contar(Connection conn, String sql) throws SQLException {
         try (var rs = conn.createStatement().executeQuery(sql)) {
             return rs.next() ? rs.getInt(1) : 0;
+        }
+    }
+
+    private static int idUsuario(String login) throws SQLException {
+        try (var ps = ConexaoSQLite.getConexao().prepareStatement("SELECT id FROM Usuarios WHERE login = ?")) {
+            ps.setString(1, login);
+            try (var rs = ps.executeQuery()) {
+                assertTrue(rs.next());
+                return rs.getInt(1);
+            }
         }
     }
 

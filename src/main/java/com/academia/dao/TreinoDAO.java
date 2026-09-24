@@ -66,13 +66,20 @@ public class TreinoDAO {
      * Como a edição pode remover divisões e exercícios, a estratégia mais limpa
      * é excluir as antigas e inserir as novas dentro de uma transação.
      */
-    public boolean salvarTreinos(int alunoId, List<TreinoDivisao> divisoes) {
+    public boolean salvarTreinos(int alunoId, List<TreinoDivisao> divisoes, int usuarioId) {
         String sqlDelete = "DELETE FROM FichasTreino WHERE aluno_id = ?";
         String sqlInsertDivisao = "INSERT INTO FichasTreino (aluno_id, nome_divisao) VALUES (?, ?)";
         String sqlInsertExercicio = "INSERT INTO ExerciciosTreino (ficha_id, ordem, grupo_muscular, nome, series, repeticoes, carga, descanso, observacoes) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         Connection conn = ConexaoSQLite.getConexao();
         try {
+            try (PreparedStatement stmt = conn.prepareStatement(
+                    "SELECT 1 FROM Usuarios WHERE id = ? AND perfil = 'INSTRUTOR'")) {
+                stmt.setInt(1, usuarioId);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (!rs.next()) return false;
+                }
+            }
             conn.setAutoCommit(false);
 
             // 1. Apaga treinos antigos (CASCADE remove os exercícios)
