@@ -379,6 +379,10 @@ public class TreinoController {
 
     @FXML
     private void onSalvarClicado() {
+        if (!TreinoValidator.podeEditar(usuarioLogado)) {
+            new Alert(Alert.AlertType.ERROR, "Somente instrutores podem salvar fichas de treino.").showAndWait();
+            return;
+        }
         Aluno alunoSelecionado = buscaAluno.getSelecionado();
         if (alunoSelecionado == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Selecione um aluno primeiro!");
@@ -409,7 +413,8 @@ public class TreinoController {
             return;
         }
 
-        boolean sucesso = treinoDAO.salvarTreinos(alunoSelecionado.getId(), divisoesParaSalvar);
+        boolean sucesso = treinoDAO.salvarTreinos(alunoSelecionado.getId(), divisoesParaSalvar,
+                usuarioLogado.getId());
 
         Alert alert = new Alert(sucesso ? Alert.AlertType.INFORMATION : Alert.AlertType.ERROR);
         alert.setTitle("Salvar Treino");
