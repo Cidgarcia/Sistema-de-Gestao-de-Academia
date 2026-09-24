@@ -20,8 +20,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Controller: Controlar Pagamentos — UC 04.
@@ -40,7 +38,8 @@ public class PagamentoController implements Subject {
     // ── Formulário de registro de pagamento ──────────────────────────────
 
     @FXML private TextField              campoBuscaAluno;
-    @FXML private ListView<Matricula>     listaResultadosAluno;
+    @FXML private ListView<Aluno>         listaResultadosAluno;
+    @FXML private Button                  btnConfirmarPagamento;
     @FXML private TextField              campValor;
     @FXML private ComboBox<String>       comboTipoPagamento;
     @FXML private ComboBox<String>       comboFormaPagamento;
@@ -72,9 +71,11 @@ public class PagamentoController implements Subject {
     private final PagamentoDAO  pagamentoDAO  = new PagamentoDAO();
     private final MatriculaDAO  matriculaDAO  = new MatriculaDAO();
     private final AlunoDAO      alunoDAO      = new AlunoDAO();
-    private List<Matricula> matriculasAtivas = new ArrayList<>();
-    private Map<Integer, String> cpfPorAluno = Map.of();
+    private List<Aluno> alunosCadastrados = new ArrayList<>();
+    private List<Matricula> matriculas = new ArrayList<>();
+    private Aluno alunoSelecionado;
     private Matricula matriculaSelecionada;
+    private boolean temPendenciaEmAberto;
     private boolean atualizandoBusca;
     private Integer pendenciaSelecionadaId;
 
@@ -83,27 +84,23 @@ public class PagamentoController implements Subject {
      */
     @FXML
     public void initialize() {
-        // Popula o combo de matrículas com as ativas
-        carregarMatriculasAtivas();
+        carregarAlunosEMatriculas();
 
-        // Configura exibição do combo de matrículas
         campoBuscaAluno.textProperty().addListener((obs, anterior, texto) -> filtrarAlunos(texto));
         listaResultadosAluno.setCellFactory(view -> new javafx.scene.control.ListCell<>() {
             @Override
-            protected void updateItem(Matricula matricula, boolean empty) {
-                super.updateItem(matricula, empty);
-                setText(empty || matricula == null ? null : String.format(
-                        "%s  ·  Matrícula #%d  ·  CPF %s", matricula.getNomeAluno(),
-                        matricula.getId(), cpfPorAluno.getOrDefault(matricula.getAlunoId(), "não informado")));
+            protected void updateItem(Aluno aluno, boolean empty) {
+                super.updateItem(aluno, empty);
+                setText(empty || aluno == null ? null : aluno.getNome() + "  ·  CPF " + aluno.getCpf());
             }
         });
         listaResultadosAluno.getSelectionModel().selectedItemProperty().addListener(
-                (obs, anterior, matricula) -> {
-                    if (matricula != null) selecionarMatricula(matricula);
+                (obs, anterior, aluno) -> {
+                    if (aluno != null) selecionarAluno(aluno);
                 });
 
         // Formas de pagamento disponíveis
-        comboFormaPagamento.getItems().addAll("DINHEIRO", "CARTAO", "PIX", "BOLETO");
+        comboFormaPagamento.getItems().addAll("DINHEIRO", "CARTAO", "PIX");
         comboFormaPagamento.getSelectionModel().selectFirst();
         comboTipoPagamento.getItems().addAll("MENSALIDADE", "OUTRO");
         comboTipoPagamento.getSelectionModel().selectFirst();
@@ -190,10 +187,10 @@ public class PagamentoController implements Subject {
     /** Ação do botão "Atualizar" (recarrega as tabelas). */
     @FXML
     private void onAtualizarClicado() {
-        carregarMatriculasAtivas();
+        carregarAlunosEMatriculas();
         carregarPagamentos();
         carregarAtrasados();
-        exibirStatus("Dados atualizados.");
+        if (alunoSelecionado == null || temPendenciaEmAberto) exibirStatus("Dados atualizados.");
     }
 
     /**
@@ -201,18 +198,16 @@ public class PagamentoController implements Subject {
      * Chamado pelo PainelPrincipalController quando a aba Pagamentos é selecionada.
      */
     public void refresh() {
-        carregarMatriculasAtivas();
+        carregarAlunosEMatriculas();
         carregarPagamentos();
         carregarAtrasados();
     }
 
     // ── Métodos auxiliares ────────────────────────────────────────────────
 
-    private void carregarMatriculasAtivas() {
-        List<Matricula> todas = matriculaDAO.listarTodas();
-        matriculasAtivas = todas.stream().filter(Matricula::isAtiva).toList();
-        cpfPorAluno = alunoDAO.listarTodos().stream()
-                .collect(Collectors.toMap(Aluno::getId, Aluno::getCpf, (a, b) -> a));
+    private void carregarAlunosEMatriculas() {
+        alunosCadastrados = alunoDAO.listarTodos();
+        matriculas = matriculaDAO.listarTodas();
     }
 
     private void carregarPagamentos() {
@@ -222,11 +217,12 @@ public class PagamentoController implements Subject {
     }
 
     private void carregarAtrasados() {
-        carregarPendencias(matriculaSelecionada == null ? null : matriculaSelecionada.getId());
+        carregarPendencias(alunoSelecionado == null ? null : alunoSelecionado.getId());
     }
 
     private void filtrarAlunos(String texto) {
         if (atualizandoBusca) return;
+        alunoSelecionado = null;
         matriculaSelecionada = null;
         pendenciaSelecionadaId = null;
         tabelaAtrasados.getSelectionModel().clearSelection();
@@ -240,46 +236,49 @@ public class PagamentoController implements Subject {
             return;
         }
         String digitos = consulta.replaceAll("\\D", "");
-        List<Matricula> encontrados = matriculasAtivas.stream().filter(m -> {
-            String nome = m.getNomeAluno() == null ? "" : m.getNomeAluno().toLowerCase();
-            String id = Integer.toString(m.getId());
-            String cpf = cpfPorAluno.getOrDefault(m.getAlunoId(), "");
-            String cpfDigitos = cpf.replaceAll("\\D", "");
-            return nome.contains(consulta) || id.contains(consulta)
-                    || (!digitos.isEmpty() && cpfDigitos.contains(digitos));
+        List<Aluno> encontrados = alunosCadastrados.stream().filter(a -> {
+            String nome = a.getNome() == null ? "" : a.getNome().toLowerCase();
+            String cpf = a.getCpf() == null ? "" : a.getCpf();
+            return nome.contains(consulta)
+                    || (!digitos.isEmpty() && cpf.replaceAll("\\D", "").contains(digitos))
+                    || matriculas.stream().anyMatch(m -> m.getAlunoId() == a.getId()
+                            && Integer.toString(m.getId()).contains(consulta));
         }).limit(8).toList();
         listaResultadosAluno.setItems(FXCollections.observableArrayList(encontrados));
         boolean mostrar = !encontrados.isEmpty();
         listaResultadosAluno.setVisible(mostrar);
         listaResultadosAluno.setManaged(mostrar);
-        if (!mostrar) exibirStatus("Nenhum aluno com matrícula ativa corresponde à busca.");
+        if (!mostrar) exibirStatus("Nenhum aluno cadastrado corresponde à busca.");
     }
 
-    private void selecionarMatricula(Matricula matricula) {
-        boolean mudouMatricula = matriculaSelecionada == null
-                || matriculaSelecionada.getId() != matricula.getId();
-        matriculaSelecionada = matricula;
+    private void selecionarAluno(Aluno aluno) {
+        alunoSelecionado = aluno;
+        matriculaSelecionada = matriculas.stream()
+                .filter(m -> m.getAlunoId() == aluno.getId()).findFirst().orElse(null);
+        pendenciaSelecionadaId = null;
         atualizandoBusca = true;
-        campoBuscaAluno.setText(String.format("%s · Matrícula #%d",
-                matricula.getNomeAluno(), matricula.getId()));
+        campoBuscaAluno.setText(aluno.getNome() + " · CPF " + aluno.getCpf());
         atualizandoBusca = false;
         listaResultadosAluno.setVisible(false);
         listaResultadosAluno.setManaged(false);
-        if (mudouMatricula) {
-            pendenciaSelecionadaId = null;
-            carregarPendencias(matricula.getId());
-        }
+        carregarPendencias(aluno.getId());
     }
 
-    private void carregarPendencias(Integer matriculaId) {
-        if (matriculaId == null) {
+    private void carregarPendencias(Integer alunoId) {
+        if (alunoId == null) {
             tabelaAtrasados.setItems(FXCollections.observableArrayList());
+            temPendenciaEmAberto = false;
+            btnConfirmarPagamento.setDisable(true);
             return;
         }
-        List<PendenciaFinanceira> pendencias = pagamentoDAO.listarPendencias(matriculaId);
+        List<PendenciaFinanceira> pendencias = pagamentoDAO.listarPendenciasPorAluno(alunoId);
         tabelaAtrasados.setItems(FXCollections.observableArrayList(pendencias));
-        if (matriculaId != null && pendencias.stream().noneMatch(p -> !"PAGA".equals(p.getSituacao()))) {
-            exibirStatus("ℹ Este aluno não possui pagamentos pendentes.");
+        temPendenciaEmAberto = pendencias.stream().anyMatch(p -> !"PAGA".equals(p.getSituacao()));
+        btnConfirmarPagamento.setDisable(!temPendenciaEmAberto);
+        if (temPendenciaEmAberto) {
+            exibirStatus("Selecione uma mensalidade pendente ou informe outro pagamento.");
+        } else {
+            exibirStatus("ℹ Aluno em situação regular: não há pagamentos pendentes.");
         }
     }
 
@@ -347,6 +346,10 @@ public class PagamentoController implements Subject {
     }
 
     private boolean validarCampos() {
+        if (alunoSelecionado == null || !temPendenciaEmAberto) {
+            exibirStatus("ℹ Selecione um aluno com pagamentos pendentes.");
+            return false;
+        }
         if (matriculaSelecionada == null) {
             exibirStatus("⚠ Selecione uma matrícula.");
             return false;
@@ -382,6 +385,7 @@ public class PagamentoController implements Subject {
     }
 
     private void limparFormulario() {
+        alunoSelecionado = null;
         matriculaSelecionada = null;
         campoBuscaAluno.clear();
         campValor.clear();
@@ -391,12 +395,17 @@ public class PagamentoController implements Subject {
         campObservacoes.clear();
         tabelaAtrasados.getSelectionModel().clearSelection();
         pendenciaSelecionadaId = null;
+        carregarPendencias(null);
     }
 
     private void preencherComPendencia(PendenciaFinanceira pendencia) {
-        matriculasAtivas.stream()
+        if (alunoSelecionado == null || "PAGA".equals(pendencia.getSituacao())) {
+            pendenciaSelecionadaId = null;
+            return;
+        }
+        matriculaSelecionada = matriculas.stream()
                 .filter(m -> m.getId() == pendencia.getMatriculaId())
-                .findFirst().ifPresent(this::selecionarMatricula);
+                .findFirst().orElse(null);
         pendenciaSelecionadaId = pendencia.getId();
         comboTipoPagamento.setValue("MENSALIDADE");
         campValor.setText(String.format("%.2f", pendencia.getValor()));
