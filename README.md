@@ -1,29 +1,39 @@
 # GymCore — Sistema de Gestão de Academia
 
 > Aplicação desktop em **Java 17 + JavaFX + SQLite** com tema moderno AtlantaFX.  
+> Focada no controle de frequência, treinos, gestão financeira e emissão de relatórios.  
 > Funciona 100% offline — sem internet, sem nuvem.
 
 ---
 
 ## 📋 Pré-requisitos
 
-Antes de rodar o projeto, instale e configure:
+O código do aplicativo é o mesmo para Windows e Linux. Antes de rodar o projeto, instale e configure:
 
 ### 1. Java 17 (JDK)
 
+**Windows:**
 1. Acesse: https://adoptium.net/
 2. Baixe o **JDK 17** (Temurin) para Windows x64 (instalador `.msi`)
 3. Execute o instalador — marque a opção **"Set JAVA_HOME"** e **"Add to PATH"**
-4. Verifique no terminal:
-   ```powershell
-   java -version
-   # Deve exibir: openjdk version "17.x.x"
-   ```
+
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install openjdk-17-jdk
+```
+
+Verifique no terminal:
+```bash
+java -version
+# Deve exibir: openjdk version "17.x.x"
+```
 
 ---
 
 ### 2. Apache Maven 3.9+
 
+**Windows:**
 1. Acesse: https://maven.apache.org/download.cgi
 2. Baixe o **apache-maven-3.9.x-bin.zip** (Binary zip archive)
 3. Extraia em um local fixo, por exemplo: `C:\tools\maven\`
@@ -31,50 +41,55 @@ Antes de rodar o projeto, instale e configure:
    - Pesquise **"Variáveis de Ambiente"** no Windows
    - Em **Variáveis do Sistema → Path**, clique em **Editar → Novo**
    - Adicione: `C:\tools\maven\bin`
-5. Verifique no terminal (abra um **novo** PowerShell):
-   ```powershell
-   mvn -version
-   # Deve exibir: Apache Maven 3.9.x
-   ```
 
-> **⚠️ Atenção:** O terminal precisa ser reaberto após alterar o PATH para reconhecer o `mvn`.
+**Linux (Ubuntu/Debian):**
+```bash
+sudo apt install maven
+```
+
+Verifique no terminal (abra um **novo** terminal):
+```bash
+mvn -version
+# Deve exibir: Apache Maven 3.9.x
+```
+
+> **⚠️ Atenção:** O terminal precisa ser reaberto após alterar o PATH para reconhecer o `mvn` no Windows.
 
 ---
 
 ## 🚀 Como Executar o Projeto
 
-### Passo 1 — Abrir o projeto no VS Code
+### Passo 1 — Abrir a pasta do projeto
 
-1. Abra o VS Code
-2. Vá em **File → Open Folder**
-3. Selecione a pasta: `C:\Users\<seu-usuario>\OneDrive\Documentos\Academia`
+Abra a pasta em que o repositório foi clonado no seu explorador de arquivos ou editor de preferência.
 
----
-
-### Passo 2 — Instalar as extensões recomendadas no VS Code
-
-Instale o **Extension Pack for Java** (da Microsoft):
-- Acesse a aba de extensões (`Ctrl+Shift+X`)
-- Pesquise: `Extension Pack for Java`
-- Clique em **Install**
+*(Opcional)* Se usar o **VS Code**:
+1. Vá em **File → Open Folder** e selecione a pasta do repositório.
+2. É recomendável instalar o **Extension Pack for Java** (da Microsoft) para obter melhor suporte.
 
 ---
 
-### Passo 3 — Compilar e rodar
+### Passo 2 — Compilar, testar e rodar
 
-Abra o terminal integrado do VS Code (`Ctrl+` `` ` ``) e execute:
+Abra o terminal (ou terminal integrado da sua IDE) na pasta do projeto e execute os comandos abaixo (válidos para Windows e Linux):
 
-```powershell
+Para rodar os testes:
+```bash
+mvn test
+```
+
+Para executar a aplicação:
+```bash
 mvn javafx:run
 ```
 
-Na primeira execução, o Maven vai baixar as dependências automaticamente (JavaFX, AtlantaFX, SQLite). Pode demorar alguns minutos dependendo da sua internet.
+Na primeira execução, o Maven vai baixar as dependências automaticamente (JavaFX, AtlantaFX, SQLite, etc). Pode demorar alguns minutos dependendo da sua internet.
 
 ---
 
-## 🔑 Login Padrão
+## 🔑 Login e Segurança
 
-Ao abrir o sistema, use as credenciais abaixo:
+Ao abrir o sistema, use as credenciais de demonstração abaixo:
 
 | Campo            | Valor         |
 |------------------|---------------|
@@ -88,17 +103,44 @@ Ao abrir o sistema, use as credenciais abaixo:
 | **Senha**        | `admin123`    |
 | **Perfil**       | `INSTRUTOR`   |
 
-> A aba **Avaliação Física** (UC 05) só aparece habilitada para o perfil **INSTRUTOR**.
+As contas iniciais são para demonstração. Em **Alterar senha** (disponível na interface principal), cada usuário pode trocar a própria senha (mínimo de 8 caracteres). As senhas iniciais só valem enquanto não forem trocadas. 
 
-As contas iniciais são para demonstração. Em **Alterar senha**, cada usuário pode trocar a própria senha (mínimo de 8 caracteres). A troca é opcional: enquanto uma conta mantiver `admin123`, ela continuará usando uma senha pública e conhecida. Os hashes novos usam PBKDF2-HMAC-SHA256 com salt individual; contas antigas com SHA-256 são atualizadas automaticamente após o primeiro login correto.
+A troca é opcional, mas os hashes novos usam PBKDF2-HMAC-SHA256 com salt individual para maior segurança. Contas antigas que utilizam SHA-256 são atualizadas automaticamente após o primeiro login correto.
 
 ---
 
 ## 🗄️ Banco de Dados
 
 - O banco SQLite é criado **automaticamente** no primeiro acesso, sem nenhuma configuração.
-- Localização do arquivo: `C:\Users\<seu-usuario>\academia_db.sqlite`
+- O arquivo `academia_db.sqlite` fica localizado na pasta pessoal do usuário do sistema operacional. Por exemplo:
+  - **Windows:** `C:\Users\<seu-usuario>\academia_db.sqlite`
+  - **Linux:** `/home/<seu-usuario>/academia_db.sqlite`
 - As tabelas são criadas via `src/main/resources/db/schema.sql`
+
+> **⚠️ Aviso:** Não apague o banco de dados se ele contiver dados cadastrados, para não perder as informações da academia.
+
+---
+
+## 📌 Funcionalidades e Permissões por Perfil
+
+O sistema possui controle de permissões baseado no perfil do usuário logado:
+
+| Área                  | Acesso: Funcionário | Acesso: Instrutor |
+|-----------------------|---------------------|-------------------|
+| 👤 Alunos             | ✅                  | ✅                |
+| 🚪 Recepção/Frequência| ✅                  | ❌                |
+| 📋 Planos             | ✅                  | ❌                |
+| 📝 Matrículas         | ✅                  | ❌                |
+| 💳 Pagamentos/Caixa   | ✅                  | ❌                |
+| 📊 Avaliação Física   | ❌                  | ✅                |
+| 🏋️ Treinos            | ❌                  | ✅                |
+| 📈 Relatórios         | ✅                  | ✅                |
+
+---
+
+## 📈 Relatórios
+
+O sistema conta com uma área dedicada a **Relatórios** gerenciais e operacionais. Os relatórios disponíveis podem ser visualizados na interface e possuem a funcionalidade de exportação direta em formato **PDF**, facilitando o compartilhamento e impressão (ex: desempenho da academia, fichas de alunos, etc).
 
 ---
 
@@ -108,7 +150,7 @@ As contas iniciais são para demonstração. Em **Alterar senha**, cada usuário
 
 **Causa:** Maven não está no PATH do sistema.
 
-**Solução:** Siga o **Passo 2** da seção de pré-requisitos acima. Lembre de abrir um **novo** terminal após configurar.
+**Solução:** Siga os passos de instalação e configuração do Maven na seção de pré-requisitos acima. Lembre de abrir um **novo** terminal após configurar.
 
 ---
 
@@ -123,26 +165,28 @@ As contas iniciais são para demonstração. Em **Alterar senha**, cada usuário
 ### ❌ "Credenciais inválidas" no login
 
 **Causas possíveis:**
-1. **Perfil errado:** Certifique-se de selecionar `FUNCIONARIO`, não `INSTRUTOR`
-2. **Senha alterada:** depois da troca, a senha inicial deixa de funcionar.
+1. **Perfil errado:** Certifique-se de selecionar o perfil correto (`FUNCIONARIO` ou `INSTRUTOR`).
+2. **Senha alterada:** Depois da troca, a senha inicial de demonstração deixa de funcionar.
 
-Se o problema persistir, confira o perfil e a senha com o responsável pelo banco. Não apague o arquivo `academia_db.sqlite`: ele contém os dados cadastrados.
+Se o problema persistir, confira o perfil e a senha.
 
 ---
 
 ### ❌ ComboBoxes vazios em Matrículas ou Pagamentos
 
-**Causa:** Os dados são recarregados ao trocar de aba. Cadastre alunos e planos primeiro, depois acesse Matrículas.
+**Causa:** Os dados são recarregados automaticamente conforme a navegação atual.
 
-**Solução:** Clique em outra aba e volte — os combos serão atualizados automaticamente.
+**Solução:** Certifique-se de que você já cadastrou alunos e planos. Caso ainda não tenha feito, vá nas respectivas telas e efetue os cadastros, então retorne para as Matrículas/Pagamentos.
 
 ---
 
 ### ❌ `BUILD FAILURE` ao rodar `mvn javafx:run`
 
-**Solução:** Execute `mvn clean` antes e tente novamente:
+**Causa:** "Build Failure" é um aviso genérico de erro. A compilação falhou por algum motivo (erro de sintaxe, teste que falhou, dependência não encontrada, etc).
 
-```powershell
+**Solução:** Role o terminal para cima e identifique o erro exato na saída do Maven antes de prosseguir. Caso tenha certeza que é apenas um problema de cache corrompido ou de limpezas de compilações anteriores, você pode tentar rodar `mvn clean` antes de executar novamente:
+
+```bash
 mvn clean
 mvn javafx:run
 ```
@@ -151,8 +195,8 @@ mvn javafx:run
 
 ## 📁 Estrutura do Projeto
 
-```
-Academia/
+```text
+Sistema-de-Gestao-de-Academia/
 ├── pom.xml                          ← Configuração Maven (dependências)
 ├── README.md                        ← Este arquivo
 └── src/main/
@@ -164,7 +208,9 @@ Academia/
     │       ├── database/             ← Conexão SQLite (Singleton)
     │       ├── model/                ← Entidades (POJOs)
     │       ├── dao/                  ← Acesso ao banco (JDBC)
-    │       └── controller/           ← Lógica e controle das telas
+    │       ├── controller/           ← Lógica e controle das telas
+    │       ├── validation/           ← Validações de regras de negócio
+    │       └── util/                 ← Classes utilitárias e exportação PDF
     └── resources/
         ├── db/schema.sql             ← Script de criação das tabelas
         └── com/academia/view/        ← Telas (.fxml)
@@ -172,23 +218,11 @@ Academia/
 
 ---
 
-## 📌 Funcionalidades (Sprint 1)
-
-| Aba                  | Caso de Uso | Perfil       |
-|----------------------|-------------|--------------|
-| 👤 Alunos            | UC 01       | Todos        |
-| 📋 Planos            | UC 02       | Todos        |
-| 📝 Matrículas        | UC 03       | Todos        |
-| 💳 Pagamentos        | UC 04       | Todos        |
-| 📊 Avaliação Física  | UC 05       | Instrutor    |
-
----
-
 ## 🔄 Padrão Observer (requisito do projeto)
 
 O sistema notifica automaticamente o cabeçalho sempre que um pagamento é registrado:
 
-```
+```text
 PagamentoController  →  notificarObservers()  →  PainelPrincipalController
      (Subject)                                          (Observer)
                                                            ↓
@@ -206,3 +240,5 @@ PagamentoController  →  notificarObservers()  →  PainelPrincipalController
 | AtlantaFX     | 2.0.1   | Tema visual moderno         |
 | SQLite (JDBC) | 3.45    | Banco de dados local        |
 | Maven         | 3.9+    | Gerenciador de dependências |
+| JUnit         | 5       | Testes automatizados        |
+| OpenPDF       | 1.3.36  | Exportação de relatórios PDF|
