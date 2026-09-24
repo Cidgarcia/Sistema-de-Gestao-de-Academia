@@ -22,7 +22,7 @@
             <VBox spacing="12" style="-fx-padding: 0 16 0 0;">
 
             <Label text="Avaliação Física"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #38BDF8;"/>
 
             <!-- Badge de acesso restrito -->
             <Label text="🔒 Restrito a Instrutores"
@@ -31,42 +31,43 @@
 
             <Separator/>
 
-            <Label text="Aluno *" style="-fx-text-fill: #c9d1d9;"/>
-            <ComboBox fx:id="comboAluno" maxWidth="Infinity"/>
+            <Label text="Aluno *" style="-fx-text-fill: #DCE7E4;"/>
+            <TextField fx:id="campoBuscaAluno" promptText="Buscar por nome, CPF ou matrícula..." maxWidth="Infinity"/>
+            <ListView fx:id="listaResultadosAluno" visible="false" managed="false" maxHeight="132" focusTraversable="false"/>
 
-            <Label text="Data da Avaliação" style="-fx-text-fill: #c9d1d9;"/>
+            <Label text="Data da Avaliação" style="-fx-text-fill: #DCE7E4;"/>
             <DatePicker fx:id="campData" maxWidth="Infinity"/>
 
             <!-- Medidas em grade 2x2 -->
             <GridPane hgap="10" vgap="8">
                 <Label text="Peso (kg)"        GridPane.columnIndex="0" GridPane.rowIndex="0"
-                       style="-fx-text-fill: #c9d1d9;"/>
+                       style="-fx-text-fill: #DCE7E4;"/>
                 <TextField fx:id="campPeso"    GridPane.columnIndex="1" GridPane.rowIndex="0"
                            promptText="Ex.: 75.5" prefWidth="130"/>
 
                 <Label text="Altura (cm)"      GridPane.columnIndex="0" GridPane.rowIndex="1"
-                       style="-fx-text-fill: #c9d1d9;"/>
+                       style="-fx-text-fill: #DCE7E4;"/>
                 <TextField fx:id="campAltura"  GridPane.columnIndex="1" GridPane.rowIndex="1"
                            promptText="Ex.: 175" prefWidth="130"/>
 
                 <Label text="Gordura (%)"      GridPane.columnIndex="0" GridPane.rowIndex="2"
-                       style="-fx-text-fill: #c9d1d9;"/>
+                       style="-fx-text-fill: #DCE7E4;"/>
                 <TextField fx:id="campGordura" GridPane.columnIndex="1" GridPane.rowIndex="2"
                            promptText="Ex.: 18.5" prefWidth="130"/>
 
                 <Label text="Massa Muscular"   GridPane.columnIndex="0" GridPane.rowIndex="3"
-                       style="-fx-text-fill: #c9d1d9;"/>
+                       style="-fx-text-fill: #DCE7E4;"/>
                 <TextField fx:id="campMassa"   GridPane.columnIndex="1" GridPane.rowIndex="3"
                            promptText="Ex.: 35.2" prefWidth="130"/>
             </GridPane>
 
             <!-- IMC calculado em tempo real -->
             <Label fx:id="labelImc" text="IMC calculado: —"
-                   style="-fx-text-fill: #58a6ff; -fx-font-size: 13px;
-                          -fx-font-weight: bold; -fx-background-color: #0d2137;
+                   style="-fx-text-fill: #38BDF8; -fx-font-size: 13px;
+                          -fx-font-weight: bold; -fx-background-color: #064E3B;
                           -fx-background-radius: 4; -fx-padding: 6 10;"/>
 
-            <Label text="Observações" style="-fx-text-fill: #c9d1d9;"/>
+            <Label text="Observações" style="-fx-text-fill: #DCE7E4;"/>
             <TextArea fx:id="campObservacoes" promptText="Progresso, metas, recomendações..."
                       prefRowCount="3" wrapText="true"/>
 
@@ -80,7 +81,7 @@
             </HBox>
 
             <Label fx:id="labelStatus" text="" wrapText="true"
-                   style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+                   style="-fx-text-fill: #45D6A4; -fx-font-size: 12px;"/>
             </VBox>
           </content>
         </ScrollPane>
@@ -90,7 +91,7 @@
     <center>
         <VBox spacing="8">
             <Label text="Histórico de Avaliações"
-                   style="-fx-text-fill: #8b949e; -fx-font-size: 12px;"/>
+                   style="-fx-text-fill: #B5C4C2; -fx-font-size: 12px;"/>
 
             <TableView fx:id="tabelaAvaliacoes" VBox.vgrow="ALWAYS">
                 <columns>

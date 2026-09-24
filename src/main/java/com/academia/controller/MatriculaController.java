@@ -7,7 +7,7 @@ import com.academia.model.Aluno;
 import com.academia.model.Matricula;
 import com.academia.model.Plano;
 import com.academia.validation.MatriculaValidator;
-import javafx.collections.FXCollections;
+import com.academia.util.AlunoSearchSupport;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -32,7 +32,8 @@ public class MatriculaController {
 
     // ── Formulário ────────────────────────────────────────────────────────
 
-    @FXML private ComboBox<Aluno> comboAluno;
+    @FXML private TextField campoBuscaAluno;
+    @FXML private ListView<Aluno> listaResultadosAluno;
     @FXML private DatePicker      campDataInicio;
     @FXML private Label           labelDataFim;
     @FXML private Label           labelPlanoSelecionado;
@@ -46,6 +47,8 @@ public class MatriculaController {
     private final MatriculaDAO matriculaDAO = new MatriculaDAO();
     private final AlunoDAO     alunoDAO     = new AlunoDAO();
     private final PlanoDAO     planoDAO     = new PlanoDAO();
+    private AlunoSearchSupport buscaAluno;
+    private Aluno alunoSelecionado;
 
     // ── Estilos CSS inline ────────────────────────────────────────────────
 
@@ -97,12 +100,9 @@ public class MatriculaController {
      */
     @FXML
     public void initialize() {
-        comboAluno.setItems(FXCollections.observableArrayList(alunoDAO.listarTodos()));
-
-        comboAluno.setConverter(new javafx.util.StringConverter<>() {
-            public String toString(Aluno a)   { return a == null ? "" : a.getNome(); }
-            public Aluno fromString(String s) { return null; }
-        });
+        buscaAluno = new AlunoSearchSupport(campoBuscaAluno, listaResultadosAluno,
+                aluno -> alunoSelecionado = aluno);
+        buscaAluno.setAlunos(alunoDAO.listarTodos());
 
         campDataInicio.valueProperty().addListener((obs, ant, sel) -> calcularDataFim());
         campDataInicio.setValue(LocalDate.now());
@@ -157,7 +157,9 @@ public class MatriculaController {
         topoCard.getChildren().addAll(lblCategoria, spacer, lblBadge);
 
         // ── Período ──────────────────────────────────────────────────────
-        Label lblPeriodo = new Label(resolverPeriodo(plano));
+        Label lblPeriodo = new Label(plano.getNome());
+        lblPeriodo.setWrapText(true);
+        lblPeriodo.setMaxWidth(Double.MAX_VALUE);
         lblPeriodo.setStyle("-fx-text-fill: white; -fx-font-size: 13; -fx-font-weight: bold;");
 
         // ── Preço por mês ────────────────────────────────────────────────
@@ -322,7 +324,7 @@ public class MatriculaController {
     /** Ação do botão "Matricular". */
     @FXML
     private void onMatricularClicado() {
-        Aluno aluno     = comboAluno.getValue();
+        Aluno aluno     = alunoSelecionado;
         LocalDate dataInicio = campDataInicio.getValue();
 
         if (aluno == null || planoSelecionado == null || dataInicio == null) {
@@ -373,7 +375,7 @@ public class MatriculaController {
      * Chamado sempre que a aba Matrículas for selecionada.
      */
     public void refresh() {
-        comboAluno.setItems(FXCollections.observableArrayList(alunoDAO.listarTodos()));
+        buscaAluno.setAlunos(alunoDAO.listarTodos());
         gerarCards(planoDAO.listarTodos());
     }
 
@@ -382,7 +384,8 @@ public class MatriculaController {
 
 
     private void limparFormulario() {
-        comboAluno.setValue(null);
+        alunoSelecionado = null;
+        buscaAluno.limpar();
         campDataInicio.setValue(LocalDate.now());
         labelDataFim.setText("Data de Término: —");
         labelStatus.setText("");

@@ -35,10 +35,10 @@ public class LoginController {
     /** Estilos dos botões de perfil */
     private static final String ESTILO_SELECIONADO   =
             "-fx-pref-width: 145px; -fx-pref-height: 36px; -fx-font-size: 13px; -fx-font-weight: bold;" +
-            "-fx-background-radius: 8; -fx-background-color: #58a6ff; -fx-text-fill: #0d1117; -fx-cursor: hand;";
+            "-fx-background-radius: 8; -fx-background-color: #45D6A4; -fx-text-fill: #0F172A; -fx-cursor: hand;";
     private static final String ESTILO_NAO_SELECIONADO =
             "-fx-pref-width: 145px; -fx-pref-height: 36px; -fx-font-size: 13px; -fx-font-weight: bold;" +
-            "-fx-background-radius: 8; -fx-background-color: #21262d; -fx-text-fill: #8b949e; -fx-cursor: hand;";
+            "-fx-background-radius: 8; -fx-background-color: #243247; -fx-text-fill: #B5C4C2; -fx-cursor: hand;";
 
     /** DAO responsável por autenticar o usuário. */
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
@@ -123,7 +123,7 @@ public class LoginController {
 
             Stage stage = (Stage) btnEntrar.getScene().getWindow();
             stage.setScene(new Scene(raiz, 1100, 700));
-            stage.setTitle("GymFlow — Bem-vindo, " + usuario.getNome());
+            stage.setTitle("GymCore — Bem-vindo, " + usuario.getNome());
 
         } catch (IOException e) {
             exibirErro("Erro ao carregar o painel principal: " + e.getMessage());

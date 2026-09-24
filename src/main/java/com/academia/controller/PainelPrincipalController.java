@@ -43,7 +43,20 @@ public class PainelPrincipalController implements Observer {
 
     @FXML private Label    labelUsuario;
     @FXML private Label    labelTotalDia;
+    @FXML private Label    labelBreadcrumb;
     @FXML private TabPane  tabPanePrincipal;
+
+    // Botões da Sidebar GymCore
+    @FXML private Button btnNavAlunos;
+    @FXML private Button btnNavFrequencia;
+    @FXML private Button btnNavPlanos;
+    @FXML private Button btnNavMatriculas;
+    @FXML private Button btnNavPagamentos;
+    @FXML private Button btnNavAvaliacao;
+    @FXML private Button btnNavTreinos;
+    @FXML private Button btnNavRelatorios;
+    @FXML private Button btnCheckInRapido;
+    @FXML private Button btnNovaMatriculaRapida;
 
     // Abas do TabPane
     @FXML private Tab tabAlunos;
@@ -53,6 +66,7 @@ public class PainelPrincipalController implements Observer {
     @FXML private Tab tabPagamentos;
     @FXML private Tab tabAvaliacao;
     @FXML private Tab tabTreinos;
+    @FXML private Tab tabRelatorios;
 
     /** Usuário autenticado, recebido via {@link #inicializar(Usuario)}. */
     private Usuario usuarioLogado;
@@ -67,6 +81,7 @@ public class PainelPrincipalController implements Observer {
     private PagamentoController            pagamentoCtrl;
     private AvaliacaoFisicaController      avaliacaoCtrl;
     private TreinoController               treinoCtrl;
+    private RelatorioController            relatorioCtrl;
 
     /**
      * Inicializa o painel com o usuário autenticado.
@@ -76,18 +91,28 @@ public class PainelPrincipalController implements Observer {
      */
     public void inicializar(Usuario usuario) {
         this.usuarioLogado = usuario;
-        labelUsuario.setText("Usuário: " + usuario.getNome() + " | " + usuario.getPerfil());
+        labelUsuario.setText(usuario.getNome() + " (" + usuario.getPerfil() + ")");
 
         if (usuario.isInstrutor()) {
-            // Instrutor acessa apenas Alunos, Avaliação Física e Treinos
+            // Instrutor acessa apenas Alunos, Avaliação Física, Treinos e Relatórios
             tabFrequencia.setDisable(true);
             tabPlanos.setDisable(true);
             tabMatriculas.setDisable(true);
             tabPagamentos.setDisable(true);
+
+            if (btnNavFrequencia != null) btnNavFrequencia.setDisable(true);
+            if (btnNavPlanos != null) btnNavPlanos.setDisable(true);
+            if (btnNavMatriculas != null) btnNavMatriculas.setDisable(true);
+            if (btnNavPagamentos != null) btnNavPagamentos.setDisable(true);
+            btnCheckInRapido.setDisable(true);
+            btnNovaMatriculaRapida.setDisable(true);
         } else {
             // Funcionário não acessa Avaliação Física nem Treinos
             tabAvaliacao.setDisable(true);
             tabTreinos.setDisable(true);
+
+            if (btnNavAvaliacao != null) btnNavAvaliacao.setDisable(true);
+            if (btnNavTreinos != null) btnNavTreinos.setDisable(true);
         }
 
         // Carrega cada aba com seu respectivo FXML e guarda a referência do controller
@@ -99,6 +124,7 @@ public class PainelPrincipalController implements Observer {
         pagamentoCtrl          = carregarAba(tabPagamentos,          "/com/academia/view/pagamento.fxml",            PagamentoController.class);
         avaliacaoCtrl          = carregarAba(tabAvaliacao,           "/com/academia/view/avaliacao-fisica.fxml",     AvaliacaoFisicaController.class);
         treinoCtrl             = carregarAba(tabTreinos,             "/com/academia/view/treino.fxml",               TreinoController.class);
+        relatorioCtrl          = carregarAba(tabRelatorios,          "/com/academia/view/relatorio.fxml",            RelatorioController.class);
 
         // Conecta o PainelPrincipal como Observer do PagamentoController (Subject)
         if (pagamentoCtrl != null) {
@@ -115,9 +141,16 @@ public class PainelPrincipalController implements Observer {
             treinoCtrl.setUsuarioLogado(usuario);
         }
 
+        // Repassa o usuário logado ao RelatorioController
+        if (relatorioCtrl != null) {
+            relatorioCtrl.setUsuarioLogado(usuario);
+        }
+
         // ── Listener de troca de aba: recarrega dados ao selecionar ──────
         tabPanePrincipal.getSelectionModel().selectedItemProperty().addListener(
                 (obs, tabAnterior, tabSelecionada) -> {
+                    atualizarEstiloNav(tabSelecionada);
+
                     if (tabSelecionada == tabAlunos && alunoCtrl != null) {
                         alunoCtrl.refresh();
                     } else if (tabSelecionada == tabFrequencia && frequenciaCtrl != null) {
@@ -130,9 +163,14 @@ public class PainelPrincipalController implements Observer {
                         avaliacaoCtrl.refresh();
                     } else if (tabSelecionada == tabTreinos && treinoCtrl != null) {
                         treinoCtrl.refresh();
+                    } else if (tabSelecionada == tabRelatorios && relatorioCtrl != null) {
+                        relatorioCtrl.refresh();
                     }
                 }
         );
+
+        // Atualiza estilo inicial para Alunos
+        atualizarEstiloNav(tabAlunos);
 
         // Atualiza o indicador de total do dia ao abrir o painel
         atualizarTotalDia();
@@ -200,7 +238,7 @@ public class PainelPrincipalController implements Observer {
         );
         Stage stage = (Stage) labelUsuario.getScene().getWindow();
         stage.setScene(new Scene(raiz, 1100, 700));
-        stage.setTitle("GymFlow");
+        stage.setTitle("GymCore");
     }
 
     @FXML
@@ -250,5 +288,60 @@ public class PainelPrincipalController implements Observer {
                 new Alert(Alert.AlertType.INFORMATION, "Senha alterada com sucesso.").showAndWait();
             }
         });
+    }
+
+    // ── Navegação via Sidebar GymCore ─────────────────────────────────────
+    @FXML private void onNavAlunos()     { tabPanePrincipal.getSelectionModel().select(tabAlunos); }
+    @FXML private void onNavFrequencia() { tabPanePrincipal.getSelectionModel().select(tabFrequencia); }
+    @FXML private void onNavPlanos()     { tabPanePrincipal.getSelectionModel().select(tabPlanos); }
+    @FXML private void onNavMatriculas() { tabPanePrincipal.getSelectionModel().select(tabMatriculas); }
+    @FXML private void onNavPagamentos() { tabPanePrincipal.getSelectionModel().select(tabPagamentos); }
+    @FXML private void onNavAvaliacao()  { tabPanePrincipal.getSelectionModel().select(tabAvaliacao); }
+    @FXML private void onNavTreinos()    { tabPanePrincipal.getSelectionModel().select(tabTreinos); }
+    @FXML private void onNavRelatorios() { tabPanePrincipal.getSelectionModel().select(tabRelatorios); }
+
+    // ── Ações Rápidas da TopBar ───────────────────────────────────────────
+    @FXML private void onCheckInRapido() {
+        if (usuarioLogado != null && !usuarioLogado.isInstrutor())
+            tabPanePrincipal.getSelectionModel().select(tabFrequencia);
+    }
+    @FXML private void onNovaMatriculaRapida() {
+        if (usuarioLogado != null && !usuarioLogado.isInstrutor())
+            tabPanePrincipal.getSelectionModel().select(tabMatriculas);
+    }
+
+    private void atualizarEstiloNav(Tab selecionada) {
+        Button[] botoes = {btnNavAlunos, btnNavFrequencia, btnNavPlanos, btnNavMatriculas,
+                           btnNavPagamentos, btnNavAvaliacao, btnNavTreinos, btnNavRelatorios};
+        for (Button b : botoes) {
+            if (b != null) b.getStyleClass().remove("gymcore-nav-btn-active");
+        }
+
+        if (selecionada == tabAlunos) {
+            destacar(btnNavAlunos, "GymCore › Alunos");
+        } else if (selecionada == tabFrequencia) {
+            destacar(btnNavFrequencia, "GymCore › Recepção e Acessos");
+        } else if (selecionada == tabPlanos) {
+            destacar(btnNavPlanos, "GymCore › Planos de Assinatura");
+        } else if (selecionada == tabMatriculas) {
+            destacar(btnNavMatriculas, "GymCore › Matrículas");
+        } else if (selecionada == tabPagamentos) {
+            destacar(btnNavPagamentos, "GymCore › Caixa e Pagamentos");
+        } else if (selecionada == tabAvaliacao) {
+            destacar(btnNavAvaliacao, "GymCore › Avaliações Físicas");
+        } else if (selecionada == tabTreinos) {
+            destacar(btnNavTreinos, "GymCore › Prescrição de Treinos");
+        } else if (selecionada == tabRelatorios) {
+            destacar(btnNavRelatorios, "GymCore › Relatórios Gerenciais");
+        }
+    }
+
+    private void destacar(Button btn, String breadcrumb) {
+        if (btn != null && !btn.getStyleClass().contains("gymcore-nav-btn-active")) {
+            btn.getStyleClass().add("gymcore-nav-btn-active");
+        }
+        if (labelBreadcrumb != null) {
+            labelBreadcrumb.setText(breadcrumb);
+        }
     }
 }

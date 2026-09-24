@@ -20,28 +20,28 @@
             <VBox spacing="12" style="-fx-padding: 0 16 0 0;">
 
             <Label text="Cadastro de Aluno"
-                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+                   style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #38BDF8;"/>
             <Separator/>
 
-            <Label text="Nome *" style="-fx-text-fill: #c9d1d9;"/>
+            <Label text="Nome *" style="-fx-text-fill: #DCE7E4;"/>
             <TextField fx:id="campNome" promptText="Nome completo"/>
 
-            <Label text="CPF" style="-fx-text-fill: #c9d1d9;"/>
+            <Label text="CPF" style="-fx-text-fill: #DCE7E4;"/>
             <TextField fx:id="campCpf" promptText="000.000.000-00"/>
 
             <Label text="Endereço:" />
             <TextField fx:id="campEndereco" promptText="Ex: Rua Principal, 123 - Bairro" />
 
-            <Label text="E-mail" style="-fx-text-fill: #c9d1d9;"/>
+            <Label text="E-mail" style="-fx-text-fill: #DCE7E4;"/>
             <TextField fx:id="campEmail" promptText="email@exemplo.com"/>
 
-            <Label text="Telefone" style="-fx-text-fill: #c9d1d9;"/>
+            <Label text="Telefone" style="-fx-text-fill: #DCE7E4;"/>
             <TextField fx:id="campTelefone" promptText="(00) 00000-0000"/>
 
-            <Label text="Data de Nascimento" style="-fx-text-fill: #c9d1d9;"/>
+            <Label text="Data de Nascimento" style="-fx-text-fill: #DCE7E4;"/>
             <DatePicker fx:id="campDataNascimento" maxWidth="Infinity"/>
 
-            <Label text="Observações" style="-fx-text-fill: #c9d1d9;"/>
+            <Label text="Observações" style="-fx-text-fill: #DCE7E4;"/>
             <TextArea fx:id="campObservacoes" promptText="Observações gerais..."
                       prefRowCount="3" wrapText="true"/>
 
@@ -59,7 +59,7 @@
 
             <!-- Mensagem de status -->
             <Label fx:id="labelStatus" text="" wrapText="true"
-                   style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+                   style="-fx-text-fill: #45D6A4; -fx-font-size: 12px;"/>
             </VBox>
           </content>
         </ScrollPane>
@@ -75,13 +75,13 @@
                        style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white; -fx-padding: 0 0 16 0;"/>
 
                 <HBox alignment="CENTER_LEFT" spacing="16">
-                    <Label text="Pesquisar:" style="-fx-text-fill: #c9d1d9;"/>
+                    <Label text="Pesquisar:" style="-fx-text-fill: #DCE7E4;"/>
                     <TextField fx:id="campPesquisa"
                                promptText="Nome do aluno..."
-                               style="-fx-background-color: #161b22;
-                                      -fx-border-color: #30363d; -fx-border-radius: 20;
+                               style="-fx-background-color: #1E293B;
+                                      -fx-border-color: #334155; -fx-border-radius: 20;
                                       -fx-background-radius: 20;
-                                      -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                      -fx-text-fill: #E6F0ED; -fx-prompt-text-fill: #475569;
                                       -fx-padding: 7 16 7 16; -fx-pref-width: 280;" HBox.hgrow="ALWAYS"/>
                     <Region HBox.hgrow="ALWAYS"/>
                 </HBox>
@@ -90,23 +90,23 @@
                 <VBox spacing="8" style="-fx-padding: 10 0 0 0;">
                   <HBox spacing="8" alignment="CENTER_LEFT">
                     <Button fx:id="btnTodos" text="● Todos" onAction="#onFiltroTodos"
-                            style="-fx-background-color: #238636; -fx-text-fill: white;
+                            style="-fx-background-color: #047857; -fx-text-fill: white;
                                    -fx-border-radius: 20; -fx-background-radius: 20;
                                    -fx-padding: 4 16 4 16; -fx-cursor: hand; -fx-font-size: 12;"/>
                     <Button fx:id="btnAtivos"        text="Ativos"        onAction="#onFiltroAtivos"
-                            style="-fx-background-color: transparent; -fx-text-fill: #8b949e;
-                                   -fx-border-color: #30363d; -fx-border-radius: 20;
+                            style="-fx-background-color: transparent; -fx-text-fill: #B5C4C2;
+                                   -fx-border-color: #334155; -fx-border-radius: 20;
                                    -fx-background-radius: 20; -fx-padding: 4 16 4 16;
                                    -fx-cursor: hand; -fx-font-size: 12;"/>
                     <Button fx:id="btnCancelados"    text="Cancelados"    onAction="#onFiltroCancelados"
-                            style="-fx-background-color: transparent; -fx-text-fill: #8b949e;
-                                   -fx-border-color: #30363d; -fx-border-radius: 20;
+                            style="-fx-background-color: transparent; -fx-text-fill: #B5C4C2;
+                                   -fx-border-color: #334155; -fx-border-radius: 20;
                                    -fx-background-radius: 20; -fx-padding: 4 16 4 16;
                                    -fx-cursor: hand; -fx-font-size: 12;"/>
 
                     <Region HBox.hgrow="ALWAYS"/>
                     <Label fx:id="labelContador" text="0 registros"
-                           style="-fx-text-fill: #8b949e; -fx-font-size: 12; -fx-padding: 0 0 0 10;"/>
+                           style="-fx-text-fill: #B5C4C2; -fx-font-size: 12; -fx-padding: 0 0 0 10;"/>
                   </HBox>
                   <HBox alignment="CENTER_RIGHT">
                       <Button text="✗ Cancelar Matrícula" onAction="#onCancelarMatriculaClicado"
@@ -118,11 +118,11 @@
                 </VBox>
             </VBox>
 
-            <Separator style="-fx-background-color: #21262d;"/>
+            <Separator style="-fx-background-color: #243247;"/>
 
             <!-- ── Tabela principal ───────────────────────────────────────────── -->
             <TableView fx:id="tabelaAlunos" VBox.vgrow="ALWAYS"
-                       style="-fx-background-color: #0d1117;">
+                       style="-fx-background-color: #0F172A;">
                 <columns>
                     <TableColumn fx:id="colId"          text="ID"           prefWidth="40"/>
                     <TableColumn fx:id="colNome"        text="Nome"         prefWidth="130"/>
@@ -139,7 +139,7 @@
                 </columns>
                 <placeholder>
                     <Label text="Nenhum aluno ou matrícula encontrada."
-                           style="-fx-text-fill: #8b949e; -fx-font-size: 14;"/>
+                           style="-fx-text-fill: #B5C4C2; -fx-font-size: 14;"/>
                 </placeholder>
             </TableView>
         </VBox>

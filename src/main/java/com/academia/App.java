@@ -50,7 +50,7 @@ public class App extends Application {
 
         // ── 3. Configura e exibe a janela ───────────────────────────────────
         Scene cena = new Scene(raiz, LARGURA, ALTURA);
-        stage.setTitle("GymFlow");
+        stage.setTitle("GymCore");
         stage.getIcons().add(new Image(Objects.requireNonNull(
                 App.class.getResourceAsStream("/com/academia/view/gymflow-icon.png"))));
         stage.setScene(cena);
