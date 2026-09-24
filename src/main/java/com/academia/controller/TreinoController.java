@@ -6,6 +6,7 @@ import com.academia.model.Aluno;
 import com.academia.model.Exercicio;
 import com.academia.model.TreinoDivisao;
 import com.academia.model.Usuario;
+import com.academia.util.AlunoSearchSupport;
 import com.academia.validation.TreinoValidator;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
@@ -27,7 +28,9 @@ import java.util.Optional;
 public class TreinoController {
 
     @FXML
-    private ComboBox<Aluno> comboAluno;
+    private TextField campoBuscaAluno;
+    @FXML
+    private ListView<Aluno> listaResultadosAluno;
     @FXML
     private Button btnDuplicar;
     @FXML
@@ -50,29 +53,29 @@ public class TreinoController {
     private Usuario usuarioLogado;
     private final AlunoDAO alunoDAO = new AlunoDAO();
     private final TreinoDAO treinoDAO = new TreinoDAO();
+    private AlunoSearchSupport buscaAluno;
+    private boolean atualizandoAbas;
 
     private final Tab tabNovoGrupo = new Tab("+ Novo Grupo");
 
     @FXML
     public void initialize() {
-        carregarAlunos();
-
         // Configura Tab Especial de Adicionar Grupo
         tabNovoGrupo.setClosable(false);
         tabNovoGrupo.setStyle("-fx-font-weight: bold; -fx-text-fill: #8b949e;");
         tabPaneTreinos.getTabs().add(tabNovoGrupo);
 
         tabPaneTreinos.getSelectionModel().selectedItemProperty().addListener((obs, oldTab, newTab) -> {
-            if (newTab == tabNovoGrupo) {
+            if (newTab == tabNovoGrupo && !atualizandoAbas) {
                 adicionarNovaDivisao("Nova Divisão", true);
             }
         });
 
-        comboAluno.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                carregarTreinoAluno(newVal);
-            }
+        buscaAluno = new AlunoSearchSupport(campoBuscaAluno, listaResultadosAluno, aluno -> {
+            if (aluno != null) carregarTreinoAluno(aluno);
+            else limparTreinoExibicao();
         });
+        carregarAlunos();
     }
 
     public void setUsuarioLogado(Usuario usuarioLogado) {
@@ -107,28 +110,35 @@ public class TreinoController {
     }
 
     private void carregarAlunos() {
-        comboAluno.getItems().clear();
-        comboAluno.getItems().addAll(alunoDAO.listarTodos());
+        if (buscaAluno != null) buscaAluno.setAlunos(alunoDAO.listarTodos());
     }
 
     public void refresh() {
-        Aluno selecionado = comboAluno.getSelectionModel().getSelectedItem();
+        Aluno selecionado = buscaAluno == null ? null : buscaAluno.getSelecionado();
         carregarAlunos();
         if (selecionado != null) {
             // Tenta reselecionar o aluno (já que a lista foi recarregada)
-            comboAluno.getItems().stream()
-                    .filter(a -> a.getId() == selecionado.getId())
-                    .findFirst()
-                    .ifPresent(a -> comboAluno.getSelectionModel().select(a));
+            carregarTreinoAluno(selecionado);
         }
+    }
+
+    private void limparTreinoExibicao() {
+        atualizandoAbas = true;
+        tabPaneTreinos.getTabs().clear();
+        atualizandoAbas = false;
+        labelTotalExercicios.setText("Total de Exercícios: 0");
+        labelTotalSeries.setText("Total de Séries: 0");
+        labelDataEdicao.setText("Última edição: --");
     }
 
     private void carregarTreinoAluno(Aluno aluno) {
         // Limpa abas atuais
+        atualizandoAbas = true;
         tabPaneTreinos.getTabs().clear();
         if (usuarioLogado != null && usuarioLogado.isInstrutor()) {
             tabPaneTreinos.getTabs().add(tabNovoGrupo);
         }
+        atualizandoAbas = false;
 
         List<TreinoDivisao> divisoes = treinoDAO.listarDivisoesPorAluno(aluno.getId());
 
@@ -356,7 +366,7 @@ public class TreinoController {
 
     @FXML
     private void onDescartarClicado() {
-        Aluno aluno = comboAluno.getSelectionModel().getSelectedItem();
+        Aluno aluno = buscaAluno.getSelecionado();
         if (aluno == null) {
             new Alert(Alert.AlertType.WARNING, "Selecione um aluno primeiro!").showAndWait();
             return;
@@ -369,7 +379,7 @@ public class TreinoController {
 
     @FXML
     private void onSalvarClicado() {
-        Aluno alunoSelecionado = comboAluno.getSelectionModel().getSelectedItem();
+        Aluno alunoSelecionado = buscaAluno.getSelecionado();
         if (alunoSelecionado == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Selecione um aluno primeiro!");
             alert.showAndWait();
@@ -414,7 +424,7 @@ public class TreinoController {
 
     @FXML
     private void onExportarClicado() {
-        Aluno alunoSelecionado = comboAluno.getSelectionModel().getSelectedItem();
+        Aluno alunoSelecionado = buscaAluno.getSelecionado();
         if (alunoSelecionado == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Selecione um aluno primeiro!");
             alert.showAndWait();

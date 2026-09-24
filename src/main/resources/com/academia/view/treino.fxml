@@ -17,8 +17,11 @@
       <HBox alignment="CENTER_LEFT" spacing="20">
         <VBox spacing="5">
             <HBox alignment="CENTER_LEFT" spacing="10">
-                <Label text="ALUNO:" style="-fx-font-size: 12px; -fx-text-fill: #3fb950; -fx-font-weight: bold;"/>
-                <ComboBox fx:id="comboAluno" prefWidth="300" promptText="Selecione um aluno..." />
+                <Label text="ALUNO:" style="-fx-font-size: 12px; -fx-text-fill: #45D6A4; -fx-font-weight: bold;"/>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <TextField fx:id="campoBuscaAluno" prefWidth="300" promptText="Buscar por nome, CPF ou matrícula..." />
+                    <ListView fx:id="listaResultadosAluno" visible="false" managed="false" maxHeight="132" focusTraversable="false" />
+                </VBox>
             </HBox>
             <Label text="Montagem de Treinos" styleClass="title-1"/>
         </VBox>
@@ -40,7 +43,7 @@
 
     <!-- Botão inferior largo -->
     <Button fx:id="btnAdicionarExercicio" text="+ Adicionar Exercício" maxWidth="Infinity"
-            style="-fx-background-color: transparent; -fx-border-color: #30363d; -fx-border-radius: 4; -fx-border-style: dashed;"
+            style="-fx-background-color: transparent; -fx-border-color: #334155; -fx-border-radius: 4; -fx-border-style: dashed;"
             onAction="#onAdicionarExercicioClicado"/>
 
     <!-- Rodapé -->

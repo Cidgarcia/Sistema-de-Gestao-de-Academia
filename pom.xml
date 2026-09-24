@@ -8,10 +8,10 @@
     <!--  Identificação do projeto                               -->
     <!-- ─────────────────────────────────────────────────────── -->
     <groupId>com.academia</groupId>
-    <artifactId>gymflow</artifactId>
+    <artifactId>gymcore</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>GymFlow</name>
+    <name>GymCore</name>
 
     <properties>
         <!-- Java / Encoding -->

@@ -5,6 +5,7 @@ import com.academia.dao.AvaliacaoFisicaDAO;
 import com.academia.model.Aluno;
 import com.academia.model.AvaliacaoFisica;
 import com.academia.model.Usuario;
+import com.academia.util.AlunoSearchSupport;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -26,7 +27,8 @@ public class AvaliacaoFisicaController {
 
     // ── Formulário ────────────────────────────────────────────────────────
 
-    @FXML private ComboBox<Aluno> comboAluno;
+    @FXML private TextField campoBuscaAluno;
+    @FXML private ListView<Aluno> listaResultadosAluno;
     @FXML private DatePicker      campData;
     @FXML private TextField       campPeso;
     @FXML private TextField       campAltura;
@@ -50,6 +52,8 @@ public class AvaliacaoFisicaController {
 
     private final AvaliacaoFisicaDAO avaliacaoDAO = new AvaliacaoFisicaDAO();
     private final AlunoDAO           alunoDAO     = new AlunoDAO();
+    private AlunoSearchSupport buscaAluno;
+    private Aluno alunoSelecionado;
 
     /** Usuário Instrutor logado — injetado pelo PainelPrincipalController. */
     private Usuario usuarioLogado;
@@ -72,7 +76,7 @@ public class AvaliacaoFisicaController {
      * Chamado pelo PainelPrincipalController ao selecionar esta aba.
      */
     public void refresh() {
-        comboAluno.setItems(FXCollections.observableArrayList(alunoDAO.listarTodos()));
+        buscaAluno.setAlunos(alunoDAO.listarTodos());
         carregarTodasAvaliacoes();
     }
 
@@ -82,16 +86,12 @@ public class AvaliacaoFisicaController {
     @FXML
     public void initialize() {
         // Popula combo de alunos
-        comboAluno.setItems(FXCollections.observableArrayList(alunoDAO.listarTodos()));
-        comboAluno.setConverter(new javafx.util.StringConverter<>() {
-            public String toString(Aluno a)   { return a == null ? "" : a.getNome(); }
-            public Aluno fromString(String s) { return null; }
+        buscaAluno = new AlunoSearchSupport(campoBuscaAluno, listaResultadosAluno, aluno -> {
+            alunoSelecionado = aluno;
+            if (aluno == null) carregarTodasAvaliacoes();
+            else carregarAvaliacoesPorAluno(aluno.getId());
         });
-
-        // Ao selecionar aluno, carrega suas avaliações anteriores
-        comboAluno.valueProperty().addListener((obs, ant, sel) -> {
-            if (sel != null) carregarAvaliacoesPorAluno(sel.getId());
-        });
+        buscaAluno.setAlunos(alunoDAO.listarTodos());
 
         // Atualiza o IMC calculado ao digitar peso ou altura
         campPeso.textProperty().addListener((obs, ant, novo) -> atualizarImcCalculado());
@@ -193,7 +193,7 @@ public class AvaliacaoFisicaController {
     }
 
     private boolean validarCampos() {
-        if (comboAluno.getValue() == null) {
+        if (alunoSelecionado == null) {
             exibirStatus("⚠ Selecione um aluno.");
             return false;
         }
@@ -202,7 +202,7 @@ public class AvaliacaoFisicaController {
 
     private AvaliacaoFisica montarObjetoAvaliacao() {
         AvaliacaoFisica av = new AvaliacaoFisica();
-        av.setAlunoId(comboAluno.getValue().getId());
+        av.setAlunoId(alunoSelecionado.getId());
         av.setInstrutorId(usuarioLogado.getId());
         av.setDataAvaliacao(campData.getValue() != null
                 ? campData.getValue().toString()
@@ -230,7 +230,8 @@ public class AvaliacaoFisicaController {
     }
 
     private void limparFormulario() {
-        comboAluno.setValue(null);
+        alunoSelecionado = null;
+        buscaAluno.limpar();
         campData.setValue(LocalDate.now());
         campPeso.clear();
         campAltura.clear();
