@@ -2,6 +2,7 @@ package com.academia.controller;
 
 import com.academia.App;
 import com.academia.dao.PagamentoDAO;
+import com.academia.dao.UsuarioDAO;
 import com.academia.model.Usuario;
 import com.academia.observer.Observer;
 import javafx.application.Platform;
@@ -10,8 +11,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.GridPane;
+import javafx.geometry.Insets;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -192,5 +201,54 @@ public class PainelPrincipalController implements Observer {
         Stage stage = (Stage) labelUsuario.getScene().getWindow();
         stage.setScene(new Scene(raiz, 1100, 700));
         stage.setTitle("Sistema de Gestão de Academia");
+    }
+
+    @FXML
+    private void onAlterarSenhaClicado() {
+        Dialog<ButtonType> dialogo = new Dialog<>();
+        dialogo.setTitle("Alterar senha");
+        dialogo.initOwner(labelUsuario.getScene().getWindow());
+
+        PasswordField senhaAtual = new PasswordField();
+        PasswordField senhaNova = new PasswordField();
+        PasswordField confirmacao = new PasswordField();
+        Label erro = new Label();
+        erro.setStyle("-fx-text-fill: #f85149;");
+        erro.setWrapText(true);
+
+        GridPane campos = new GridPane();
+        campos.setHgap(10);
+        campos.setVgap(10);
+        campos.setPadding(new Insets(20));
+        campos.addRow(0, new Label("Senha atual"), senhaAtual);
+        campos.addRow(1, new Label("Nova senha"), senhaNova);
+        campos.addRow(2, new Label("Confirmar nova senha"), confirmacao);
+        campos.add(erro, 0, 3, 2, 1);
+        dialogo.getDialogPane().setContent(campos);
+
+        ButtonType salvar = new ButtonType("Salvar", ButtonBar.ButtonData.OK_DONE);
+        dialogo.getDialogPane().getButtonTypes().addAll(salvar, ButtonType.CANCEL);
+        Button botaoSalvar = (Button) dialogo.getDialogPane().lookupButton(salvar);
+        botaoSalvar.addEventFilter(javafx.event.ActionEvent.ACTION, evento -> {
+            if (senhaAtual.getText().isEmpty()) {
+                erro.setText("Informe a senha atual.");
+            } else if (senhaNova.getText().length() < 8) {
+                erro.setText("A nova senha deve ter pelo menos 8 caracteres.");
+            } else if (!senhaNova.getText().equals(confirmacao.getText())) {
+                erro.setText("A confirmação da nova senha não confere.");
+            } else if (!new UsuarioDAO().alterarSenha(
+                    usuarioLogado.getId(), senhaAtual.getText(), senhaNova.getText())) {
+                erro.setText("Senha atual incorreta ou não foi possível alterar a senha.");
+            } else {
+                return;
+            }
+            evento.consume();
+        });
+
+        dialogo.showAndWait().ifPresent(resultado -> {
+            if (resultado == salvar) {
+                new Alert(Alert.AlertType.INFORMATION, "Senha alterada com sucesso.").showAndWait();
+            }
+        });
     }
 }
