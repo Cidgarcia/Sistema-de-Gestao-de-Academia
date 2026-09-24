@@ -11,21 +11,21 @@
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.academia.controller.PlanoController"
       spacing="0"
-      style="-fx-background-color: #0d1117;">
+      style="-fx-background-color: #0F172A;">
 
     <!-- ── Cabeçalho ─────────────────────────────────────────────────── -->
-    <VBox style="-fx-padding: 20 20 14 20; -fx-background-color: #0d1117;"
+    <VBox style="-fx-padding: 20 20 14 20; -fx-background-color: #0F172A;"
           VBox.vgrow="NEVER">
         <Label text="Gerenciar Planos"
                style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;"/>
         <Label text="Cadastre, edite e exclua os planos disponíveis na academia."
-               style="-fx-font-size: 12px; -fx-text-fill: #8b949e; -fx-padding: 2 0 0 0;"/>
+               style="-fx-font-size: 12px; -fx-text-fill: #B5C4C2; -fx-padding: 2 0 0 0;"/>
     </VBox>
 
-    <Separator style="-fx-background-color: #21262d;"/>
+    <Separator style="-fx-background-color: #243247;"/>
 
     <!-- ── Conteúdo principal ────────────────────────────────────────── -->
-    <BorderPane VBox.vgrow="ALWAYS" style="-fx-padding: 16; -fx-background-color: #0d1117;">
+    <BorderPane VBox.vgrow="ALWAYS" style="-fx-padding: 16; -fx-background-color: #0F172A;">
 
         <!-- ── Formulário (esquerda) — card escuro ────────────────────── -->
         <left>
@@ -37,8 +37,8 @@
 
                 <!-- Card do formulário -->
                 <VBox spacing="11"
-                      style="-fx-background-color: #161b22;
-                             -fx-border-color: #30363d;
+                      style="-fx-background-color: #1E293B;
+                             -fx-border-color: #334155;
                              -fx-border-width: 1.5;
                              -fx-border-radius: 12;
                              -fx-background-radius: 12;
@@ -47,49 +47,49 @@
                     <!-- Título do card -->
                     <HBox alignment="CENTER_LEFT" spacing="8">
                         <Label text="✦"
-                               style="-fx-text-fill: #58a6ff; -fx-font-size: 14;"/>
+                               style="-fx-text-fill: #38BDF8; -fx-font-size: 14;"/>
                         <Label fx:id="labelTituloForm" text="Novo Plano"
-                               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #e6edf3;"/>
+                               style="-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #E6F0ED;"/>
                     </HBox>
 
-                    <Separator style="-fx-background-color: #21262d;"/>
+                    <Separator style="-fx-background-color: #243247;"/>
 
                     <!-- Nome -->
                     <VBox spacing="4">
                         <Label text="Nome do Plano *"
-                               style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                               style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                         <TextField fx:id="campNome" promptText="Ex.: Mensal, Trimestral..."
-                                   style="-fx-background-color: #0d1117;
-                                          -fx-border-color: #30363d;
+                                   style="-fx-background-color: #0F172A;
+                                          -fx-border-color: #334155;
                                           -fx-border-radius: 6; -fx-background-radius: 6;
-                                          -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                          -fx-text-fill: #E6F0ED; -fx-prompt-text-fill: #475569;
                                           -fx-padding: 8 10 8 10;"/>
                     </VBox>
 
                     <!-- Condições de utilização -->
                     <VBox spacing="4">
                         <Label text="Condições de utilização *"
-                               style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                               style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                         <TextArea fx:id="campCondicoes" promptText="Ex.: acesso de segunda a sábado, sem transferência"
                                   prefRowCount="2" wrapText="true"
-                                  style="-fx-background-color: #0d1117;
-                                         -fx-border-color: #30363d;
+                                  style="-fx-background-color: #0F172A;
+                                         -fx-border-color: #334155;
                                          -fx-border-radius: 6; -fx-background-radius: 6;
-                                         -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                         -fx-text-fill: #E6F0ED; -fx-prompt-text-fill: #475569;
                                          -fx-padding: 8 10 8 10;"/>
                     </VBox>
 
                     <!-- Descrição -->
                     <VBox spacing="4">
                         <Label text="Descrição (features separadas por |)"
-                               style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                               style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                         <TextArea fx:id="campDescricao"
                                   promptText="Ex.: Musculação Livre|Aeróbico"
                                   prefRowCount="2" wrapText="true"
-                                  style="-fx-background-color: #0d1117;
-                                         -fx-border-color: #30363d;
+                                  style="-fx-background-color: #0F172A;
+                                         -fx-border-color: #334155;
                                          -fx-border-radius: 6; -fx-background-radius: 6;
-                                         -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                         -fx-text-fill: #E6F0ED; -fx-prompt-text-fill: #475569;
                                          -fx-padding: 8 10 8 10;"/>
                     </VBox>
 
@@ -97,27 +97,27 @@
                     <HBox spacing="10">
                         <VBox spacing="4" HBox.hgrow="ALWAYS">
                             <Label text="Valor Total (R$) *"
-                                   style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                                   style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                             <TextField fx:id="campValor" promptText="Ex.: 120.00"
-                                       style="-fx-background-color: #0d1117;
-                                              -fx-border-color: #30363d;
+                                       style="-fx-background-color: #0F172A;
+                                              -fx-border-color: #334155;
                                               -fx-border-radius: 6; -fx-background-radius: 6;
-                                              -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                              -fx-text-fill: #E6F0ED; -fx-prompt-text-fill: #475569;
                                               -fx-padding: 8 10 8 10;"/>
                         </VBox>
                         <VBox spacing="4" HBox.hgrow="ALWAYS">
                             <Label text="Duração (dias) *"
-                                   style="-fx-text-fill: #8b949e; -fx-font-size: 11px; -fx-font-weight: bold;"/>
+                                   style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px; -fx-font-weight: bold;"/>
                             <TextField fx:id="campDuracao" promptText="30, 90, 365"
-                                       style="-fx-background-color: #0d1117;
-                                              -fx-border-color: #30363d;
+                                       style="-fx-background-color: #0F172A;
+                                              -fx-border-color: #334155;
                                               -fx-border-radius: 6; -fx-background-radius: 6;
-                                              -fx-text-fill: #e6edf3; -fx-prompt-text-fill: #484f58;
+                                              -fx-text-fill: #E6F0ED; -fx-prompt-text-fill: #475569;
                                               -fx-padding: 8 10 8 10;"/>
                         </VBox>
                     </HBox>
 
-                    <Separator style="-fx-background-color: #21262d;"/>
+                    <Separator style="-fx-background-color: #243247;"/>
 
                     <!-- Botões de ação -->
                     <GridPane hgap="8" vgap="8">
@@ -142,21 +142,21 @@
                         <Button text="+ Novo"    onAction="#onNovoClicado"
                                 maxWidth="Infinity" GridPane.columnIndex="0" GridPane.rowIndex="1"
                                 style="-fx-background-color: transparent;
-                                       -fx-border-color: #30363d; -fx-text-fill: #c9d1d9;
+                                       -fx-border-color: #334155; -fx-text-fill: #DCE7E4;
                                        -fx-border-radius: 6; -fx-background-radius: 6;
                                        -fx-padding: 8 0 8 0; -fx-cursor: hand;
                                        -fx-pref-width: 9999;"/>
                         <Button text="Cancelar" onAction="#onCancelarClicado"
                                 maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1"
                                 style="-fx-background-color: transparent;
-                                       -fx-border-color: #30363d; -fx-text-fill: #c9d1d9;
+                                       -fx-border-color: #334155; -fx-text-fill: #DCE7E4;
                                        -fx-border-radius: 6; -fx-background-radius: 6;
                                        -fx-padding: 8 0 8 0; -fx-cursor: hand;
                                        -fx-pref-width: 9999;"/>
                     </GridPane>
 
                     <Label fx:id="labelStatus" text="" wrapText="true"
-                           style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+                           style="-fx-text-fill: #45D6A4; -fx-font-size: 12px;"/>
                 </VBox>
                 </VBox>
               </content>
@@ -170,7 +170,7 @@
                 <HBox alignment="CENTER_LEFT" spacing="6"
                       style="-fx-padding: 0 0 4 0;">
                     <Label text="Planos Cadastrados"
-                           style="-fx-text-fill: #58a6ff; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                           style="-fx-text-fill: #38BDF8; -fx-font-size: 13px; -fx-font-weight: bold;"/>
                 </HBox>
 
                 <TableView fx:id="tabelaPlanos" VBox.vgrow="ALWAYS">

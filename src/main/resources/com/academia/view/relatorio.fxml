@@ -11,7 +11,7 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.academia.controller.RelatorioController"
             stylesheets="@gymcore.css"
-            style="-fx-background-color: #0B0E14; -fx-padding: 20;">
+            style="-fx-background-color: #0F172A; -fx-padding: 20;">
 
     <!-- ── Topo: Título, Breadcrumbs, Ações e Filtros ─────────────── -->
     <top>
@@ -20,12 +20,12 @@
             <HBox alignment="CENTER_LEFT" spacing="12">
                 <VBox spacing="2">
                     <HBox alignment="CENTER_LEFT" spacing="6">
-                        <Label text="Relatórios" style="-fx-text-fill: #00D287; -fx-font-size: 13px; -fx-font-weight: bold;"/>
-                        <Label text="›" style="-fx-text-fill: #64748B; -fx-font-size: 13px;"/>
+                        <Label text="Relatórios" style="-fx-text-fill: #45D6A4; -fx-font-size: 13px; -fx-font-weight: bold;"/>
+                        <Label text="›" style="-fx-text-fill: #83939A; -fx-font-size: 13px;"/>
                         <Label text="Consultas e Exportação" style="-fx-text-fill: #94A3B8; -fx-font-size: 13px;"/>
                     </HBox>
                     <Label text="Central de Relatórios Gerenciais"
-                           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #F1F5F9;"/>
+                           style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #DCE7E4;"/>
                 </VBox>
 
                 <Region HBox.hgrow="ALWAYS"/>
@@ -45,7 +45,7 @@
             <VBox styleClass="gymcore-card" spacing="12" style="-fx-padding: 16;">
                 <!-- Linha 1: Seletor do Tipo de Relatório -->
                 <HBox alignment="CENTER_LEFT" spacing="12">
-                    <Label text="Tipo de Relatório:" style="-fx-font-weight: bold; -fx-text-fill: #F1F5F9; -fx-font-size: 13px;"/>
+                    <Label text="Tipo de Relatório:" style="-fx-font-weight: bold; -fx-text-fill: #DCE7E4; -fx-font-size: 13px;"/>
                     <ComboBox fx:id="comboTipoRelatorio" prefWidth="250" styleClass="gymcore-input"/>
                     
                     <Region HBox.hgrow="ALWAYS"/>
@@ -63,7 +63,7 @@
                     <HBox fx:id="boxPeriodo" alignment="CENTER_LEFT" spacing="8">
                         <Label text="Período:" style="-fx-text-fill: #94A3B8; -fx-font-size: 12px;"/>
                         <DatePicker fx:id="dpInicio" promptText="Data Inicial" prefWidth="125" styleClass="gymcore-input"/>
-                        <Label text="até" style="-fx-text-fill: #64748B; -fx-font-size: 12px;"/>
+                        <Label text="até" style="-fx-text-fill: #83939A; -fx-font-size: 12px;"/>
                         <DatePicker fx:id="dpFim" promptText="Data Final" prefWidth="125" styleClass="gymcore-input"/>
 
                         <!-- Atalhos Rápidos (Pills) -->
@@ -112,34 +112,34 @@
                     <Label fx:id="labelKpi1Titulo" text="TOTAL DE REGISTROS"
                            style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #34D399;"/>
                     <Label fx:id="labelKpi1Valor" text="0"
-                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #00D287;"/>
+                           style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #45D6A4;"/>
                 </VBox>
 
                 <!-- Card 2 -->
                 <VBox fx:id="cardKpi2" alignment="CENTER_LEFT" spacing="4"
                       styleClass="gymcore-card" style="-fx-padding: 12 16;" HBox.hgrow="ALWAYS">
                     <Label fx:id="labelKpi2Titulo" text="MÉTRICA 2"
-                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #8B9FB5;"/>
+                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #B5C4C2;"/>
                     <Label fx:id="labelKpi2Valor" text="-"
-                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #F1F5F9;"/>
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #DCE7E4;"/>
                 </VBox>
 
                 <!-- Card 3 -->
                 <VBox fx:id="cardKpi3" alignment="CENTER_LEFT" spacing="4"
                       styleClass="gymcore-card" style="-fx-padding: 12 16;" HBox.hgrow="ALWAYS">
                     <Label fx:id="labelKpi3Titulo" text="MÉTRICA 3"
-                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #8B9FB5;"/>
+                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #B5C4C2;"/>
                     <Label fx:id="labelKpi3Valor" text="-"
-                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #F1F5F9;"/>
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #DCE7E4;"/>
                 </VBox>
 
                 <!-- Card 4 -->
                 <VBox fx:id="cardKpi4" alignment="CENTER_LEFT" spacing="4"
                       styleClass="gymcore-card" style="-fx-padding: 12 16;" HBox.hgrow="ALWAYS">
                     <Label fx:id="labelKpi4Titulo" text="MÉTRICA 4"
-                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #8B9FB5;"/>
+                           style="-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #B5C4C2;"/>
                     <Label fx:id="labelKpi4Valor" text="-"
-                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #F1F5F9;"/>
+                           style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #DCE7E4;"/>
                 </VBox>
             </HBox>
         </VBox>
@@ -240,7 +240,7 @@
     <bottom>
         <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 10 0 0 0;">
             <Label fx:id="labelStatus" text="Carregando dados..."
-                   style="-fx-font-size: 12px; -fx-text-fill: #64748B;"/>
+                   style="-fx-font-size: 12px; -fx-text-fill: #83939A;"/>
         </HBox>
     </bottom>
 

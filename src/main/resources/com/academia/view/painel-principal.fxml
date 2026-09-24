@@ -11,22 +11,22 @@
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.academia.controller.PainelPrincipalController"
             stylesheets="@gymcore.css"
-            style="-fx-background-color: #0B0E14;">
+            style="-fx-background-color: #0F172A;">
 
     <!-- ── Esquerda: Sidebar Vertical GymCore ─────────────────────── -->
     <left>
         <VBox styleClass="gymcore-sidebar" spacing="0">
             <!-- Logo e Identidade do Sistema -->
-            <VBox spacing="4" style="-fx-padding: 20 16 20 16; -fx-border-color: #1E2736; -fx-border-width: 0 0 1 0;">
+            <VBox spacing="4" style="-fx-padding: 20 16 20 16; -fx-border-color: #29384B; -fx-border-width: 0 0 1 0;">
                 <HBox alignment="CENTER_LEFT" spacing="10">
-                    <StackPane style="-fx-background-color: #0E2A22; -fx-background-radius: 8; -fx-padding: 6 8;">
+                    <StackPane style="-fx-background-color: #064E3B; -fx-background-radius: 8; -fx-padding: 6 8;">
                         <Label text="🏋" style="-fx-font-size: 16px;"/>
                     </StackPane>
                     <VBox spacing="1">
                         <Label text="GymCore"
                                style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF; -fx-font-family: 'Segoe UI', sans-serif;"/>
                         <Label text="Management System"
-                               style="-fx-font-size: 10px; -fx-text-fill: #64748B; -fx-font-weight: bold;"/>
+                               style="-fx-font-size: 10px; -fx-text-fill: #83939A; -fx-font-weight: bold;"/>
                     </VBox>
                 </HBox>
             </VBox>
@@ -52,13 +52,13 @@
             </VBox>
 
             <!-- Rodapé da Sidebar: Usuário / Operador -->
-            <VBox spacing="4" style="-fx-padding: 14 16; -fx-border-color: #1E2736; -fx-border-width: 1 0 0 0;">
+            <VBox spacing="4" style="-fx-padding: 14 16; -fx-border-color: #29384B; -fx-border-width: 1 0 0 0;">
                 <HBox alignment="CENTER_LEFT" spacing="10">
-                    <Label text="👤" style="-fx-font-size: 14px; -fx-text-fill: #00D287;"/>
+                    <Label text="👤" style="-fx-font-size: 14px; -fx-text-fill: #45D6A4;"/>
                     <VBox spacing="1">
                         <Label fx:id="labelUsuario" text="Operador"
-                               style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #F1F5F9;"/>
-                        <Label text="Terminal Conectado" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                               style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #DCE7E4;"/>
+                        <Label text="Terminal Conectado" style="-fx-font-size: 10px; -fx-text-fill: #83939A;"/>
                     </VBox>
                 </HBox>
             </VBox>
@@ -67,7 +67,7 @@
 
     <!-- ── Centro: TopBar de Ações e Área de Conteúdo ─────────────── -->
     <center>
-        <BorderPane style="-fx-background-color: #0B0E14;">
+        <BorderPane style="-fx-background-color: #0F172A;">
             <!-- TopBar com Ações Rápidas (Check-in, Nova Matrícula, Total do Dia e Sair) -->
             <top>
                 <HBox alignment="CENTER_LEFT" spacing="14" styleClass="gymcore-topbar">
@@ -86,9 +86,9 @@
                     <!-- Indicador Observer: Total Recebido Hoje -->
                     <Label fx:id="labelTotalDia" text="Total Recebido Hoje: R$ 0,00"
                            style="-fx-font-size: 12px; -fx-font-weight: bold;
-                                  -fx-text-fill: #00D287; -fx-background-color: #0E2A22;
+                                  -fx-text-fill: #45D6A4; -fx-background-color: #064E3B;
                                   -fx-background-radius: 6; -fx-padding: 6 12 6 12;
-                                  -fx-border-color: #14533D; -fx-border-radius: 6;"/>
+                                  -fx-border-color: #0F766E; -fx-border-radius: 6;"/>
 
                     <!-- Botão Sair -->
                     <Button text="Sair" onAction="#onSairClicado"

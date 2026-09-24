@@ -3,106 +3,94 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<!--
-    pagamento.fxml — UC 04: Controlar Pagamentos
-    Controller: com.academia.controller.PagamentoController
-    
-    PagamentoController implementa Subject (Padrão Observer):
-    notifica PainelPrincipalController ao registrar pagamentos.
-    
-    Usa TabPane interno para separar "Registrar Pagamento" de "Atrasados".
--->
 <VBox xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.academia.controller.PagamentoController"
-      spacing="0" style="-fx-padding: 16;">
+      spacing="14" style="-fx-padding: 18; -fx-background-color: #0F172A;">
 
-    <Label text="Controlar Pagamentos"
-           style="-fx-font-size: 16px; -fx-font-weight: bold;
-                  -fx-text-fill: #58a6ff; -fx-padding: 0 0 12 0;"/>
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <VBox spacing="3">
+            <Label text="Caixa" style="-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #DCE7E4;"/>
+            <Label text="Consulte pendências e registre pagamentos" style="-fx-font-size: 12px; -fx-text-fill: #B5C4C2;"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="↻ Atualizar" onAction="#onAtualizarClicado" styleClass="gymcore-btn-secondary"/>
+    </HBox>
 
     <TabPane tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-
-        <!-- ── Aba: Registrar Pagamento ──────────────────────────── -->
-        <Tab text="💳 Registrar Pagamento">
-            <BorderPane style="-fx-padding: 16;">
-
-                <!-- Formulário -->
-                <left>
-                    <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" focusTraversable="false"
-                                prefWidth="360" style="-fx-background-color: transparent; -fx-background: transparent;">
-                      <content>
-                        <VBox spacing="12" style="-fx-padding: 0 16 0 0;">
-
-                        <Label text="Matrícula *" style="-fx-text-fill: #c9d1d9;"/>
-                        <ComboBox fx:id="comboMatricula" maxWidth="Infinity"/>
-
-                        <Label text="Valor Pago (R$) *" style="-fx-text-fill: #c9d1d9;"/>
-                        <TextField fx:id="campValor" promptText="Ex.: 99.90"/>
-
-                        <Label text="Tipo de Pagamento *" style="-fx-text-fill: #c9d1d9;"/>
-                        <ComboBox fx:id="comboTipoPagamento" maxWidth="Infinity"/>
-
-                        <Label text="Forma de Pagamento *" style="-fx-text-fill: #c9d1d9;"/>
-                        <ComboBox fx:id="comboFormaPagamento" maxWidth="Infinity"/>
-
-                        <Label text="Data do Pagamento" style="-fx-text-fill: #c9d1d9;"/>
-                        <DatePicker fx:id="campDataPagamento" maxWidth="Infinity"/>
-
-                        <Label text="Observações" style="-fx-text-fill: #c9d1d9;"/>
-                        <TextArea fx:id="campObservacoes" promptText="Observações..."
-                                  prefRowCount="3" wrapText="true"/>
-
-                        <Separator/>
-
-                        <HBox spacing="8">
-                            <Button text="✔ Registrar Pagamento" onAction="#onRegistrarPagamentoClicado"
-                                    styleClass="accent" maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
-                            <Button text="🔄 Atualizar" onAction="#onAtualizarClicado"
-                                    maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
-                        </HBox>
-
-                        <Label fx:id="labelStatus" text="" wrapText="true"
-                               style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
-                        </VBox>
-                      </content>
-                    </ScrollPane>
-                </left>
-
-                <!-- Tabela de pagamentos -->
+        <Tab text="Registrar pagamento">
+            <BorderPane style="-fx-padding: 12 0 0 0;">
                 <center>
-                    <TableView fx:id="tabelaPagamentos" VBox.vgrow="ALWAYS">
-                        <columns>
-                            <TableColumn fx:id="colId"    text="ID"     prefWidth="50"/>
-                            <TableColumn fx:id="colAluno" text="Aluno"  prefWidth="180"/>
-                            <TableColumn fx:id="colValor" text="Valor"  prefWidth="100"/>
-                            <TableColumn fx:id="colData"  text="Data"   prefWidth="100"/>
-                            <TableColumn fx:id="colTipo"  text="Tipo"   prefWidth="110"/>
-                            <TableColumn fx:id="colForma" text="Forma"  prefWidth="100"/>
-                            <TableColumn fx:id="colObs"   text="Obs."   prefWidth="160"/>
-                        </columns>
-                        <placeholder><Label text="Nenhum pagamento registrado."/></placeholder>
-                    </TableView>
+                    <VBox spacing="12" style="-fx-padding: 0 14 0 0;" BorderPane.alignment="TOP_LEFT">
+                        <VBox spacing="10" styleClass="gymcore-card" style="-fx-padding: 16;">
+                            <HBox alignment="CENTER_LEFT" spacing="8">
+                                <Label text="⌕" style="-fx-font-size: 20px; -fx-text-fill: #45D6A4;"/>
+                                <Label text="Identificação do aluno" style="-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: #DCE7E4;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label text="● Caixa aberto" style="-fx-text-fill: #45D6A4; -fx-font-size: 11px;"/>
+                            </HBox>
+                            <TextField fx:id="campoBuscaAluno" promptText="Buscar por nome, CPF ou matrícula..." maxWidth="Infinity" prefHeight="38"/>
+                            <ListView fx:id="listaResultadosAluno" visible="false" managed="false" maxHeight="132" focusTraversable="false"/>
+                        </VBox>
+
+                        <VBox spacing="0" styleClass="gymcore-card" VBox.vgrow="ALWAYS">
+                            <Label text="PENDÊNCIAS FINANCEIRAS" style="-fx-padding: 12 14; -fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #B5C4C2;"/>
+                            <TableView fx:id="tabelaAtrasados" VBox.vgrow="ALWAYS">
+                                <columns>
+                                    <TableColumn fx:id="colAlunoAt" text="Aluno" prefWidth="170"/>
+                                    <TableColumn fx:id="colTipoAt" text="Mensalidade" prefWidth="190"/>
+                                    <TableColumn fx:id="colValorAt" text="Valor" prefWidth="90"/>
+                                    <TableColumn fx:id="colVencimentoAt" text="Vencimento" prefWidth="105"/>
+                                    <TableColumn fx:id="colSituacaoAt" text="Situação" prefWidth="100"/>
+                                </columns>
+                                <placeholder><Label text="Selecione uma matrícula para consultar as pendências." style="-fx-text-fill: #B5C4C2;"/></placeholder>
+                            </TableView>
+                            <HBox alignment="CENTER_LEFT" style="-fx-padding: 10 14; -fx-border-color: #334155; -fx-border-width: 1 0 0 0;">
+                                <Label fx:id="labelStatus" text="Selecione uma pendência ou informe um pagamento avulso." wrapText="true" style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px;"/>
+                            </HBox>
+                        </VBox>
+                    </VBox>
                 </center>
+
+                <right>
+                    <VBox spacing="12" prefWidth="300" minWidth="280" styleClass="gymcore-card" style="-fx-padding: 16;" BorderPane.alignment="TOP_RIGHT">
+                        <VBox alignment="CENTER" spacing="4" style="-fx-background-color: #064E3B; -fx-background-radius: 8; -fx-padding: 16;">
+                            <Label text="VALOR DO PAGAMENTO" style="-fx-font-size: 10px; -fx-text-fill: #B5C4C2;"/>
+                            <HBox alignment="CENTER" spacing="4">
+                                <Label text="R$" style="-fx-font-size: 18px; -fx-text-fill: #45D6A4;"/>
+                                <TextField fx:id="campValor" promptText="0,00" style="-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #45D6A4; -fx-alignment: CENTER_RIGHT; -fx-background-color: transparent; -fx-border-color: transparent;" HBox.hgrow="ALWAYS"/>
+                            </HBox>
+                        </VBox>
+
+                        <Label text="Forma de pagamento" style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px;"/>
+                        <ComboBox fx:id="comboFormaPagamento" maxWidth="Infinity"/>
+                        <Label text="Tipo" style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px;"/>
+                        <ComboBox fx:id="comboTipoPagamento" maxWidth="Infinity"/>
+                        <Label text="Data" style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px;"/>
+                        <DatePicker fx:id="campDataPagamento" maxWidth="Infinity"/>
+                        <Label text="Observações" style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px;"/>
+                        <TextArea fx:id="campObservacoes" promptText="Opcional" prefRowCount="3" wrapText="true"/>
+                        <Region VBox.vgrow="ALWAYS"/>
+                        <Button text="✓  Confirmar pagamento" onAction="#onRegistrarPagamentoClicado" styleClass="gymcore-btn-primary" maxWidth="Infinity" prefHeight="42"/>
+                        <Label text="O registro atualiza o caixa e o histórico." wrapText="true" style="-fx-text-fill: #83939A; -fx-font-size: 10px; -fx-alignment: CENTER;"/>
+                    </VBox>
+                </right>
             </BorderPane>
         </Tab>
 
-        <!-- ── Aba: Mensalidades Atrasadas ───────────────────────── -->
-        <Tab text="⚠ Pendências Financeiras">
-            <VBox spacing="10" style="-fx-padding: 16;">
-
-                <Label text="Selecione uma pendência para registrar o pagamento"
-                       style="-fx-text-fill: #f85149; -fx-font-size: 13px;"/>
-
-                <TableView fx:id="tabelaAtrasados" VBox.vgrow="ALWAYS">
+        <Tab text="Histórico de pagamentos">
+            <VBox style="-fx-padding: 12 0 0 0;" VBox.vgrow="ALWAYS">
+                <TableView fx:id="tabelaPagamentos" VBox.vgrow="ALWAYS">
                     <columns>
-                        <TableColumn fx:id="colAlunoAt" text="Aluno" prefWidth="220"/>
-                        <TableColumn fx:id="colTipoAt" text="Mensalidade" prefWidth="240"/>
-                        <TableColumn fx:id="colValorAt" text="Valor" prefWidth="100"/>
-                        <TableColumn fx:id="colVencimentoAt" text="Vencimento" prefWidth="110"/>
-                        <TableColumn fx:id="colSituacaoAt" text="Situação" prefWidth="110"/>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="55"/>
+                        <TableColumn fx:id="colAluno" text="Aluno" prefWidth="220"/>
+                        <TableColumn fx:id="colValor" text="Valor" prefWidth="110"/>
+                        <TableColumn fx:id="colData" text="Data" prefWidth="120"/>
+                        <TableColumn fx:id="colTipo" text="Tipo" prefWidth="130"/>
+                        <TableColumn fx:id="colForma" text="Forma" prefWidth="120"/>
+                        <TableColumn fx:id="colObs" text="Observações" prefWidth="200"/>
                     </columns>
-                    <placeholder><Label text="🎉 Nenhuma pendência encontrada!"/></placeholder>
+                    <placeholder><Label text="Nenhum pagamento registrado."/></placeholder>
                 </TableView>
             </VBox>
         </Tab>

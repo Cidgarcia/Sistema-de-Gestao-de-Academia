@@ -6,7 +6,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.academia.controller.MatriculaController"
-            style="-fx-padding: 16; -fx-background-color: #0d1117;">
+            style="-fx-padding: 16; -fx-background-color: #0F172A;">
 
     <left>
         <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" focusTraversable="false"
@@ -14,25 +14,26 @@
             <content>
                 <VBox spacing="12" style="-fx-padding: 0 16 0 0;">
                     <Label text="Realizar Matrícula"
-                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+                           style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #38BDF8;"/>
                     <Label text="Selecione o aluno, o plano e a data inicial."
-                           wrapText="true" style="-fx-font-size: 11px; -fx-text-fill: #8b949e;"/>
+                           wrapText="true" style="-fx-font-size: 11px; -fx-text-fill: #B5C4C2;"/>
                     <Separator/>
 
-                    <Label text="Aluno *" style="-fx-text-fill: #c9d1d9;"/>
-                    <ComboBox fx:id="comboAluno" maxWidth="Infinity" promptText="Selecione um aluno..."/>
+                    <Label text="Aluno *" style="-fx-text-fill: #DCE7E4;"/>
+                    <TextField fx:id="campoBuscaAluno" promptText="Buscar por nome, CPF ou matrícula..." maxWidth="Infinity"/>
+                    <ListView fx:id="listaResultadosAluno" visible="false" managed="false" maxHeight="132" focusTraversable="false"/>
 
-                    <Label text="Data de Início *" style="-fx-text-fill: #c9d1d9;"/>
+                    <Label text="Data de Início *" style="-fx-text-fill: #DCE7E4;"/>
                     <DatePicker fx:id="campDataInicio" maxWidth="Infinity"/>
 
-                    <Label text="Plano selecionado" style="-fx-text-fill: #c9d1d9;"/>
+                    <Label text="Plano selecionado" style="-fx-text-fill: #DCE7E4;"/>
                     <Label fx:id="labelPlanoSelecionado" text="Nenhum plano selecionado"
                            maxWidth="Infinity" wrapText="true"
-                           style="-fx-text-fill: #8b949e; -fx-font-size: 12px;
-                                  -fx-padding: 8 12 8 12; -fx-background-color: #161b22;
+                           style="-fx-text-fill: #B5C4C2; -fx-font-size: 12px;
+                                  -fx-padding: 8 12 8 12; -fx-background-color: #1E293B;
                                   -fx-background-radius: 6;"/>
 
-                    <Label text="Data de Término" style="-fx-text-fill: #c9d1d9;"/>
+                    <Label text="Data de Término" style="-fx-text-fill: #DCE7E4;"/>
                     <Label fx:id="labelDataFim" text="Data de Término: —"
                            maxWidth="Infinity" wrapText="true"
                            style="-fx-text-fill: #e3b341; -fx-font-size: 13px; -fx-font-weight: bold;
@@ -47,7 +48,7 @@
                             styleClass="danger" maxWidth="Infinity" prefHeight="36"/>
 
                     <Label fx:id="labelStatus" text="" wrapText="true"
-                           style="-fx-text-fill: #3fb950; -fx-font-size: 12px;"/>
+                           style="-fx-text-fill: #45D6A4; -fx-font-size: 12px;"/>
                 </VBox>
             </content>
         </ScrollPane>
@@ -58,7 +59,7 @@
             <Label text="Planos Ativos"
                    style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;"/>
             <Label text="Selecione um plano para preencher a matrícula."
-                   style="-fx-font-size: 12px; -fx-text-fill: #8b949e;"/>
+                   style="-fx-font-size: 12px; -fx-text-fill: #B5C4C2;"/>
             <ScrollPane hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED" focusTraversable="false"
                         fitToHeight="false" fitToWidth="false" VBox.vgrow="ALWAYS"
                         style="-fx-background-color: transparent; -fx-background: transparent;

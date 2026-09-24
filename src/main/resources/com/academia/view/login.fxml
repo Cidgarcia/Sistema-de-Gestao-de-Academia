@@ -2,79 +2,64 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
 
-<!--
-    login.fxml — Tela de Autenticação
-    Padrão visual: AtlantaFX PrimerDark
-    Controller: com.academia.controller.LoginController
--->
 <StackPane xmlns="http://javafx.com/javafx/17"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="com.academia.controller.LoginController"
-           style="-fx-background-color: #0d1117;">
-
-    <!-- Cartão centralizado de login -->
-    <VBox alignment="CENTER" spacing="20" maxWidth="380" maxHeight="480"
-          style="-fx-background-color: #161b22; -fx-background-radius: 12;
-                 -fx-padding: 40; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 20, 0, 0, 8);">
-
-        <!-- Ícone / Título -->
-        <Label text="🏋 Academia" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
-        <Label text="Sistema de Gestão" style="-fx-font-size: 14px; -fx-text-fill: #8b949e;"/>
-
-        <Separator/>
-
-        <!-- Campo: Login -->
-        <VBox spacing="6">
-            <Label text="Login" style="-fx-text-fill: #c9d1d9;"/>
-            <TextField fx:id="campLogin" promptText="Digite seu login"
-                       style="-fx-pref-width: 300px;"/>
-        </VBox>
-
-        <!-- Campo: Senha -->
-        <VBox spacing="6">
-            <Label text="Senha" style="-fx-text-fill: #c9d1d9;"/>
-            <PasswordField fx:id="campSenha" promptText="Digite sua senha"
-                           style="-fx-pref-width: 300px;"/>
-        </VBox>
-
-        <!-- Campo: Perfil -->
-        <VBox spacing="6">
-            <Label text="Perfil de Acesso" style="-fx-text-fill: #c9d1d9;"/>
-            <HBox spacing="10">
-                <ToggleButton fx:id="btnFuncionario" text="FUNCIONARIO"
-                              onAction="#onPerfilSelecionado"
-                              style="-fx-pref-width: 145px; -fx-pref-height: 36px;
-                                     -fx-font-size: 13px; -fx-font-weight: bold;
-                                     -fx-background-radius: 8;
-                                     -fx-background-color: #21262d;
-                                     -fx-text-fill: #8b949e;
-                                     -fx-cursor: hand;"/>
-                <ToggleButton fx:id="btnInstrutor" text="INSTRUTOR"
-                              onAction="#onPerfilSelecionado"
-                              style="-fx-pref-width: 145px; -fx-pref-height: 36px;
-                                     -fx-font-size: 13px; -fx-font-weight: bold;
-                                     -fx-background-radius: 8;
-                                     -fx-background-color: #21262d;
-                                     -fx-text-fill: #8b949e;
-                                     -fx-cursor: hand;"/>
+           style="-fx-background-color: #0F172A;">
+    <HBox maxWidth="900" maxHeight="560" style="-fx-background-color: #1E293B; -fx-background-radius: 16; -fx-border-color: #334155; -fx-border-radius: 16; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.35), 24, 0, 0, 10);">
+        <VBox alignment="CENTER_LEFT" spacing="22" prefWidth="350" minWidth="300"
+              style="-fx-background-color: #064E3B; -fx-background-radius: 16 0 0 16; -fx-padding: 42;">
+            <VBox alignment="CENTER_LEFT" spacing="8">
+                <HBox alignment="CENTER_LEFT" spacing="12">
+                    <StackPane prefWidth="42" prefHeight="42" style="-fx-background-color: #45D6A4; -fx-background-radius: 10;">
+                        <Label text="G" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0F172A;"/>
+                    </StackPane>
+                    <VBox spacing="1">
+                        <Label text="GymCore" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #45D6A4;"/>
+                        <Label text="MANAGEMENT SYSTEM" style="-fx-font-size: 10px; -fx-text-fill: #B5C4C2;"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+            <Region VBox.vgrow="ALWAYS"/>
+            <Label text="Treino em dia. Gestão no ritmo." wrapText="true"
+                   style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #E6F0ED;"/>
+            <Label text="Acompanhe seus alunos, organize a academia e mantenha cada resultado em movimento."
+                   wrapText="true" style="-fx-font-size: 14px; -fx-text-fill: #B5C4C2; -fx-line-spacing: 4px;"/>
+            <HBox alignment="CENTER_LEFT" spacing="8" style="-fx-padding: 10 0 0 0;">
+                <Label text="●" style="-fx-text-fill: #45D6A4;"/>
+                <Label text="Sistema de gestão da academia" style="-fx-font-size: 11px; -fx-text-fill: #B5C4C2;"/>
             </HBox>
+            <Region VBox.vgrow="ALWAYS"/>
         </VBox>
 
-        <!-- Mensagem de erro (oculta por padrão) -->
-        <Label fx:id="labelErro" text="" visible="false"
-               style="-fx-text-fill: #f85149; -fx-font-size: 12px;"/>
+        <VBox alignment="CENTER_LEFT" spacing="16" maxWidth="390" HBox.hgrow="ALWAYS"
+              style="-fx-padding: 48 52;">
+            <Label text="Acesse sua conta" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #DCE7E4;"/>
+            <Label text="Entre com suas credenciais para continuar." style="-fx-font-size: 12px; -fx-text-fill: #B5C4C2;"/>
 
-        <Separator/>
+            <VBox spacing="7" style="-fx-padding: 12 0 0 0;">
+                <Label text="Login" style="-fx-font-size: 12px; -fx-text-fill: #DCE7E4;"/>
+                <TextField fx:id="campLogin" promptText="Seu usuário" maxWidth="Infinity" prefHeight="40"/>
+            </VBox>
+            <VBox spacing="7">
+                <Label text="Senha" style="-fx-font-size: 12px; -fx-text-fill: #DCE7E4;"/>
+                <PasswordField fx:id="campSenha" promptText="Sua senha" maxWidth="Infinity" prefHeight="40"/>
+            </VBox>
+            <VBox spacing="8">
+                <Label text="Perfil de acesso" style="-fx-font-size: 12px; -fx-text-fill: #DCE7E4;"/>
+                <HBox spacing="10">
+                    <ToggleButton fx:id="btnFuncionario" text="Funcionário" onAction="#onPerfilSelecionado" maxWidth="Infinity" prefHeight="38" HBox.hgrow="ALWAYS"/>
+                    <ToggleButton fx:id="btnInstrutor" text="Instrutor" onAction="#onPerfilSelecionado" maxWidth="Infinity" prefHeight="38" HBox.hgrow="ALWAYS"/>
+                </HBox>
+            </VBox>
 
-        <!-- Botão de login -->
-        <Button fx:id="btnEntrar" text="Entrar" onAction="#onEntrarClicado" defaultButton="true"
-                style="-fx-pref-width: 300px; -fx-font-size: 14px;"
-                styleClass="accent"/>
-
-        <!-- Credenciais padrão (apenas para desenvolvimento) -->
-        <Label text="Padrão: admin / admin123 / FUNCIONARIO"
-               style="-fx-text-fill: #484f58; -fx-font-size: 11px;"/>
-    </VBox>
+            <Label fx:id="labelErro" text="" visible="false" wrapText="true" style="-fx-text-fill: #F87171; -fx-font-size: 12px;"/>
+            <Button fx:id="btnEntrar" text="Entrar no GymCore  →" onAction="#onEntrarClicado" defaultButton="true"
+                    maxWidth="Infinity" prefHeight="44"
+                    style="-fx-background-color: #45D6A4; -fx-text-fill: #0F172A; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 6; -fx-cursor: hand;"/>
+            <Label text="Acesso seguro para a equipe da academia" wrapText="true"
+                   style="-fx-text-fill: #83939A; -fx-font-size: 10px; -fx-alignment: CENTER;" maxWidth="Infinity"/>
+        </VBox>
+    </HBox>
 </StackPane>
