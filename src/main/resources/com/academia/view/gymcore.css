@@ -1,0 +1,237 @@
+/* ==========================================================================
+   GymCore Management System — Design System & Stylesheet
+   Identidade visual moderna com paleta Dark Slate & Emerald/Mint Green
+   ========================================================================== */
+
+/* ── Cores Globais ──────────────────────────────────────────────────────── */
+.root {
+    -fx-base: #0B0E14;
+    -fx-background: #0B0E14;
+    -fx-control-inner-background: #0E141E;
+    -fx-text-base-color: #F1F5F9;
+    -fx-accent: #00D287;
+    -fx-focus-color: #00D287;
+    -fx-faint-focus-color: rgba(0, 210, 135, 0.2);
+
+    /* Cores GymCore */
+    -gymcore-bg-dark: #0B0E14;
+    -gymcore-bg-card: #161F2E;
+    -gymcore-bg-card-highlight: #0B2D22;
+    -gymcore-bg-input: #0E141E;
+    -gymcore-border: #222D3D;
+    -gymcore-border-highlight: #14533D;
+    -gymcore-green: #00D287;
+    -gymcore-green-hover: #10E296;
+    -gymcore-green-light: #34D399;
+    -gymcore-text-main: #F1F5F9;
+    -gymcore-text-muted: #8B9FB5;
+    -gymcore-text-dim: #64748B;
+}
+
+/* ── Barra Lateral (Sidebar) ────────────────────────────────────────────── */
+.gymcore-sidebar {
+    -fx-background-color: #0B0E14;
+    -fx-border-color: #1E2736;
+    -fx-border-width: 0 1 0 0;
+    -fx-pref-width: 220px;
+    -fx-min-width: 220px;
+}
+
+.gymcore-nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #94A3B8;
+    -fx-font-size: 13px;
+    -fx-font-weight: normal;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 10 16 10 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+    -fx-border-width: 0 0 0 3;
+    -fx-border-color: transparent;
+}
+
+.gymcore-nav-btn:hover {
+    -fx-background-color: #161F2E;
+    -fx-text-fill: #FFFFFF;
+}
+
+.gymcore-nav-btn-active {
+    -fx-background-color: #0E2A22;
+    -fx-text-fill: #00D287;
+    -fx-font-weight: bold;
+    -fx-border-color: #00D287;
+    -fx-border-width: 0 0 0 3;
+}
+
+/* ── Barra Superior (TopBar) ────────────────────────────────────────────── */
+.gymcore-topbar {
+    -fx-background-color: #0B0E14;
+    -fx-border-color: #1E2736;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 10 20 10 20;
+}
+
+/* ── Botões Primários e Secundários ─────────────────────────────────────── */
+.gymcore-btn-primary {
+    -fx-background-color: #00D287;
+    -fx-text-fill: #0B1E16;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 8 16 8 16;
+    -fx-background-radius: 6;
+    -fx-cursor: hand;
+}
+
+.gymcore-btn-primary:hover {
+    -fx-background-color: #10E296;
+}
+
+.gymcore-btn-primary:pressed {
+    -fx-background-color: #00B774;
+}
+
+.gymcore-btn-secondary {
+    -fx-background-color: #161F2E;
+    -fx-border-color: #222D3D;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: #E2E8F0;
+    -fx-font-size: 12px;
+    -fx-padding: 7 14 7 14;
+    -fx-cursor: hand;
+}
+
+.gymcore-btn-secondary:hover {
+    -fx-background-color: #1F2B3E;
+    -fx-border-color: #2F3E54;
+    -fx-text-fill: #FFFFFF;
+}
+
+.gymcore-btn-pill {
+    -fx-background-color: #161F2E;
+    -fx-border-color: #222D3D;
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-text-fill: #8B9FB5;
+    -fx-font-size: 11px;
+    -fx-padding: 4 12 4 12;
+    -fx-cursor: hand;
+}
+
+.gymcore-btn-pill:hover {
+    -fx-background-color: #1F2B3E;
+    -fx-text-fill: #FFFFFF;
+    -fx-border-color: #3B4B63;
+}
+
+/* ── Cards / Contêineres ────────────────────────────────────────────────── */
+.gymcore-card {
+    -fx-background-color: #161F2E;
+    -fx-border-color: #222D3D;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.gymcore-card-highlight {
+    -fx-background-color: #0B2D22;
+    -fx-border-color: #14533D;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+/* ── Campos de Formulário (Inputs & Combos) ──────────────────────────────── */
+.gymcore-input, .text-field, .combo-box, .date-picker {
+    -fx-background-color: #0E141E;
+    -fx-border-color: #222E42;
+    -fx-border-radius: 6;
+    -fx-background-radius: 6;
+    -fx-text-fill: #F1F5F9;
+    -fx-prompt-text-fill: #64748B;
+}
+
+.gymcore-input:focused, .text-field:focused, .combo-box:focused, .date-picker:focused {
+    -fx-border-color: #00D287;
+    -fx-border-width: 1;
+}
+
+.combo-box .list-cell {
+    -fx-text-fill: #F1F5F9;
+    -fx-background-color: transparent;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: #161F2E;
+    -fx-border-color: #222D3D;
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #1F2B3E;
+    -fx-text-fill: #00D287;
+}
+
+.combo-box-popup .list-view .list-cell:filled:selected {
+    -fx-background-color: #0E2A22;
+    -fx-text-fill: #00D287;
+}
+
+/* ── Tabelas (TableView) ────────────────────────────────────────────────── */
+.table-view {
+    -fx-background-color: #0B0E14;
+    -fx-border-color: #222D3D;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #0F1520;
+    -fx-border-color: #222D3D;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent #222D3D transparent transparent;
+    -fx-border-width: 0 1 0 0;
+    -fx-padding: 8 6 8 6;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #8B9FB5;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.table-row-cell {
+    -fx-background-color: #161F2E;
+    -fx-border-color: transparent transparent #1E2736 transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #121824;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #1A2638;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #0E2A22;
+    -fx-text-fill: #00D287;
+}
+
+.table-row-cell .table-cell {
+    -fx-text-fill: #F1F5F9;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 6 10 6 10;
+}
+
+/* Esconde abas superiores nativas do TabPane no Painel Principal */
+.tab-pane-sem-cabecalho > .tab-header-area {
+    -fx-padding: 0;
+    -fx-max-height: 0;
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    visibility: hidden;
+}

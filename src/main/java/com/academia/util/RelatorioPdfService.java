@@ -19,19 +19,19 @@ import java.util.Locale;
  */
 public class RelatorioPdfService {
 
-    private static final Color COR_AZUL = new Color(25, 118, 210); // #1976D2
-    private static final Color COR_AZUL_ESCURO = new Color(13, 71, 161);
-    private static final Color COR_LINHA_PAR = new Color(245, 248, 252);
-    private static final Color COR_CINZA_BORDA = new Color(207, 216, 220);
-    private static final Color COR_CINZA_TEXTO = new Color(90, 100, 110);
+    private static final Color COR_AZUL = new Color(0, 168, 107); // GymCore Green #00A86B
+    private static final Color COR_AZUL_ESCURO = new Color(11, 45, 34); // #0B2D22
+    private static final Color COR_LINHA_PAR = new Color(242, 249, 245);
+    private static final Color COR_CINZA_BORDA = new Color(215, 230, 222);
+    private static final Color COR_CINZA_TEXTO = new Color(100, 116, 139);
 
-    private static final Font FONTE_TITULO = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16, COR_AZUL_ESCURO);
+    private static final Font FONTE_TITULO = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 15, COR_AZUL_ESCURO);
     private static final Font FONTE_SUBTITULO = FontFactory.getFont(FontFactory.HELVETICA, 9, COR_CINZA_TEXTO);
     private static final Font FONTE_CABECALHO_TABELA = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 9, Color.WHITE);
     private static final Font FONTE_DADOS = FontFactory.getFont(FontFactory.HELVETICA, 8, Color.BLACK);
     private static final Font FONTE_DADOS_BOLD = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8, Color.BLACK);
-    private static final Font FONTE_KPI_TITULO = FontFactory.getFont(FontFactory.HELVETICA, 8, COR_CINZA_TEXTO);
-    private static final Font FONTE_KPI_VALOR = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 11, COR_AZUL_ESCURO);
+    private static final Font FONTE_KPI_TITULO = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 8, COR_CINZA_TEXTO);
+    private static final Font FONTE_KPI_VALOR = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, COR_AZUL);
 
     private static final NumberFormat MOEDA = NumberFormat.getCurrencyInstance(new Locale("pt", "BR"));
 
@@ -287,7 +287,7 @@ public class RelatorioPdfService {
 
         PdfPCell leftCell = new PdfPCell();
         leftCell.setBorder(Rectangle.NO_BORDER);
-        leftCell.addElement(new Paragraph("ACADEMIA FIT & SAÚDE", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, COR_AZUL)));
+        leftCell.addElement(new Paragraph("GYMCORE — MANAGEMENT SYSTEM", FontFactory.getFont(FontFactory.HELVETICA_BOLD, 10, COR_AZUL)));
         leftCell.addElement(new Paragraph(titulo, FONTE_TITULO));
         if (filtros != null && !filtros.isBlank()) {
             leftCell.addElement(new Paragraph("Filtros aplicados: " + filtros, FONTE_SUBTITULO));

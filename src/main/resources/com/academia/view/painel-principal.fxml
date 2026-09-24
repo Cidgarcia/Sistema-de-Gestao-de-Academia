@@ -4,74 +4,115 @@
 <?import javafx.scene.layout.*?>
 
 <!--
-    painel-principal.fxml — Tela Principal com abas de navegação
+    painel-principal.fxml — Layout Geral GymCore Management System
     Controller: com.academia.controller.PainelPrincipalController
-    
-    Implementa o lado Observer do Padrão Observer:
-    recebe notificações do PagamentoController e atualiza labelTotalDia.
 -->
 <BorderPane xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.academia.controller.PainelPrincipalController">
+            fx:controller="com.academia.controller.PainelPrincipalController"
+            stylesheets="@gymcore.css"
+            style="-fx-background-color: #0B0E14;">
 
-    <!-- ── Cabeçalho (topo) ──────────────────────────────────────── -->
-    <top>
-        <HBox alignment="CENTER_LEFT" spacing="20"
-              style="-fx-background-color: #161b22; -fx-padding: 12 20 12 20;
-                     -fx-border-color: #30363d; -fx-border-width: 0 0 1 0;">
+    <!-- ── Esquerda: Sidebar Vertical GymCore ─────────────────────── -->
+    <left>
+        <VBox styleClass="gymcore-sidebar" spacing="0">
+            <!-- Logo e Identidade do Sistema -->
+            <VBox spacing="4" style="-fx-padding: 20 16 20 16; -fx-border-color: #1E2736; -fx-border-width: 0 0 1 0;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <StackPane style="-fx-background-color: #0E2A22; -fx-background-radius: 8; -fx-padding: 6 8;">
+                        <Label text="🏋" style="-fx-font-size: 16px;"/>
+                    </StackPane>
+                    <VBox spacing="1">
+                        <Label text="GymCore"
+                               style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFFFFF; -fx-font-family: 'Segoe UI', sans-serif;"/>
+                        <Label text="Management System"
+                               style="-fx-font-size: 10px; -fx-text-fill: #64748B; -fx-font-weight: bold;"/>
+                    </VBox>
+                </HBox>
+            </VBox>
 
-            <!-- Nome do sistema -->
-            <Label text="🏋 Academia"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+            <!-- Lista de Módulos (Menu de Navegação) -->
+            <VBox spacing="4" style="-fx-padding: 16 10 16 10;" VBox.vgrow="ALWAYS">
+                <Button fx:id="btnNavAlunos" text="👥  Alunos" maxWidth="Infinity"
+                        onAction="#onNavAlunos" styleClass="gymcore-nav-btn, gymcore-nav-btn-active"/>
+                <Button fx:id="btnNavFrequencia" text="⏰  Recepção" maxWidth="Infinity"
+                        onAction="#onNavFrequencia" styleClass="gymcore-nav-btn"/>
+                <Button fx:id="btnNavPlanos" text="📋  Planos" maxWidth="Infinity"
+                        onAction="#onNavPlanos" styleClass="gymcore-nav-btn"/>
+                <Button fx:id="btnNavMatriculas" text="📝  Matrículas" maxWidth="Infinity"
+                        onAction="#onNavMatriculas" styleClass="gymcore-nav-btn"/>
+                <Button fx:id="btnNavPagamentos" text="💳  Caixa" maxWidth="Infinity"
+                        onAction="#onNavPagamentos" styleClass="gymcore-nav-btn"/>
+                <Button fx:id="btnNavAvaliacao" text="📊  Avaliações" maxWidth="Infinity"
+                        onAction="#onNavAvaliacao" styleClass="gymcore-nav-btn"/>
+                <Button fx:id="btnNavTreinos" text="🏋  Treinos" maxWidth="Infinity"
+                        onAction="#onNavTreinos" styleClass="gymcore-nav-btn"/>
+                <Button fx:id="btnNavRelatorios" text="📈  Relatórios" maxWidth="Infinity"
+                        onAction="#onNavRelatorios" styleClass="gymcore-nav-btn"/>
+            </VBox>
 
-            <!-- Espaço expansível -->
-            <Region HBox.hgrow="ALWAYS"/>
+            <!-- Rodapé da Sidebar: Usuário / Operador -->
+            <VBox spacing="4" style="-fx-padding: 14 16; -fx-border-color: #1E2736; -fx-border-width: 1 0 0 0;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="👤" style="-fx-font-size: 14px; -fx-text-fill: #00D287;"/>
+                    <VBox spacing="1">
+                        <Label fx:id="labelUsuario" text="Operador"
+                               style="-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #F1F5F9;"/>
+                        <Label text="Terminal Conectado" style="-fx-font-size: 10px; -fx-text-fill: #64748B;"/>
+                    </VBox>
+                </HBox>
+            </VBox>
+        </VBox>
+    </left>
 
-            <!-- Indicador Observer: Total Recebido no Dia -->
-            <Label fx:id="labelTotalDia" text="Total Recebido Hoje: R$ 0,00"
-                   style="-fx-font-size: 14px; -fx-font-weight: bold;
-                          -fx-text-fill: #3fb950; -fx-background-color: #1a2c1a;
-                          -fx-background-radius: 6; -fx-padding: 6 12 6 12;"/>
-
-            <!-- Usuário logado -->
-            <Label fx:id="labelUsuario" text="Usuário: —"
-                   style="-fx-text-fill: #8b949e; -fx-font-size: 12px;"/>
-
-            <!-- Botão Sair -->
-            <Button text="Sair" onAction="#onSairClicado" styleClass="danger"/>
-        </HBox>
-    </top>
-
-    <!-- ── Conteúdo central: TabPane com abas dos Casos de Uso ───── -->
+    <!-- ── Centro: TopBar de Ações e Área de Conteúdo ─────────────── -->
     <center>
-        <TabPane fx:id="tabPanePrincipal" tabClosingPolicy="UNAVAILABLE">
+        <BorderPane style="-fx-background-color: #0B0E14;">
+            <!-- TopBar com Ações Rápidas (Check-in, Nova Matrícula, Total do Dia e Sair) -->
+            <top>
+                <HBox alignment="CENTER_LEFT" spacing="14" styleClass="gymcore-topbar">
+                    <!-- Breadcrumbs dinâmico -->
+                    <Label fx:id="labelBreadcrumb" text="GymCore › Alunos"
+                           style="-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #94A3B8;"/>
 
-            <!-- UC 01: Cadastrar Aluno -->
-            <Tab fx:id="tabAlunos" text="👤 Alunos"/>
+                    <Region HBox.hgrow="ALWAYS"/>
 
-            <!-- UC 07: Registro de Frequência (Recepção) -->
-            <Tab fx:id="tabFrequencia" text="⏰ Recepção"/>
+                    <!-- Ação Rápida: + Check-in -->
+                    <Button text="+ Check-in" onAction="#onCheckInRapido" styleClass="gymcore-btn-secondary"/>
 
-            <!-- UC 02: Cadastrar Plano -->
-            <Tab fx:id="tabPlanos" text="📋 Planos"/>
+                    <!-- Ação Rápida: + Nova Matrícula -->
+                    <Button text="+ Nova Matrícula" onAction="#onNovaMatriculaRapida" styleClass="gymcore-btn-primary"/>
 
-            <!-- UC 03: Realizar Matrícula -->
-            <Tab fx:id="tabMatriculas" text="📝 Matrículas"/>
+                    <!-- Indicador Observer: Total Recebido Hoje -->
+                    <Label fx:id="labelTotalDia" text="Total Recebido Hoje: R$ 0,00"
+                           style="-fx-font-size: 12px; -fx-font-weight: bold;
+                                  -fx-text-fill: #00D287; -fx-background-color: #0E2A22;
+                                  -fx-background-radius: 6; -fx-padding: 6 12 6 12;
+                                  -fx-border-color: #14533D; -fx-border-radius: 6;"/>
 
-            <!-- UC 04: Controlar Pagamentos -->
-            <Tab fx:id="tabPagamentos" text="💳 Pagamentos"/>
+                    <!-- Botão Sair -->
+                    <Button text="Sair" onAction="#onSairClicado"
+                            style="-fx-background-color: transparent; -fx-border-color: #3B2024;
+                                   -fx-border-radius: 6; -fx-background-radius: 6;
+                                   -fx-text-fill: #F87171; -fx-cursor: hand; -fx-font-size: 12px; -fx-padding: 6 12;"/>
+                </HBox>
+            </top>
 
-            <!-- UC 05: Avaliação Física (Restrita a Instrutores) -->
-            <Tab fx:id="tabAvaliacao" text="📊 Avaliação Física"/>
-
-            <!-- UC 06: Montagem de Treinos -->
-            <Tab fx:id="tabTreinos" text="🏋 Treinos"/>
-
-            <!-- Relatórios Gerenciais e Operacionais -->
-            <Tab fx:id="tabRelatorios" text="📈 Relatórios"/>
-
-        </TabPane>
+            <!-- Conteúdo Central: TabPane sem abas visíveis no topo (navegado pela sidebar) -->
+            <center>
+                <TabPane fx:id="tabPanePrincipal" tabClosingPolicy="UNAVAILABLE"
+                         styleClass="tab-pane-sem-cabecalho" style="-fx-background-color: transparent;">
+                    <Tab fx:id="tabAlunos" text="Alunos"/>
+                    <Tab fx:id="tabFrequencia" text="Recepção"/>
+                    <Tab fx:id="tabPlanos" text="Planos"/>
+                    <Tab fx:id="tabMatriculas" text="Matrículas"/>
+                    <Tab fx:id="tabPagamentos" text="Caixa"/>
+                    <Tab fx:id="tabAvaliacao" text="Avaliação Física"/>
+                    <Tab fx:id="tabTreinos" text="Treinos"/>
+                    <Tab fx:id="tabRelatorios" text="Relatórios"/>
+                </TabPane>
+            </center>
+        </BorderPane>
     </center>
 
 </BorderPane>
-
