@@ -4,6 +4,7 @@ import com.academia.dao.AlunoDAO;
 import com.academia.dao.MatriculaDAO;
 import com.academia.model.Aluno;
 import com.academia.model.AlunoMatriculaDTO;
+import com.academia.model.Usuario;
 import com.academia.validation.AlunoValidator;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,6 +42,18 @@ public class AlunoController {
     private DatePicker campDataNascimento;
     @FXML
     private TextArea campObservacoes;
+    @FXML
+    private ScrollPane painelCadastro;
+    @FXML
+    private Button btnCancelarMatricula;
+
+    private boolean podeAlterar;
+
+    public void configurarAcesso(Usuario usuario) {
+        podeAlterar = usuario != null && "FUNCIONARIO".equals(usuario.getPerfil());
+        painelCadastro.setDisable(!podeAlterar);
+        btnCancelarMatricula.setDisable(!podeAlterar);
+    }
 
     // ── Controles da listagem ─────────────────────────────────────────────
 
@@ -176,6 +189,7 @@ public class AlunoController {
      */
     @FXML
     private void onSalvarClicado() {
+        if (!podeAlterar) return;
         if (!validarCampos())
             return;
 
@@ -214,6 +228,7 @@ public class AlunoController {
      */
     @FXML
     private void onExcluirClicado() {
+        if (!podeAlterar) return;
         AlunoMatriculaDTO selecionado = tabelaAlunos.getSelectionModel().getSelectedItem();
         if (selecionado == null) {
             exibirStatus("Selecione um aluno para excluir.");
@@ -242,6 +257,7 @@ public class AlunoController {
     /** Ação do botão "Novo" — limpa o formulário para um novo cadastro. */
     @FXML
     private void onNovoClicado() {
+        if (!podeAlterar) return;
         limparFormulario();
         tabelaAlunos.getSelectionModel().clearSelection();
     }
@@ -249,6 +265,7 @@ public class AlunoController {
     /** Ação de cancelar a matrícula selecionada diretamente na tabela. */
     @FXML
     private void onCancelarMatriculaClicado() {
+        if (!podeAlterar) return;
         AlunoMatriculaDTO selecionado = tabelaAlunos.getSelectionModel().getSelectedItem();
         if (selecionado == null) {
             exibirStatus("⚠ Selecione um registro na tabela para cancelar a matrícula.");

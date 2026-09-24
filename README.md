@@ -127,7 +127,8 @@ O sistema possui controle de permissões baseado no perfil do usuário logado:
 
 | Área                  | Acesso: Funcionário | Acesso: Instrutor |
 |-----------------------|---------------------|-------------------|
-| 👤 Alunos             | ✅                  | ✅                |
+| 👤 Alunos — consulta  | ✅                  | ✅                |
+| 👤 Alunos — cadastro, edição e exclusão | ✅ | ❌          |
 | 🚪 Recepção/Frequência| ✅                  | ❌                |
 | 📋 Planos             | ✅                  | ❌                |
 | 📝 Matrículas         | ✅                  | ❌                |
@@ -135,6 +136,8 @@ O sistema possui controle de permissões baseado no perfil do usuário logado:
 | 📊 Avaliação Física   | ❌                  | ✅                |
 | 🏋️ Treinos            | ❌                  | ✅                |
 | 📈 Relatórios         | ✅                  | ✅                |
+
+O Instrutor pode consultar alunos, mas somente o Funcionário pode cadastrar, editar ou excluir alunos e cancelar matrículas pela tela Alunos.
 
 ---
 

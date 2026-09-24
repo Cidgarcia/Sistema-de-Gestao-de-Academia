@@ -14,7 +14,7 @@
 
     <!-- ── Formulário (esquerda) ──────────────────────────────────── -->
     <left>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" focusTraversable="false"
+        <ScrollPane fx:id="painelCadastro" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" focusTraversable="false"
                     prefWidth="360" style="-fx-background-color: transparent; -fx-background: transparent;">
           <content>
             <VBox spacing="12" style="-fx-padding: 0 16 0 0;">
@@ -49,7 +49,7 @@
 
             <!-- Botões de ação -->
             <HBox spacing="8">
-                <Button text="💾 Salvar" onAction="#onSalvarClicado" styleClass="accent"
+                <Button fx:id="btnSalvarAluno" text="💾 Salvar" onAction="#onSalvarClicado" styleClass="accent"
                         maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
                 <Button text="🗑 Excluir" onAction="#onExcluirClicado" styleClass="danger"
                         maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
@@ -109,7 +109,7 @@
                            style="-fx-text-fill: #B5C4C2; -fx-font-size: 12; -fx-padding: 0 0 0 10;"/>
                   </HBox>
                   <HBox alignment="CENTER_RIGHT">
-                      <Button text="✗ Cancelar Matrícula" onAction="#onCancelarMatriculaClicado"
+                      <Button fx:id="btnCancelarMatricula" text="✗ Cancelar Matrícula" onAction="#onCancelarMatriculaClicado"
                               style="-fx-background-color: transparent;
                                      -fx-border-color: #da3633; -fx-border-radius: 6;
                                      -fx-background-radius: 6; -fx-text-fill: #f85149;

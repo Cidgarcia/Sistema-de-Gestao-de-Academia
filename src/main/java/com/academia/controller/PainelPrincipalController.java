@@ -117,6 +117,7 @@ public class PainelPrincipalController implements Observer {
 
         // Carrega cada aba com seu respectivo FXML e guarda a referência do controller
         alunoCtrl              = carregarAba(tabAlunos,              "/com/academia/view/aluno.fxml",                AlunoController.class);
+        if (alunoCtrl != null) alunoCtrl.configurarAcesso(usuario);
         frequenciaCtrl         = carregarAba(tabFrequencia,          "/com/academia/view/frequencia.fxml",           FrequenciaController.class);
         /* PlanoController não precisa de refresh */
                                  carregarAba(tabPlanos,              "/com/academia/view/plano.fxml",                null);
