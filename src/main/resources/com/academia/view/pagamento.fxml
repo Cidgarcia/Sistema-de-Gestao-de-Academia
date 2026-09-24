@@ -43,10 +43,10 @@
                                     <TableColumn fx:id="colVencimentoAt" text="Vencimento" prefWidth="105"/>
                                     <TableColumn fx:id="colSituacaoAt" text="Situação" prefWidth="100"/>
                                 </columns>
-                                <placeholder><Label text="Selecione uma matrícula para consultar as pendências." style="-fx-text-fill: #B5C4C2;"/></placeholder>
+                                <placeholder><Label text="Selecione um aluno para consultar as pendências." style="-fx-text-fill: #B5C4C2;"/></placeholder>
                             </TableView>
                             <HBox alignment="CENTER_LEFT" style="-fx-padding: 10 14; -fx-border-color: #334155; -fx-border-width: 1 0 0 0;">
-                                <Label fx:id="labelStatus" text="Selecione uma pendência ou informe um pagamento avulso." wrapText="true" style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px;"/>
+                                <Label fx:id="labelStatus" text="Selecione um aluno para consultar as pendências." wrapText="true" style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px;"/>
                             </HBox>
                         </VBox>
                     </VBox>
@@ -71,7 +71,7 @@
                         <Label text="Observações" style="-fx-text-fill: #B5C4C2; -fx-font-size: 11px;"/>
                         <TextArea fx:id="campObservacoes" promptText="Opcional" prefRowCount="3" wrapText="true"/>
                         <Region VBox.vgrow="ALWAYS"/>
-                        <Button text="✓  Confirmar pagamento" onAction="#onRegistrarPagamentoClicado" styleClass="gymcore-btn-primary" maxWidth="Infinity" prefHeight="42"/>
+                        <Button fx:id="btnConfirmarPagamento" text="✓  Confirmar pagamento" onAction="#onRegistrarPagamentoClicado" styleClass="gymcore-btn-primary" maxWidth="Infinity" prefHeight="42" disable="true"/>
                         <Label text="O registro atualiza o caixa e o histórico." wrapText="true" style="-fx-text-fill: #83939A; -fx-font-size: 10px; -fx-alignment: CENTER;"/>
                     </VBox>
                 </right>

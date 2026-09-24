@@ -252,24 +252,33 @@ public class PagamentoDAO {
 
     /** Lista pendências, opcionalmente filtradas por matrícula. */
     public List<PendenciaFinanceira> listarPendencias(Integer matriculaId) {
+        return buscarPendencias(matriculaId, false);
+    }
+
+    /** Lista as pendências de todas as matrículas de um aluno. */
+    public List<PendenciaFinanceira> listarPendenciasPorAluno(int alunoId) {
+        return buscarPendencias(alunoId, true);
+    }
+
+    private List<PendenciaFinanceira> buscarPendencias(Integer id, boolean porAluno) {
         sincronizarPendenciasMensais();
         String sql = """
                 SELECT pf.*, a.nome AS nome_aluno
                 FROM PendenciasFinanceiras pf
                 JOIN Matriculas m ON pf.matricula_id = m.id
                 JOIN Alunos a ON m.aluno_id = a.id
-                WHERE (? IS NULL OR pf.matricula_id = ?)
+                WHERE (? IS NULL OR %s = ?)
                 ORDER BY pf.data_vencimento, a.nome
-                """;
+                """.formatted(porAluno ? "m.aluno_id" : "pf.matricula_id");
         List<PendenciaFinanceira> lista = new ArrayList<>();
         try (Connection conn = ConexaoSQLite.getConexao();
              PreparedStatement ps = conn.prepareStatement(sql)) {
-            if (matriculaId == null) {
+            if (id == null) {
                 ps.setNull(1, Types.INTEGER);
                 ps.setNull(2, Types.INTEGER);
             } else {
-                ps.setInt(1, matriculaId);
-                ps.setInt(2, matriculaId);
+                ps.setInt(1, id);
+                ps.setInt(2, id);
             }
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) lista.add(mapearPendencia(rs));
