@@ -115,12 +115,17 @@ public class ConexaoSQLite {
 
         try (Statement stmt = conexao.createStatement()) {
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_alunos_nome ON Alunos(nome)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_alunos_cpf ON Alunos(cpf)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_alunos_cpf_limpo ON Alunos(replace(replace(cpf, '.', ''), '-', ''))");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_matriculas_aluno ON Matriculas(aluno_id)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_matriculas_ativa_datas ON Matriculas(ativa, data_fim, data_inicio)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_pagamentos_matricula_data ON Pagamentos(matricula_id, data_pagamento)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_pendencias_matricula_situacao ON PendenciasFinanceiras(matricula_id, situacao)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_pendencias_vencimento ON PendenciasFinanceiras(data_vencimento, situacao)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_avaliacoes_aluno_data ON AvaliacoesFisicas(aluno_id, data_avaliacao)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_fichas_aluno ON FichasTreino(aluno_id)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_frequencias_aluno_data ON Frequencias(aluno_id, data_hora_entrada)");
+            stmt.execute("CREATE INDEX IF NOT EXISTS idx_frequencias_data_entrada ON Frequencias(data_hora_entrada)");
 
             // Triggers aplicam as novas regras também em bancos criados por versões anteriores.
             stmt.execute("""

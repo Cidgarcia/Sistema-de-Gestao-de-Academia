@@ -111,9 +111,13 @@ public class FrequenciaController {
             return;
         }
         historicoFiltrado = true;
-        tabelaHistorico.setItems(FXCollections.observableArrayList(
-                frequenciaDAO.listarHistorico(txtFiltroAluno.getText(), inicio, fim, null)));
-        lblHistorico.setText("Histórico completo: " + tabelaHistorico.getItems().size() + " registro(s)");
+        // Evita carregamentos completos desnecessários (limite de 250 registros mais recentes quando sem filtro estrito)
+        Integer limite = (inicio == null && fim == null && (txtFiltroAluno.getText() == null || txtFiltroAluno.getText().isBlank())) ? 250 : null;
+        List<FrequenciaDTO> resultados = frequenciaDAO.listarHistorico(txtFiltroAluno.getText(), inicio, fim, limite);
+        tabelaHistorico.setItems(FXCollections.observableArrayList(resultados));
+        lblHistorico.setText(limite != null && resultados.size() >= 250 
+                ? "Exibindo as 250 frequências mais recentes (use filtros para refinar)" 
+                : "Histórico completo: " + resultados.size() + " registro(s)");
     }
 
     @FXML

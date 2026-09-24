@@ -169,11 +169,16 @@ CREATE TABLE IF NOT EXISTS Frequencias (
 
 -- Índices das consultas mais frequentes e garantia de matrícula ativa única
 CREATE INDEX IF NOT EXISTS idx_alunos_nome ON Alunos(nome);
+CREATE INDEX IF NOT EXISTS idx_alunos_cpf ON Alunos(cpf);
+CREATE INDEX IF NOT EXISTS idx_alunos_cpf_limpo ON Alunos(replace(replace(cpf, '.', ''), '-', ''));
 CREATE INDEX IF NOT EXISTS idx_matriculas_aluno ON Matriculas(aluno_id);
+CREATE INDEX IF NOT EXISTS idx_matriculas_ativa_datas ON Matriculas(ativa, data_fim, data_inicio);
 CREATE INDEX IF NOT EXISTS idx_pagamentos_matricula_data ON Pagamentos(matricula_id, data_pagamento);
 CREATE INDEX IF NOT EXISTS idx_pendencias_matricula_situacao ON PendenciasFinanceiras(matricula_id, situacao);
+CREATE INDEX IF NOT EXISTS idx_pendencias_vencimento ON PendenciasFinanceiras(data_vencimento, situacao);
 CREATE INDEX IF NOT EXISTS idx_avaliacoes_aluno_data ON AvaliacoesFisicas(aluno_id, data_avaliacao);
 CREATE INDEX IF NOT EXISTS idx_fichas_aluno ON FichasTreino(aluno_id);
 CREATE INDEX IF NOT EXISTS idx_frequencias_aluno_data ON Frequencias(aluno_id, data_hora_entrada);
+CREATE INDEX IF NOT EXISTS idx_frequencias_data_entrada ON Frequencias(data_hora_entrada);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_matricula_ativa_unica
     ON Matriculas(aluno_id, plano_id) WHERE ativa = 1;
