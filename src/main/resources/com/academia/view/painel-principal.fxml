@@ -67,6 +67,9 @@
             <!-- UC 06: Montagem de Treinos -->
             <Tab fx:id="tabTreinos" text="🏋 Treinos"/>
 
+            <!-- Relatórios Gerenciais e Operacionais -->
+            <Tab fx:id="tabRelatorios" text="📈 Relatórios"/>
+
         </TabPane>
     </center>
 

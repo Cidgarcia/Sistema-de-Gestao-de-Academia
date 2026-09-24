@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+    relatorio.fxml — Módulo de Relatórios Gerenciais
+    Controller: com.academia.controller.RelatorioController
+-->
+<BorderPane xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.academia.controller.RelatorioController"
+            style="-fx-padding: 16;">
+
+    <!-- ── Topo: Título e Controles de Filtro ─────────────────────── -->
+    <top>
+        <VBox spacing="12">
+            <!-- Cabeçalho de Título -->
+            <HBox alignment="CENTER_LEFT" spacing="12">
+                <Label text="📈 Central de Relatórios"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+                <Label text="— Consultas consolidadas e exportação em PDF"
+                       style="-fx-font-size: 12px; -fx-text-fill: #8b949e;"/>
+            </HBox>
+
+            <!-- Barra de Seleção de Tipo e Ações Principais -->
+            <HBox alignment="CENTER_LEFT" spacing="12"
+                  style="-fx-background-color: #161b22; -fx-padding: 12; -fx-background-radius: 6;
+                         -fx-border-color: #30363d; -fx-border-radius: 6;">
+                <Label text="Tipo de Relatório:" style="-fx-font-weight: bold; -fx-text-fill: #c9d1d9;"/>
+                <ComboBox fx:id="comboTipoRelatorio" prefWidth="230"/>
+
+                <Region HBox.hgrow="ALWAYS"/>
+
+                <Button fx:id="btnFiltrar" text="🔍 Atualizar / Filtrar" onAction="#onFiltrarClicado" styleClass="accent"/>
+                <Button fx:id="btnExportarPdf" text="📄 Exportar PDF" onAction="#onExportarPdfClicado" styleClass="success"/>
+                <Button fx:id="btnLimparFiltros" text="🔄 Limpar Filtros" onAction="#onLimparFiltrosClicado"/>
+            </HBox>
+
+            <!-- Barra de Filtros Dinâmicos -->
+            <VBox fx:id="boxFiltros" spacing="10"
+                  style="-fx-background-color: #161b22; -fx-padding: 12; -fx-background-radius: 6;
+                         -fx-border-color: #30363d; -fx-border-radius: 6;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <!-- Filtro por Período de Datas -->
+                    <HBox fx:id="boxPeriodo" alignment="CENTER_LEFT" spacing="6">
+                        <Label text="Período:" style="-fx-text-fill: #c9d1d9;"/>
+                        <DatePicker fx:id="dpInicio" promptText="De" prefWidth="125"/>
+                        <Label text="até" style="-fx-text-fill: #8b949e;"/>
+                        <DatePicker fx:id="dpFim" promptText="Até" prefWidth="125"/>
+
+                        <Button text="Hoje" onAction="#onAtalhoHoje" style="-fx-font-size: 11px;"/>
+                        <Button text="7 Dias" onAction="#onAtalho7Dias" style="-fx-font-size: 11px;"/>
+                        <Button text="Este Mês" onAction="#onAtalhoEsteMes" style="-fx-font-size: 11px;"/>
+                    </HBox>
+
+                    <!-- Filtro Específico 1: Plano -->
+                    <HBox fx:id="boxFiltroPlano" alignment="CENTER_LEFT" spacing="6">
+                        <Label text="Plano:" style="-fx-text-fill: #c9d1d9;"/>
+                        <ComboBox fx:id="comboPlano" prefWidth="150"/>
+                    </HBox>
+
+                    <!-- Filtro Específico 2: Situação Matrícula -->
+                    <HBox fx:id="boxFiltroSituacao" alignment="CENTER_LEFT" spacing="6">
+                        <Label text="Situação:" style="-fx-text-fill: #c9d1d9;"/>
+                        <ComboBox fx:id="comboSituacao" prefWidth="130"/>
+                    </HBox>
+
+                    <!-- Filtro Específico 3: Forma Pagamento -->
+                    <HBox fx:id="boxFiltroFormaPagamento" alignment="CENTER_LEFT" spacing="6">
+                        <Label text="Forma:" style="-fx-text-fill: #c9d1d9;"/>
+                        <ComboBox fx:id="comboFormaPagamento" prefWidth="120"/>
+                    </HBox>
+
+                    <!-- Filtro Específico 4: Tipo Pagamento -->
+                    <HBox fx:id="boxFiltroTipoPagamento" alignment="CENTER_LEFT" spacing="6">
+                        <Label text="Tipo:" style="-fx-text-fill: #c9d1d9;"/>
+                        <ComboBox fx:id="comboTipoPagamento" prefWidth="140"/>
+                    </HBox>
+
+                    <!-- Filtro Específico 5: Aluno (Avaliações) -->
+                    <HBox fx:id="boxFiltroAluno" alignment="CENTER_LEFT" spacing="6">
+                        <Label text="Aluno:" style="-fx-text-fill: #c9d1d9;"/>
+                        <ComboBox fx:id="comboAluno" prefWidth="160"/>
+                    </HBox>
+
+                    <!-- Campo de Busca por Texto -->
+                    <HBox alignment="CENTER_LEFT" spacing="6" HBox.hgrow="ALWAYS">
+                        <TextField fx:id="campBuscaTexto" promptText="Pesquisar por nome ou CPF..."
+                                   maxWidth="Infinity" HBox.hgrow="ALWAYS"/>
+                    </HBox>
+                </HBox>
+            </VBox>
+
+            <!-- Cards de Resumo e Métricas (KPIs) -->
+            <HBox fx:id="boxKpiContainer" spacing="12">
+                <VBox fx:id="cardKpi1" alignment="CENTER_LEFT" spacing="4"
+                      style="-fx-background-color: #21262d; -fx-padding: 10 14; -fx-background-radius: 6;
+                             -fx-border-color: #30363d; -fx-border-radius: 6;" HBox.hgrow="ALWAYS">
+                    <Label fx:id="labelKpi1Titulo" text="TOTAL DE REGISTROS" style="-fx-font-size: 11px; -fx-text-fill: #8b949e;"/>
+                    <Label fx:id="labelKpi1Valor" text="0" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+                </VBox>
+
+                <VBox fx:id="cardKpi2" alignment="CENTER_LEFT" spacing="4"
+                      style="-fx-background-color: #21262d; -fx-padding: 10 14; -fx-background-radius: 6;
+                             -fx-border-color: #30363d; -fx-border-radius: 6;" HBox.hgrow="ALWAYS">
+                    <Label fx:id="labelKpi2Titulo" text="MÉTRICA 2" style="-fx-font-size: 11px; -fx-text-fill: #8b949e;"/>
+                    <Label fx:id="labelKpi2Valor" text="-" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #3fb950;"/>
+                </VBox>
+
+                <VBox fx:id="cardKpi3" alignment="CENTER_LEFT" spacing="4"
+                      style="-fx-background-color: #21262d; -fx-padding: 10 14; -fx-background-radius: 6;
+                             -fx-border-color: #30363d; -fx-border-radius: 6;" HBox.hgrow="ALWAYS">
+                    <Label fx:id="labelKpi3Titulo" text="MÉTRICA 3" style="-fx-font-size: 11px; -fx-text-fill: #8b949e;"/>
+                    <Label fx:id="labelKpi3Valor" text="-" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #d29922;"/>
+                </VBox>
+
+                <VBox fx:id="cardKpi4" alignment="CENTER_LEFT" spacing="4"
+                      style="-fx-background-color: #21262d; -fx-padding: 10 14; -fx-background-radius: 6;
+                             -fx-border-color: #30363d; -fx-border-radius: 6;" HBox.hgrow="ALWAYS">
+                    <Label fx:id="labelKpi4Titulo" text="MÉTRICA 4" style="-fx-font-size: 11px; -fx-text-fill: #8b949e;"/>
+                    <Label fx:id="labelKpi4Valor" text="-" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #f0883e;"/>
+                </VBox>
+            </HBox>
+        </VBox>
+    </top>
+
+    <!-- ── Centro: Tabelas dos 5 Relatórios (Alternadas conforme tipo) ── -->
+    <center>
+        <StackPane style="-fx-padding: 12 0 0 0;">
+            <!-- 1. Tabela: Alunos Ativos -->
+            <TableView fx:id="tabelaAlunosAtivos">
+                <columns>
+                    <TableColumn fx:id="colAlunoAtivoId" text="ID" prefWidth="55"/>
+                    <TableColumn fx:id="colAlunoAtivoNome" text="Aluno" prefWidth="220"/>
+                    <TableColumn fx:id="colAlunoAtivoCpf" text="CPF" prefWidth="130"/>
+                    <TableColumn fx:id="colAlunoAtivoTelefone" text="Telefone" prefWidth="125"/>
+                    <TableColumn fx:id="colAlunoAtivoEmail" text="E-mail" prefWidth="180"/>
+                    <TableColumn fx:id="colAlunoAtivoPlano" text="Plano" prefWidth="140"/>
+                    <TableColumn fx:id="colAlunoAtivoInicio" text="Data Início" prefWidth="100"/>
+                    <TableColumn fx:id="colAlunoAtivoFim" text="Data Fim" prefWidth="100"/>
+                    <TableColumn fx:id="colAlunoAtivoDias" text="Dias Restantes" prefWidth="110"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <!-- 2. Tabela: Matrículas -->
+            <TableView fx:id="tabelaMatriculas" visible="false">
+                <columns>
+                    <TableColumn fx:id="colMatriculaId" text="Matrícula" prefWidth="80"/>
+                    <TableColumn fx:id="colMatriculaAluno" text="Aluno" prefWidth="220"/>
+                    <TableColumn fx:id="colMatriculaCpf" text="CPF" prefWidth="130"/>
+                    <TableColumn fx:id="colMatriculaPlano" text="Plano" prefWidth="140"/>
+                    <TableColumn fx:id="colMatriculaValor" text="Valor" prefWidth="110"/>
+                    <TableColumn fx:id="colMatriculaInicio" text="Data Início" prefWidth="110"/>
+                    <TableColumn fx:id="colMatriculaFim" text="Data Fim" prefWidth="110"/>
+                    <TableColumn fx:id="colMatriculaSituacao" text="Situação" prefWidth="110"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <!-- 3. Tabela: Pagamentos -->
+            <TableView fx:id="tabelaPagamentos" visible="false">
+                <columns>
+                    <TableColumn fx:id="colPagamentoId" text="ID" prefWidth="55"/>
+                    <TableColumn fx:id="colPagamentoMatricula" text="Matrícula" prefWidth="85"/>
+                    <TableColumn fx:id="colPagamentoAluno" text="Aluno" prefWidth="220"/>
+                    <TableColumn fx:id="colPagamentoData" text="Data Pagamento" prefWidth="120"/>
+                    <TableColumn fx:id="colPagamentoTipo" text="Tipo" prefWidth="130"/>
+                    <TableColumn fx:id="colPagamentoForma" text="Forma" prefWidth="110"/>
+                    <TableColumn fx:id="colPagamentoValor" text="Valor Pago" prefWidth="115"/>
+                    <TableColumn fx:id="colPagamentoObs" text="Observações" prefWidth="180"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <!-- 4. Tabela: Frequência -->
+            <TableView fx:id="tabelaFrequencia" visible="false">
+                <columns>
+                    <TableColumn fx:id="colFreqId" text="ID" prefWidth="60"/>
+                    <TableColumn fx:id="colFreqDataHora" text="Data / Hora Entrada" prefWidth="160"/>
+                    <TableColumn fx:id="colFreqAluno" text="Aluno" prefWidth="230"/>
+                    <TableColumn fx:id="colFreqCpf" text="CPF" prefWidth="130"/>
+                    <TableColumn fx:id="colFreqMatPlano" text="Matrícula / Plano" prefWidth="180"/>
+                    <TableColumn fx:id="colFreqStatus" text="Status Acesso" prefWidth="110"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+
+            <!-- 5. Tabela: Avaliações Físicas -->
+            <TableView fx:id="tabelaAvaliacoes" visible="false">
+                <columns>
+                    <TableColumn fx:id="colAvId" text="ID" prefWidth="55"/>
+                    <TableColumn fx:id="colAvData" text="Data" prefWidth="95"/>
+                    <TableColumn fx:id="colAvAluno" text="Aluno" prefWidth="200"/>
+                    <TableColumn fx:id="colAvInstrutor" text="Instrutor" prefWidth="150"/>
+                    <TableColumn fx:id="colAvPeso" text="Peso" prefWidth="85"/>
+                    <TableColumn fx:id="colAvAltura" text="Altura" prefWidth="85"/>
+                    <TableColumn fx:id="colAvImc" text="IMC" prefWidth="75"/>
+                    <TableColumn fx:id="colAvClassificacao" text="Classificação" prefWidth="130"/>
+                    <TableColumn fx:id="colAvGordura" text="Gordura (%)" prefWidth="90"/>
+                    <TableColumn fx:id="colAvMassa" text="Massa Musc." prefWidth="95"/>
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
+                </columnResizePolicy>
+            </TableView>
+        </StackPane>
+    </center>
+
+    <!-- ── Rodapé: Status de Registros ───────────────────────────── -->
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 8 0 0 0;">
+            <Label fx:id="labelStatus" text="Carregando dados..."
+                   style="-fx-font-size: 12px; -fx-text-fill: #8b949e;"/>
+        </HBox>
+    </bottom>
+
+</BorderPane>

@@ -44,6 +44,7 @@ public class PainelPrincipalController implements Observer {
     @FXML private Tab tabPagamentos;
     @FXML private Tab tabAvaliacao;
     @FXML private Tab tabTreinos;
+    @FXML private Tab tabRelatorios;
 
     /** Usuário autenticado, recebido via {@link #inicializar(Usuario)}. */
     private Usuario usuarioLogado;
@@ -58,6 +59,7 @@ public class PainelPrincipalController implements Observer {
     private PagamentoController            pagamentoCtrl;
     private AvaliacaoFisicaController      avaliacaoCtrl;
     private TreinoController               treinoCtrl;
+    private RelatorioController            relatorioCtrl;
 
     /**
      * Inicializa o painel com o usuário autenticado.
@@ -90,6 +92,7 @@ public class PainelPrincipalController implements Observer {
         pagamentoCtrl          = carregarAba(tabPagamentos,          "/com/academia/view/pagamento.fxml",            PagamentoController.class);
         avaliacaoCtrl          = carregarAba(tabAvaliacao,           "/com/academia/view/avaliacao-fisica.fxml",     AvaliacaoFisicaController.class);
         treinoCtrl             = carregarAba(tabTreinos,             "/com/academia/view/treino.fxml",               TreinoController.class);
+        relatorioCtrl          = carregarAba(tabRelatorios,          "/com/academia/view/relatorio.fxml",            RelatorioController.class);
 
         // Conecta o PainelPrincipal como Observer do PagamentoController (Subject)
         if (pagamentoCtrl != null) {
@@ -104,6 +107,11 @@ public class PainelPrincipalController implements Observer {
         // Repassa o usuário logado ao TreinoController
         if (treinoCtrl != null) {
             treinoCtrl.setUsuarioLogado(usuario);
+        }
+
+        // Repassa o usuário logado ao RelatorioController
+        if (relatorioCtrl != null) {
+            relatorioCtrl.setUsuarioLogado(usuario);
         }
 
         // ── Listener de troca de aba: recarrega dados ao selecionar ──────
@@ -121,6 +129,8 @@ public class PainelPrincipalController implements Observer {
                         avaliacaoCtrl.refresh();
                     } else if (tabSelecionada == tabTreinos && treinoCtrl != null) {
                         treinoCtrl.refresh();
+                    } else if (tabSelecionada == tabRelatorios && relatorioCtrl != null) {
+                        relatorioCtrl.refresh();
                     }
                 }
         );

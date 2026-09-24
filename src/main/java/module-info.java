@@ -34,5 +34,6 @@ module com.academia {
     exports com.academia.dao;
     exports com.academia.observer;
     exports com.academia.database;
+    exports com.academia.util;
 }
 
