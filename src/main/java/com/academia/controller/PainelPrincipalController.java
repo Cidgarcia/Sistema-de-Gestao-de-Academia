@@ -200,7 +200,7 @@ public class PainelPrincipalController implements Observer {
         );
         Stage stage = (Stage) labelUsuario.getScene().getWindow();
         stage.setScene(new Scene(raiz, 1100, 700));
-        stage.setTitle("Sistema de Gestão de Academia");
+        stage.setTitle("GymFlow");
     }
 
     @FXML

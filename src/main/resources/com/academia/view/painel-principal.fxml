@@ -2,6 +2,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
 
 <!--
     painel-principal.fxml — Tela Principal com abas de navegação
@@ -21,8 +22,13 @@
                      -fx-border-color: #30363d; -fx-border-width: 0 0 1 0;">
 
             <!-- Nome do sistema -->
-            <Label text="🏋 Academia"
-                   style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+            <HBox alignment="CENTER_LEFT" spacing="8">
+                <ImageView fitWidth="28" fitHeight="28" preserveRatio="true">
+                    <image><Image url="@gymflow-icon.png"/></image>
+                </ImageView>
+                <Label text="GymFlow"
+                       style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+            </HBox>
 
             <!-- Espaço expansível -->
             <Region HBox.hgrow="ALWAYS"/>

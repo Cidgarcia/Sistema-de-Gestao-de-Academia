@@ -2,6 +2,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.text.*?>
 
 <!--
@@ -20,7 +21,12 @@
                  -fx-padding: 40; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 20, 0, 0, 8);">
 
         <!-- Ícone / Título -->
-        <Label text="🏋 Academia" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+        <HBox alignment="CENTER" spacing="8">
+            <ImageView fitWidth="44" fitHeight="44" preserveRatio="true">
+                <image><Image url="@gymflow-icon.png"/></image>
+            </ImageView>
+            <Label text="GymFlow" style="-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #58a6ff;"/>
+        </HBox>
         <Label text="Sistema de Gestão" style="-fx-font-size: 14px; -fx-text-fill: #8b949e;"/>
 
         <Separator/>
