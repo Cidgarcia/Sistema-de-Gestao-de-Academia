@@ -197,7 +197,51 @@ public class AvaliacaoFisicaController {
             exibirStatus("⚠ Selecione um aluno.");
             return false;
         }
+
+        String pesoTxt = campPeso.getText() != null ? campPeso.getText().trim() : "";
+        String alturaTxt = campAltura.getText() != null ? campAltura.getText().trim() : "";
+
+        if (pesoTxt.isEmpty() || alturaTxt.isEmpty()) {
+            exibirStatus("⚠ Os campos de Peso e Altura são obrigatórios.");
+            return false;
+        }
+
+        if (!isNumeroValido(pesoTxt) || !isNumeroValido(alturaTxt)) {
+            exibirStatus("⚠ Medidas inválidas. Os campos de medidas devem conter apenas números. Corrija os dados.");
+            return false;
+        }
+
+        double peso = Double.parseDouble(pesoTxt.replace(",", "."));
+        double altura = Double.parseDouble(alturaTxt.replace(",", "."));
+        if (peso <= 0 || altura <= 0) {
+            exibirStatus("⚠ Medidas inválidas. Peso e Altura devem ser valores positivos. Corrija os dados.");
+            return false;
+        }
+
+        // Medidas complementares (se informadas, devem conter apenas números)
+        String gorduraTxt = campGordura.getText() != null ? campGordura.getText().trim() : "";
+        if (!gorduraTxt.isEmpty() && (!isNumeroValido(gorduraTxt) || Double.parseDouble(gorduraTxt.replace(",", ".")) < 0)) {
+            exibirStatus("⚠ Medidas inválidas. O campo Gordura (%) deve conter apenas números. Corrija os dados.");
+            return false;
+        }
+
+        String massaTxt = campMassa.getText() != null ? campMassa.getText().trim() : "";
+        if (!massaTxt.isEmpty() && (!isNumeroValido(massaTxt) || Double.parseDouble(massaTxt.replace(",", ".")) < 0)) {
+            exibirStatus("⚠ Medidas inválidas. O campo Massa Muscular deve conter apenas números. Corrija os dados.");
+            return false;
+        }
+
         return true;
+    }
+
+    private boolean isNumeroValido(String texto) {
+        if (texto == null || texto.isBlank()) return false;
+        try {
+            Double.parseDouble(texto.replace(",", "."));
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     private AvaliacaoFisica montarObjetoAvaliacao() {

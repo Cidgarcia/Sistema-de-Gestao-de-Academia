@@ -352,19 +352,22 @@ public class RelatorioController {
         Plano planoSel = comboPlano.getValue();
         Integer planoId = (planoSel != null && planoSel.getId() > 0) ? planoSel.getId() : null;
 
+        boolean semDados = false;
         switch (tipo) {
             case ALUNOS_ATIVOS -> {
                 cacheAlunosAtivos = relatorioDAO.listarAlunosAtivos(filtroTexto, planoId);
                 tabelaAlunosAtivos.setItems(FXCollections.observableArrayList(cacheAlunosAtivos));
                 atualizarKpisAlunosAtivos(cacheAlunosAtivos);
-                labelStatus.setText(cacheAlunosAtivos.size() + " alunos ativos encontrados.");
+                semDados = cacheAlunosAtivos.isEmpty();
+                if (!semDados) labelStatus.setText(cacheAlunosAtivos.size() + " alunos ativos encontrados.");
             }
             case MATRICULAS -> {
                 String situacao = comboSituacao.getValue();
                 cacheMatriculas = relatorioDAO.listarMatriculas(inicio, fim, situacao, planoId, filtroTexto);
                 tabelaMatriculas.setItems(FXCollections.observableArrayList(cacheMatriculas));
                 atualizarKpisMatriculas(cacheMatriculas);
-                labelStatus.setText(cacheMatriculas.size() + " matrículas encontradas no período.");
+                semDados = cacheMatriculas.isEmpty();
+                if (!semDados) labelStatus.setText(cacheMatriculas.size() + " matrículas encontradas no período.");
             }
             case PAGAMENTOS -> {
                 String forma = comboFormaPagamento.getValue();
@@ -372,13 +375,15 @@ public class RelatorioController {
                 cachePagamentos = relatorioDAO.listarPagamentos(inicio, fim, forma, tipoPagto, filtroTexto);
                 tabelaPagamentos.setItems(FXCollections.observableArrayList(cachePagamentos));
                 atualizarKpisPagamentos(cachePagamentos);
-                labelStatus.setText(cachePagamentos.size() + " pagamentos encontrados no período.");
+                semDados = cachePagamentos.isEmpty();
+                if (!semDados) labelStatus.setText(cachePagamentos.size() + " pagamentos encontrados no período.");
             }
             case FREQUENCIA -> {
                 cacheFrequencias = relatorioDAO.listarFrequencias(inicio, fim, filtroTexto);
                 tabelaFrequencia.setItems(FXCollections.observableArrayList(cacheFrequencias));
                 atualizarKpisFrequencia(cacheFrequencias);
-                labelStatus.setText(cacheFrequencias.size() + " registros de frequência encontrados.");
+                semDados = cacheFrequencias.isEmpty();
+                if (!semDados) labelStatus.setText(cacheFrequencias.size() + " registros de frequência encontrados.");
             }
             case AVALIACOES_FISICAS -> {
                 Aluno alunoSel = comboAluno.getValue();
@@ -386,8 +391,16 @@ public class RelatorioController {
                 cacheAvaliacoes = relatorioDAO.listarAvaliacoes(inicio, fim, alunoId, filtroTexto);
                 tabelaAvaliacoes.setItems(FXCollections.observableArrayList(cacheAvaliacoes));
                 atualizarKpisAvaliacoes(cacheAvaliacoes);
-                labelStatus.setText(cacheAvaliacoes.size() + " avaliações físicas encontradas.");
+                semDados = cacheAvaliacoes.isEmpty();
+                if (!semDados) labelStatus.setText(cacheAvaliacoes.size() + " avaliações físicas encontradas.");
             }
+        }
+
+        if (semDados) {
+            labelStatus.setText("Nenhum dado encontrado para o período/filtro");
+            labelStatus.setStyle("-fx-font-size: 12px; -fx-text-fill: #F87171; -fx-font-weight: bold;");
+        } else {
+            labelStatus.setStyle("-fx-font-size: 12px; -fx-text-fill: #83939A;");
         }
     }
 

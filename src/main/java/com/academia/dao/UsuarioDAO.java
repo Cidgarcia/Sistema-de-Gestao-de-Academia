@@ -13,6 +13,39 @@ import java.sql.*;
 public class UsuarioDAO {
 
     /**
+     * Autentica um usuário por login e senha, identificando seu perfil automaticamente.
+     *
+     * @param login Login do usuário.
+     * @param senha Senha informada pelo usuário.
+     * @return O objeto {@link Usuario} com o perfil identificado se autenticado, ou {@code null} se inválido.
+     */
+    public Usuario autenticar(String login, String senha) {
+        if (login == null || senha == null) return null;
+        String sql = "SELECT * FROM Usuarios WHERE login = ?";
+
+        try {
+            Connection conn = ConexaoSQLite.getConexao();
+            Usuario usuario;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, login);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (!rs.next() || !SenhaHasher.verificar(senha, rs.getString("senha"))) return null;
+                    usuario = mapearResultSet(rs);
+                }
+            }
+            if (SenhaHasher.isLegado(usuario.getSenha())) {
+                String novoHash = SenhaHasher.criar(senha);
+                if (!atualizarHash(conn, usuario.getId(), usuario.getSenha(), novoHash)) return null;
+                usuario.setSenha(novoHash);
+            }
+            return usuario;
+        } catch (SQLException e) {
+            System.err.println("[ERRO] Falha na autenticação.");
+            return null;
+        }
+    }
+
+    /**
      * Autentica um usuário e atualiza hashes SHA-256 antigos após login válido.
      *
      * @param login  Login do usuário.

@@ -35,7 +35,8 @@ public class MatriculaController {
     @FXML private TextField campoBuscaAluno;
     @FXML private ListView<Aluno> listaResultadosAluno;
     @FXML private DatePicker      campDataInicio;
-    @FXML private Label           labelDataFim;
+    @FXML private DatePicker      campDataFim;
+    @FXML private ComboBox<String> comboSituacaoMatricula;
     @FXML private Label           labelPlanoSelecionado;
     @FXML private Label           labelStatus;
 
@@ -106,6 +107,11 @@ public class MatriculaController {
 
         campDataInicio.valueProperty().addListener((obs, ant, sel) -> calcularDataFim());
         campDataInicio.setValue(LocalDate.now());
+
+        if (comboSituacaoMatricula != null) {
+            comboSituacaoMatricula.getItems().setAll("Ativa", "Inativa");
+            comboSituacaoMatricula.getSelectionModel().selectFirst();
+        }
 
         gerarCards(planoDAO.listarTodos());
     }
@@ -307,15 +313,15 @@ public class MatriculaController {
 
     // ── Lógica de data ────────────────────────────────────────────────────
 
-    /** Recalcula e exibe a data de término conforme plano e data de início. */
+    /** Recalcula e define a validade (data de término) conforme plano e data de início. */
     private void calcularDataFim() {
         LocalDate dataInicio = campDataInicio.getValue();
 
         if (planoSelecionado != null && dataInicio != null) {
             LocalDate dataFim = dataInicio.plusDays(planoSelecionado.getDuracaoDias());
-            labelDataFim.setText("Data de Término: " + dataFim);
+            if (campDataFim != null) campDataFim.setValue(dataFim);
         } else {
-            labelDataFim.setText("Data de Término: —");
+            if (campDataFim != null) campDataFim.setValue(null);
         }
     }
 
@@ -324,15 +330,14 @@ public class MatriculaController {
     /** Ação do botão "Matricular". */
     @FXML
     private void onMatricularClicado() {
-        Aluno aluno     = alunoSelecionado;
+        Aluno aluno = alunoSelecionado;
         LocalDate dataInicio = campDataInicio.getValue();
+        LocalDate dataFim = campDataFim != null ? campDataFim.getValue() : null;
 
-        if (aluno == null || planoSelecionado == null || dataInicio == null) {
-            exibirStatus("⚠ Selecione aluno, plano (card) e data de início.");
+        if (aluno == null || planoSelecionado == null || dataInicio == null || dataFim == null) {
+            exibirStatus("⚠ Selecione aluno, plano (card), data de início e validade.");
             return;
         }
-
-        LocalDate dataFim = dataInicio.plusDays(planoSelecionado.getDuracaoDias());
 
         String erroData = MatriculaValidator.validarDatas(dataInicio, dataFim);
         if (erroData != null) {
@@ -345,12 +350,14 @@ public class MatriculaController {
             return;
         }
 
+        boolean ativa = comboSituacaoMatricula == null || "Ativa".equalsIgnoreCase(comboSituacaoMatricula.getValue());
+
         Matricula matricula = new Matricula();
         matricula.setAlunoId(aluno.getId());
         matricula.setPlanoId(planoSelecionado.getId());
         matricula.setDataInicio(dataInicio.toString());
         matricula.setDataFim(dataFim.toString());
-        matricula.setAtiva(true);
+        matricula.setAtiva(ativa);
 
         if (matriculaDAO.inserir(matricula)) {
             exibirStatus("✔ Matrícula de '" + aluno.getNome() + "' efetuada até " + dataFim + "!");
@@ -381,13 +388,12 @@ public class MatriculaController {
 
     // ── Auxiliares ────────────────────────────────────────────────────────
 
-
-
     private void limparFormulario() {
         alunoSelecionado = null;
         buscaAluno.limpar();
         campDataInicio.setValue(LocalDate.now());
-        labelDataFim.setText("Data de Término: —");
+        if (campDataFim != null) campDataFim.setValue(null);
+        if (comboSituacaoMatricula != null) comboSituacaoMatricula.getSelectionModel().selectFirst();
         labelStatus.setText("");
         planoSelecionado = null;
         labelPlanoSelecionado.setText("Plano: nenhum selecionado");
