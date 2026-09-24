@@ -1,5 +1,5 @@
 # 🚀 Relatório Técnico de Desempenho e Otimização de Consultas
-**Sistema de Gestão de Academia (GymFlow)**
+**Sistema de Gestão de Academia (GymCore)**
 
 ---
 
