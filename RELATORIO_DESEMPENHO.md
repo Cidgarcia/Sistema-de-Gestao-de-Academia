@@ -1,66 +1,49 @@
-# 🚀 Relatório Técnico de Desempenho e Otimização de Consultas
-**Sistema de Gestão de Academia (GymCore)**
+# Desempenho — GymCore
 
----
+## Como reproduzir
 
-## 1. Volume de Dados dos Testes
-Para avaliar o comportamento da aplicação em cenário de escala real de utilização, foi configurada uma massa de testes automatizada em `DesempenhoTest.java` com:
-- **100 Alunos** cadastrados com dados completos e CPFs formatados e normalizados.
-- **100 Matrículas** com vigência ativa e associações a planos.
-- **1.000 Registros de Frequência** com distribuição temporal na recepção.
+Execute `mvn -Dtest=DesempenhoTest test`. O teste cria um SQLite temporário com 100 alunos, 100 matrículas e 1.000 frequências. Ele não altera o banco de uso diário. Os tempos abaixo foram observados em 24/09/2026 neste computador; podem variar conforme máquina, cache e carga do sistema.
 
----
+## Medições com a base ampliada
 
-## 2. Diagnóstico de Consultas Lentas e Gargalos Identificados
+| Operação | Tempo observado |
+|---|---:|
+| Cadastro de aluno | 7 ms |
+| Atualização de aluno | 6 ms |
+| Busca de aluno por nome | 4 ms |
+| Listagem de alunos e matrículas | 18 ms |
+| Registro de entrada por CPF | 21 ms |
+| Histórico completo (1.001 entradas, incluindo a entrada do teste) | 40 ms |
+| Histórico recente (10 entradas) | 9 ms |
+| Sincronização e listagem de pendências | 25 ms |
+| Carregamento do FXML de login | 559 ms |
+| Carregamento do painel de Funcionário | 762 ms |
+| Carregamento do painel de Instrutor | 309 ms |
 
-1. **Busca e Validação por CPF na Recepção (`FrequenciaDAO.registrarEntrada`):**
-   - **Gargalo:** A consulta usava `replace(replace(a.cpf, '.', ''), '-', '') = ?`. O SQLite **não utiliza índices convencionais** quando a coluna é envolvida por funções de manipulação de string na cláusula `WHERE`, forçando um *Full Table Scan* (varredura completa da tabela `Alunos`).
-   - **Solução:** Criação de um índice funcional/em expressão no SQLite:
-     ```sql
-     CREATE INDEX IF NOT EXISTS idx_alunos_cpf_limpo ON Alunos(replace(replace(cpf, '.', ''), '-', ''));
-     CREATE INDEX IF NOT EXISTS idx_alunos_cpf ON Alunos(cpf);
-     ```
+O teste verifica os limites de 500 ms para cadastro/atualização, 2 s para carregar cada tela e os limites específicos das consultas existentes. O carregamento do FXML inclui a inicialização do controlador, mas **não** mede a pintura da janela na tela; uma avaliação visual de fluidez ainda precisa ser feita no aplicativo.
 
-2. **Verificação de Vigência de Matrículas e Presenças Recorrentes:**
-   - **Gargalo:** Joins e verificações contínuas de vigência de plano (`ativa = 1 AND data_fim >= hoje`).
-   - **Solução:** Criação de índice composto cobrindo status e datas:
-     ```sql
-     CREATE INDEX IF NOT EXISTS idx_matriculas_ativa_datas ON Matriculas(ativa, data_fim, data_inicio);
-     CREATE INDEX IF NOT EXISTS idx_frequencias_data_entrada ON Frequencias(data_hora_entrada);
-     CREATE INDEX IF NOT EXISTS idx_pendencias_vencimento ON PendenciasFinanceiras(data_vencimento, situacao);
-     ```
+## Consulta lenta e comparação antes/depois
 
-3. **Carregamentos Completos Desnecessários na Interface:**
-   - **Gargalo:** A consulta de histórico completo de frequência na interface carregava todo o banco para uma `ObservableList` sem teto caso o usuário não especificasse datas.
-   - **Solução:** Aplicado limite de segurança (`LIMIT 250`) nos casos em que a busca for aberta sem filtros específicos, mantendo a tela rápida e a memória sob controle, com mensagem informativa ao usuário.
+A busca por CPF normalizado em `Alunos` usa `replace(replace(cpf, '.', ''), '-', '')`. Sem índice de expressão, o plano de consulta apresenta `SCAN Alunos`; com `idx_alunos_cpf_limpo`, apresenta `SEARCH Alunos USING INDEX idx_alunos_cpf_limpo`. Para comparação reproduzível, o teste executa a mesma consulta com `NOT INDEXED` (simulação do cenário sem índice) e normalmente, na mesma base e no mesmo processo:
 
-4. **Migração Automática Retroativa (`ConexaoSQLite.java`):**
-   - Os novos índices foram integrados tanto no `schema.sql` quanto no método `executarMigracoes()` da classe de conexão, garantindo que qualquer membro da equipe ou cliente com banco pré-existente receba as otimizações automaticamente ao iniciar a aplicação.
+| 1.000 buscas por CPF | Sem índice | Com índice |
+|---|---:|---:|
+| Tempo observado | 49 ms | 12 ms |
 
----
+Esse é um comparativo controlado da consulta, **não** uma medição histórica de versões anteriores do aplicativo. Os índices de CPF, matrículas, frequência e pendências já constam de `schema.sql` e das migrações em `ConexaoSQLite.java`, inclusive para bancos existentes. Nenhum índice novo foi necessário nesta revisão.
 
-## 3. Resultados: Comparação Antes vs. Depois
+## Carregamentos na interface
 
-Medições reais coletadas na máquina executando `mvn test -Dtest=DesempenhoTest`:
+A abertura da tela de frequência carrega apenas as dez entradas recentes. A consulta de histórico sem filtros limita a resposta a 250 registros; o teste confirma esse limite com 1.000 entradas. O histórico completo continua acessível por consulta explícita. Não há evidência aqui de paginação geral ou de *lazy loading* em todas as telas; essa alegação foi removida.
 
-| Operação / Consulta | Antes (Baseline) | Depois (Otimizado) | Redução / Ganho |
-|---|---|---|---|
-| **Busca de Aluno por Nome** | 16 ms | **1 ms** | **-93.7%** (16x mais rápido) |
-| **Listagem Completa Alunos + Matrículas** | 81 ms | **64 ms** | **-21.0%** mais veloz |
-| **Validação e Registro de Entrada por CPF** | 86 ms | **68 ms** | **-20.9%** mais veloz |
-| **Abertura de Histórico Recente (UI)** | 48 ms | **51 ms** | Estável em ~50 ms (< 100ms) |
-| **Sincronização de Pendências Financeiras** | 88 ms | **97 ms** | Processamento em lote estável (< 100ms) |
+## Checklist
 
-> **Critério de Aceitação:** Todas as operações críticas da interface permaneceram muito abaixo de **100 ms** (o limiar de percepção humana de resposta instantânea em aplicações desktop é 100-200 ms).
+- [x] Massa de 100 alunos e 1.000 frequências.
+- [x] Cadastro, busca, atualização e carregamento das telas medidos.
+- [x] Plano de consulta identificou varredura de CPF sem o índice.
+- [x] Índices necessários conferidos no SQLite e nas migrações.
+- [x] Carga automática de frequência limitada e testada.
+- [x] Resultados sem/com índice documentados com metodologia reproduzível.
+- [x] Tempos automatizados dentro dos limites acima com a base ampliada.
 
----
-
-## 4. Checklist da Task Concluído
-
-- [x] **Definir um volume de testes** (100 alunos e 1.000 frequências)
-- [x] **Medir cadastro, busca, atualização e abertura das telas**
-- [x] **Identificar consultas lentas** (Table scan no CPF com `replace`, falta de índices compostos em vigência e datas)
-- [x] **Criar índices no SQLite quando necessários** (`idx_alunos_cpf_limpo`, `idx_matriculas_ativa_datas`, etc.)
-- [x] **Evitar carregamentos completos desnecessários** (limite de 250 registros no histórico livre e lazy loading)
-- [x] **Registrar resultados antes e depois dos ajustes** (tabela comparativa documentada)
-- [x] **Confirmar tempo de resposta adequado com a base ampliada** (todos os 18 testes automatizados passando com `BUILD SUCCESS`)
+Para aceitar a experiência visual como concluída, ainda é recomendável abrir o aplicativo e observar a navegação nas telas com os dois perfis; os testes automatizados não substituem essa checagem.
