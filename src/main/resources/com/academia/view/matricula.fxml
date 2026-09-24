@@ -33,12 +33,11 @@
                                   -fx-padding: 8 12 8 12; -fx-background-color: #1E293B;
                                   -fx-background-radius: 6;"/>
 
-                    <Label text="Data de Término" style="-fx-text-fill: #DCE7E4;"/>
-                    <Label fx:id="labelDataFim" text="Data de Término: —"
-                           maxWidth="Infinity" wrapText="true"
-                           style="-fx-text-fill: #e3b341; -fx-font-size: 13px; -fx-font-weight: bold;
-                                  -fx-background-color: #2d2500; -fx-background-radius: 6;
-                                  -fx-padding: 8 12 8 12;"/>
+                    <Label text="Validade (Data de Término) *" style="-fx-text-fill: #DCE7E4;"/>
+                    <DatePicker fx:id="campDataFim" maxWidth="Infinity"/>
+
+                    <Label text="Situação da Matrícula *" style="-fx-text-fill: #DCE7E4;"/>
+                    <ComboBox fx:id="comboSituacaoMatricula" maxWidth="Infinity"/>
 
                     <Separator/>
 

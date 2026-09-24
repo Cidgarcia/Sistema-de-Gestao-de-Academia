@@ -27,30 +27,17 @@ public class LoginController {
 
     @FXML private TextField     campLogin;
     @FXML private PasswordField campSenha;
-    @FXML private ToggleButton  btnFuncionario;
-    @FXML private ToggleButton  btnInstrutor;
     @FXML private Label         labelErro;
     @FXML private Button        btnEntrar;
-
-    /** Estilos dos botões de perfil */
-    private static final String ESTILO_SELECIONADO   =
-            "-fx-pref-width: 145px; -fx-pref-height: 36px; -fx-font-size: 13px; -fx-font-weight: bold;" +
-            "-fx-background-radius: 8; -fx-background-color: #45D6A4; -fx-text-fill: #0F172A; -fx-cursor: hand;";
-    private static final String ESTILO_NAO_SELECIONADO =
-            "-fx-pref-width: 145px; -fx-pref-height: 36px; -fx-font-size: 13px; -fx-font-weight: bold;" +
-            "-fx-background-radius: 8; -fx-background-color: #243247; -fx-text-fill: #B5C4C2; -fx-cursor: hand;";
 
     /** DAO responsável por autenticar o usuário. */
     private final UsuarioDAO usuarioDAO = new UsuarioDAO();
 
     /**
      * Inicializa o controller após o FXML ter sido carregado.
-     * Pré-seleciona o perfil FUNCIONARIO e configura os botões de perfil.
      */
     @FXML
     public void initialize() {
-        // Pré-seleciona FUNCIONARIO
-        aplicarDestaque(btnFuncionario, btnInstrutor);
         labelErro.setVisible(false);
 
         // Permite submeter o formulário pressionando Enter no campo de senha
@@ -58,30 +45,9 @@ public class LoginController {
     }
 
     /**
-     * Alterna o destaque visual entre os botões de perfil.
-     *
-     * @param event Evento de clique em um dos botões de perfil.
-     */
-    @FXML
-    private void onPerfilSelecionado(ActionEvent event) {
-        if (event.getSource() == btnFuncionario) {
-            aplicarDestaque(btnFuncionario, btnInstrutor);
-        } else {
-            aplicarDestaque(btnInstrutor, btnFuncionario);
-        }
-    }
-
-    /** Aplica estilo de selecionado ao {@code ativo} e de inativo ao {@code outro}. */
-    private void aplicarDestaque(ToggleButton ativo, ToggleButton outro) {
-        ativo.setStyle(ESTILO_SELECIONADO);
-        ativo.setSelected(true);
-        outro.setStyle(ESTILO_NAO_SELECIONADO);
-        outro.setSelected(false);
-    }
-
-    /**
      * Ação do botão "Entrar".
-     * Valida os campos, autentica o usuário e navega para o Painel Principal.
+     * Valida os campos, autentica o usuário de forma segura, identifica seu perfil
+     * e navega para o Painel Principal correspondente.
      *
      * @param event Evento de clique no botão.
      */
@@ -90,20 +56,19 @@ public class LoginController {
         labelErro.setVisible(false);
 
         // Validação básica dos campos
-        String login  = campLogin.getText().trim();
-        String senha  = campSenha.getText();
-        String perfil = btnFuncionario.isSelected() ? "FUNCIONARIO" : "INSTRUTOR";
+        String login = campLogin.getText().trim();
+        String senha = campSenha.getText();
 
         if (login.isEmpty() || senha.isEmpty()) {
-            exibirErro("Preencha login e senha.");
+            exibirErro("Preencha usuário e senha.");
             return;
         }
 
-        // Autentica no banco de dados
-        Usuario usuario = usuarioDAO.autenticar(login, senha, perfil);
+        // Autentica no banco de dados e identifica o perfil automaticamente
+        Usuario usuario = usuarioDAO.autenticar(login, senha);
 
         if (usuario == null) {
-            exibirErro("Credenciais inválidas. Verifique login, senha e perfil.");
+            exibirErro("Credenciais Inválidas");
             campSenha.clear();
             return;
         }

@@ -47,13 +47,6 @@
                 <Label text="Senha" style="-fx-font-size: 12px; -fx-text-fill: #DCE7E4;"/>
                 <PasswordField fx:id="campSenha" promptText="Sua senha" maxWidth="Infinity" prefHeight="40"/>
             </VBox>
-            <VBox spacing="8">
-                <Label text="Perfil de acesso" style="-fx-font-size: 12px; -fx-text-fill: #DCE7E4;"/>
-                <HBox spacing="10">
-                    <ToggleButton fx:id="btnFuncionario" text="Funcionário" onAction="#onPerfilSelecionado" maxWidth="Infinity" prefHeight="38" HBox.hgrow="ALWAYS"/>
-                    <ToggleButton fx:id="btnInstrutor" text="Instrutor" onAction="#onPerfilSelecionado" maxWidth="Infinity" prefHeight="38" HBox.hgrow="ALWAYS"/>
-                </HBox>
-            </VBox>
 
             <Label fx:id="labelErro" text="" visible="false" wrapText="true" style="-fx-text-fill: #F87171; -fx-font-size: 12px;"/>
             <Button fx:id="btnEntrar" text="Entrar no GymCore  →" onAction="#onEntrarClicado" defaultButton="true"

@@ -150,6 +150,9 @@
         <StackPane style="-fx-padding: 14 0 0 0;">
             <!-- 1. Tabela: Alunos Ativos -->
             <TableView fx:id="tabelaAlunosAtivos">
+                <placeholder>
+                    <Label text="Nenhum dado encontrado para o período/filtro" style="-fx-text-fill: #94A3B8;"/>
+                </placeholder>
                 <columns>
                     <TableColumn fx:id="colAlunoAtivoId" text="ID" prefWidth="55"/>
                     <TableColumn fx:id="colAlunoAtivoNome" text="ALUNO" prefWidth="220"/>
@@ -168,6 +171,9 @@
 
             <!-- 2. Tabela: Matrículas -->
             <TableView fx:id="tabelaMatriculas" visible="false">
+                <placeholder>
+                    <Label text="Nenhum dado encontrado para o período/filtro" style="-fx-text-fill: #94A3B8;"/>
+                </placeholder>
                 <columns>
                     <TableColumn fx:id="colMatriculaId" text="MATRÍCULA" prefWidth="90"/>
                     <TableColumn fx:id="colMatriculaAluno" text="ALUNO" prefWidth="220"/>
@@ -185,6 +191,9 @@
 
             <!-- 3. Tabela: Pagamentos -->
             <TableView fx:id="tabelaPagamentos" visible="false">
+                <placeholder>
+                    <Label text="Nenhum dado encontrado para o período/filtro" style="-fx-text-fill: #94A3B8;"/>
+                </placeholder>
                 <columns>
                     <TableColumn fx:id="colPagamentoId" text="ID" prefWidth="55"/>
                     <TableColumn fx:id="colPagamentoMatricula" text="MATRÍCULA" prefWidth="90"/>
@@ -202,6 +211,9 @@
 
             <!-- 4. Tabela: Frequência -->
             <TableView fx:id="tabelaFrequencia" visible="false">
+                <placeholder>
+                    <Label text="Nenhum dado encontrado para o período/filtro" style="-fx-text-fill: #94A3B8;"/>
+                </placeholder>
                 <columns>
                     <TableColumn fx:id="colFreqId" text="ID" prefWidth="60"/>
                     <TableColumn fx:id="colFreqDataHora" text="DATA / HORA ENTRADA" prefWidth="165"/>
@@ -217,6 +229,9 @@
 
             <!-- 5. Tabela: Avaliações Físicas -->
             <TableView fx:id="tabelaAvaliacoes" visible="false">
+                <placeholder>
+                    <Label text="Nenhum dado encontrado para o período/filtro" style="-fx-text-fill: #94A3B8;"/>
+                </placeholder>
                 <columns>
                     <TableColumn fx:id="colAvId" text="ID" prefWidth="55"/>
                     <TableColumn fx:id="colAvData" text="DATA" prefWidth="95"/>
