@@ -193,7 +193,7 @@ public class PagamentoDAO {
                         UPDATE PendenciasFinanceiras
                         SET situacao = CASE
                             WHEN situacao = 'PAGA' THEN 'PAGA'
-                            WHEN data_vencimento < date('now') THEN 'VENCIDA'
+                            WHEN data_vencimento < date('now', 'localtime') THEN 'VENCIDA'
                             ELSE 'PENDENTE'
                         END
                         """);
