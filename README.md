@@ -89,19 +89,12 @@ Na primeira execução, o Maven vai baixar as dependências automaticamente (Jav
 
 ## 🔑 Login e Segurança
 
-Ao abrir o sistema, use as credenciais de demonstração abaixo:
+Ao abrir o sistema, informe o usuário e senha cadastrados. O perfil de acesso (**Funcionário** ou **Instrutor**) é identificado automaticamente pelo sistema:
 
-| Campo            | Valor         |
-|------------------|---------------|
-| **Login**        | `admin`       |
-| **Senha**        | `admin123`    |
-| **Perfil**       | `FUNCIONARIO` |
-
-| Campo            | Valor         |
-|------------------|---------------|
-| **Login**        | `instrutor`   |
-| **Senha**        | `admin123`    |
-| **Perfil**       | `INSTRUTOR`   |
+| Usuário (Login) | Senha inicial | Perfil identificado |
+|-----------------|---------------|----------------------|
+| `admin`         | `admin123`    | `FUNCIONARIO`        |
+| `instrutor`     | `admin123`    | `INSTRUTOR`          |
 
 As contas iniciais são para demonstração. Em **Alterar senha** (disponível na interface principal), cada usuário pode trocar a própria senha (mínimo de 8 caracteres). As senhas iniciais só valem enquanto não forem trocadas. 
 
@@ -168,10 +161,10 @@ O sistema conta com uma área dedicada a **Relatórios** gerenciais e operaciona
 ### ❌ "Credenciais inválidas" no login
 
 **Causas possíveis:**
-1. **Perfil errado:** Certifique-se de selecionar o perfil correto (`FUNCIONARIO` ou `INSTRUTOR`).
+1. **Usuário ou senha incorretos:** Certifique-se de digitar o login e senha exatamente como cadastrados.
 2. **Senha alterada:** Depois da troca, a senha inicial de demonstração deixa de funcionar.
 
-Se o problema persistir, confira o perfil e a senha.
+Se o problema persistir, confira o usuário e a senha informados.
 
 ---
 
